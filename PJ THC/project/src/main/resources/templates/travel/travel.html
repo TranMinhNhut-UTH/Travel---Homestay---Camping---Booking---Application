@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách tour - Travel-Homestay-Camping</title>
+    <!-- Favicon -->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/201/201623.png" type="image/x-icon">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        dark: '#1F2937',
+                        light: '#F9FAFB'
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- CSRF Token -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body class="bg-gray-100 font-sans min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <a href="/" title="Về trang chủ">
+                    <img src="https://cdn-icons-png.flaticon.com/512/201/201623.png" alt="Logo" class="h-10 w-10"/>
+                </a>
+                <span class="text-2xl font-serif font-bold text-primary">Travel<span class="text-secondary">Homestay</span>Camping</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform md:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto">
+        <div class="flex items-center justify-center h-16 px-4 bg-primary">
+            <h1 class="text-xl font-bold text-white flex items-center">
+                <i class="fas fa-home mr-2"></i>
+                Bảng điều khiển
+            </h1>
+        </div>
+        <div class="px-4 py-6">
+            <div class="flex items-center px-4 py-3 bg-blue-50 rounded-lg mb-6">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-user-circle text-primary text-3xl"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900">HuynhDang</p>
+                    <p class="text-xs text-gray-500">Tài khoản người dùng</p>
+                </div>
+            </div>
+
+            <nav>
+                <div class="mb-4">
+                    <h3 class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Menu chính</h3>
+                    <div class="mt-2 space-y-1">
+                        <a href="/dashboard" class="nav-link flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:text-primary">
+                            <i class="fas fa-tachometer-alt mr-3"></i>
+                            Bảng điều khiển
+                        </a>
+                        <a href="/homestay" class="nav-link flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:text-primary">
+                            <i class="fas fa-search mr-3"></i>
+                            Tìm kiếm Homestay
+                        </a>
+                        <a href="/camping" class="nav-link flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:text-primary">
+                            <i class="fas fa-campground mr-3"></i>
+                            Tìm kiếm Camping
+                        </a>
+                        <a href="/travels" class="nav-link flex items-center px-4 py-2 text-sm font-medium rounded-lg text-primary bg-blue-50">
+                            <i class="fas fa-route mr-3"></i>
+                            Tìm kiếm Tour
+                        </a>
+                        <a href="/bookings/my-history" class="nav-link flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:text-primary">
+                            <i class="fas fa-calendar-alt mr-3"></i>
+                            Lịch sử đặt phòng
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8 md:ml-64">
+        <!-- Search and Filter Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <form id="searchForm" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tìm kiếm</label>
+                        <input type="text" name="search" th:value="${searchParams?.search}" 
+                               class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                               placeholder="Tìm kiếm tour...">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Địa điểm</label>
+                        <input type="text" name="location" th:value="${searchParams?.location}"
+                               class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                               placeholder="Nhập địa điểm...">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Thời gian</label>
+                        <input type="number" name="duration" th:value="${searchParams?.duration}"
+                               class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                               placeholder="Số ngày">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Giá từ</label>
+                        <input type="number" name="minPrice" th:value="${searchParams?.minPrice}"
+                               class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                               placeholder="Giá tối thiểu">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Đến</label>
+                        <input type="number" name="maxPrice" th:value="${searchParams?.maxPrice}"
+                               class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                               placeholder="Giá tối đa">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Đánh giá từ</label>
+                        <input type="number" name="minRating" th:value="${searchParams?.minRating}"
+                               class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                               placeholder="Điểm đánh giá" min="0" max="5" step="0.1">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Sắp xếp</label>
+                        <select name="sortBy" th:value="${searchParams?.sortBy}"
+                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="">Mặc định</option>
+                            <option value="price">Giá</option>
+                            <option value="rating">Đánh giá</option>
+                            <option value="duration">Thời gian</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="resetFilters()"
+                            class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition duration-150">
+                        <i class="fas fa-redo mr-2"></i>Đặt lại
+                    </button>
+                    <button type="submit"
+                            class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition duration-150">
+                        <i class="fas fa-search mr-2"></i>Tìm kiếm
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Travel List -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div th:each="travel : ${travels}" class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="relative">
+                    <img th:src="${travel.imageUrls[0]}" alt="Travel image" class="w-full h-48 object-cover">
+                    <button class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100"
+                            th:onclick="'toggleWishlist(this, ' + ${travel.id} + ')'">
+                        <i class="far fa-heart text-gray-600"></i>
+                    </button>
+                </div>
+                <div class="p-4">
+                    <h3 class="text-xl font-bold text-dark mb-2" th:text="${travel.tourName}">Tour name</h3>
+                    <p class="text-gray-600 mb-2" th:text="${travel.location}">Location</p>
+                    <div class="flex items-center mb-2">
+                        <i class="fas fa-star text-yellow-400 mr-1"></i>
+                        <span class="text-gray-700" th:text="${travel.rating} + ' (' + ${travel.bookingCount} + ' đánh giá)'">Rating</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-primary font-bold" th:text="${travel.price} + ' VNĐ'">Price</span>
+                    <a th:href="@{/travels/{id}(id=${travel.id})}"
+                           class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition duration-150">
+                        Xem chi tiết
+                    </a>
+                </div>
+            </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Travel-Homestay-Camping</h3>
+                    <p class="text-gray-400">Khám phá những điểm đến tuyệt vời cùng chúng tôi.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Liên hệ</h3>
+                    <p class="text-gray-400">Email: info@travelhomestaycamping.com</p>
+                    <p class="text-gray-400">Điện thoại: +84 123 456 789</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Theo dõi chúng tôi</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Travel-Homestay-Camping. All rights reserved.</p>
+            </div>
+</div>
+    </footer>
+
+    <script>
+        function toggleWishlist(button, travelId) {
+            fetch(`/travels/${travelId}/wishlist`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').content
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    const icon = button.querySelector('i');
+                    if (data.isInWishlist) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        icon.classList.add('text-red-500');
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        icon.classList.remove('text-red-500');
+                    }
+                }
+            });
+        }
+
+        function resetFilters() {
+            document.querySelectorAll('#searchForm input, #searchForm select').forEach(input => {
+                input.value = '';
+            });
+            document.getElementById('searchForm').submit();
+        }
+    </script>
+</body>
+</html>
