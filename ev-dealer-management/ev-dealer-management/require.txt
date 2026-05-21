@@ -1,0 +1,81 @@
+@startuml
+left to right direction
+actor "Dealer Staff" as DS
+actor "Dealer Manager" as DM
+actor "EVM Staff" as EVM
+actor "Admin" as AD
+actor "Khách hàng" as KH
+
+rectangle "User & Auth Service" {
+  usecase "Đăng nhập / Xác thực" as UC1
+  usecase "Quản lý user & role" as UC12
+}
+
+rectangle "Vehicle Service" {
+  usecase "Quản lý sản phẩm\n(mẫu xe, phiên bản, cấu hình)" as UC2
+  usecase "Quản lý tồn kho (Đại lý)" as UC9
+  usecase "Quản lý tồn kho & phân phối (Hãng)" as UC10
+}
+
+rectangle "Sales Service" {
+  usecase "Tạo báo giá" as UC3
+  usecase "Tạo đơn hàng & hợp đồng" as UC4
+  usecase "Quản lý thanh toán" as UC5
+  usecase "Phê duyệt hợp đồng" as UC8
+}
+
+rectangle "Customer Service" {
+  usecase "Quản lý khách hàng" as UC6
+  usecase "Lịch lái thử" as UC7
+}
+
+rectangle "Reporting Service" {
+  usecase "Xem báo cáo doanh số & phân tích" as UC11
+}
+
+rectangle "Notification Service" {
+  usecase "Gửi thông báo (Email/SMS)" as UC14
+}
+
+rectangle "Admin Service" {
+  usecase "Quản trị hệ thống" as UC13
+}
+
+' Dealer Staff
+DS --> UC1
+DS --> UC3
+DS --> UC4
+DS --> UC5
+DS --> UC6
+DS --> UC7
+
+' Dealer Manager
+DM --> UC1
+DM --> UC4
+DM --> UC5
+DM --> UC8
+DM --> UC9
+DM --> UC11
+
+' EVM Staff
+EVM --> UC1
+EVM --> UC2
+EVM --> UC10
+EVM --> UC11
+
+' Admin
+AD --> UC1
+AD --> UC12
+AD --> UC13
+
+' Khách hàng
+KH --> UC6
+KH --> UC7
+
+' Notification gửi cho tất cả
+UC14 --> DS
+UC14 --> DM
+UC14 --> EVM
+UC14 --> AD
+UC14 --> KH
+@enduml

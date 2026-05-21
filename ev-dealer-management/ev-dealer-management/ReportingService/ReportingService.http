@@ -1,0 +1,91 @@
+@ReportingService_HostAddress = https://localhost:5214
+
+### =======================
+### Sales Summary Endpoints
+### =======================
+
+### GET all sales summaries
+GET {{ReportingService_HostAddress}}/api/reports/sales-summary
+Accept: application/json
+
+###
+
+### GET sales summaries filtered by date range
+GET {{ReportingService_HostAddress}}/api/reports/sales-summary?fromDate=2025-01-01T00:00:00Z&toDate=2025-01-31T23:59:59Z
+Accept: application/json
+
+###
+
+### GET sales summaries filtered by dealerId
+GET {{ReportingService_HostAddress}}/api/reports/sales-summary?dealerId=550e8400-e29b-41d4-a716-446655440000
+Accept: application/json
+
+###
+
+### GET sales summary by ID
+GET {{ReportingService_HostAddress}}/api/reports/sales-summary/550e8400-e29b-41d4-a716-446655440001
+Accept: application/json
+
+###
+
+### POST new sales summary
+POST {{ReportingService_HostAddress}}/api/reports/sales-summary
+Content-Type: application/json
+
+{
+  "date": "2025-01-15T00:00:00Z",
+  "dealerId": "550e8400-e29b-41d4-a716-446655440000",
+  "dealerName": "Dealer Hà Nội",
+  "salespersonId": "550e8400-e29b-41d4-a716-446655440002",
+  "salespersonName": "Nguyễn Văn A",
+  "totalOrders": 5,
+  "totalRevenue": 1500000000
+}
+
+###
+
+### ==========================
+### Inventory Summary Endpoints
+### ==========================
+
+### GET all inventory summaries
+GET {{ReportingService_HostAddress}}/api/reports/inventory-summary
+Accept: application/json
+
+###
+
+### GET inventory summaries filtered by dealerId
+GET {{ReportingService_HostAddress}}/api/reports/inventory-summary?dealerId=550e8400-e29b-41d4-a716-446655440000
+Accept: application/json
+
+###
+
+### GET inventory summary by ID
+GET {{ReportingService_HostAddress}}/api/reports/inventory-summary/550e8400-e29b-41d4-a716-446655440010
+Accept: application/json
+
+###
+
+### POST new inventory summary
+POST {{ReportingService_HostAddress}}/api/reports/inventory-summary
+Content-Type: application/json
+
+{
+  "vehicleId": "550e8400-e29b-41d4-a716-446655440003",
+  "vehicleName": "Tesla Model 3",
+  "dealerId": "550e8400-e29b-41d4-a716-446655440000",
+  "dealerName": "Dealer Hà Nội",
+  "stockCount": 15
+}
+
+###
+
+### ===================
+### Other Endpoints
+### ===================
+
+### GET weather forecast
+GET {{ReportingService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

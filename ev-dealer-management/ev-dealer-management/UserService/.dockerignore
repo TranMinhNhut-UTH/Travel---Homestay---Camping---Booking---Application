@@ -1,0 +1,11 @@
+bin/
+obj/
+.migration*
+.vs/
+**/node_modules
+**/*.db
+Dockerfile
+*.user
+*.suo
+.idea/
+.vscode/

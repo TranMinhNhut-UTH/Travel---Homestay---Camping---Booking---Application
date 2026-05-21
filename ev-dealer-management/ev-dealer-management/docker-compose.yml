@@ -1,0 +1,112 @@
+version: '3.8'
+services:
+  userservice:
+    build: ./UserService
+    image: evdealer/userservice:local
+    container_name: evm_userservice
+    ports:
+      - "5223:80"
+    volumes:
+      - ./UserService/data:/app/data
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/users.db
+      - Jwt__Key=ReplaceThisWithASecretKeyForDevelopment
+      - Jwt__Issuer=evm.local
+      - Jwt__Audience=evm.local
+      - FrontendUrl=http://localhost:5173
+      - EmailSettings__SmtpHost=smtp.gmail.com
+      - EmailSettings__SmtpPort=587
+      - EmailSettings__SmtpUser=bata79892@gmail.com
+      - EmailSettings__SmtpPassword=rgiksegnoxayweeo
+      - EmailSettings__FromEmail=bata79892@gmail.com
+      - EmailSettings__FromName=EV Dealer
+      - EmailSettings__EnableSsl=true
+    restart: unless-stopped
+
+  vehicleservice:
+    build: ./VehicleService
+    image: evdealer/vehicleservice:local
+    container_name: evm_vehicleservice
+    ports:
+      - "5224:8080"
+    volumes:
+      - ./VehicleService/data:/app/data
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/vehicles.db
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - ev-dealer-network
+
+  salesservice:
+    build: ./SalesService
+    image: evdealer/salesservice:local
+    container_name: evm_salesservice
+    ports:
+      - "5003:80"
+    volumes:
+      - ./SalesService/data:/app/data
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/sales.db
+      - RabbitMQ__Host=rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+      - RabbitMQ__Queues__SaleCompleted=sales.completed
+      - RabbitMQ__Queues__OrderCreated=order.created
+      - RabbitMQ__Queues__PaymentReceived=payment.received
+      - RabbitMQ__Queues__OrderStatusChanged=order.status.changed
+      - Services__VehicleService=http://vehicleservice:8080
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      vehicleservice:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - ev-dealer-network
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    hostname: "rabbitmq"
+    container_name: evm_rabbitmq
+    ports:
+      - "5672:5672"    # AMQP port
+      - "15672:15672"  # Management UI port
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_VHOST: /
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_logs:/var/log/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - ev-dealer-network
+
+volumes:
+  rabbitmq_data:
+    driver: local
+  rabbitmq_logs:
+    driver: local
+
+networks:
+  ev-dealer-network:
+    driver: bridge
+

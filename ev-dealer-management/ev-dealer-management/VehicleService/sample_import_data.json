@@ -1,0 +1,212 @@
+[
+  {
+    "model": "Tesla Model 3",
+    "type": "sedan",
+    "price": 45000,
+    "batteryCapacity": 75,
+    "range": 350,
+    "stockQuantity": 12,
+    "description": "Premium electric sedan with autopilot capabilities",
+    "dealerId": 1,
+    "images": [
+      {
+        "url": "https://example.com/tesla-model3.jpg",
+        "altText": "Tesla Model 3",
+        "order": 1
+      }
+    ],
+    "colorVariants": [
+      {
+        "name": "Pearl White",
+        "hex": "#FFFFFF",
+        "stock": 5
+      },
+      {
+        "name": "Deep Blue",
+        "hex": "#000080",
+        "stock": 4
+      },
+      {
+        "name": "Stealth Grey",
+        "hex": "#4B4B4B",
+        "stock": 3
+      }
+    ],
+    "specifications": {
+      "acceleration": "5.8s",
+      "topSpeed": "140 mph",
+      "charging": "30 min",
+      "warranty": "8 years",
+      "seats": 5,
+      "cargo": "15 cu ft"
+    }
+  },
+  {
+    "model": "Tesla Model Y",
+    "type": "suv",
+    "price": 55000,
+    "batteryCapacity": 75,
+    "range": 320,
+    "stockQuantity": 8,
+    "description": "Compact electric SUV with versatile cargo space",
+    "dealerId": 1,
+    "images": [
+      {
+        "url": "https://example.com/tesla-modely.jpg",
+        "altText": "Tesla Model Y",
+        "order": 1
+      }
+    ],
+    "colorVariants": [
+      {
+        "name": "Pearl White",
+        "hex": "#FFFFFF",
+        "stock": 3
+      },
+      {
+        "name": "Deep Blue",
+        "hex": "#000080",
+        "stock": 3
+      },
+      {
+        "name": "Red Multi-Coat",
+        "hex": "#8B0000",
+        "stock": 2
+      }
+    ],
+    "specifications": {
+      "acceleration": "5.5s",
+      "topSpeed": "135 mph",
+      "charging": "30 min",
+      "warranty": "8 years",
+      "seats": 5,
+      "cargo": "27 cu ft"
+    }
+  },
+  {
+    "model": "Tesla Model S",
+    "type": "sedan",
+    "price": 80000,
+    "batteryCapacity": 100,
+    "range": 405,
+    "stockQuantity": 5,
+    "description": "Luxury electric sedan with cutting-edge technology",
+    "dealerId": 1,
+    "images": [
+      {
+        "url": "https://example.com/tesla-models.jpg",
+        "altText": "Tesla Model S",
+        "order": 1
+      }
+    ],
+    "colorVariants": [
+      {
+        "name": "Pearl White",
+        "hex": "#FFFFFF",
+        "stock": 2
+      },
+      {
+        "name": "Deep Blue",
+        "hex": "#000080",
+        "stock": 2
+      },
+      {
+        "name": "Ultra Red",
+        "hex": "#FF0000",
+        "stock": 1
+      }
+    ],
+    "specifications": {
+      "acceleration": "3.1s",
+      "topSpeed": "162 mph",
+      "charging": "15 min",
+      "warranty": "8 years",
+      "seats": 5,
+      "cargo": "28 cu ft"
+    }
+  },
+  {
+    "model": "Tesla Model X",
+    "type": "suv",
+    "price": 120000,
+    "batteryCapacity": 100,
+    "range": 325,
+    "stockQuantity": 3,
+    "description": "Luxury electric SUV with falcon wing doors",
+    "dealerId": 1,
+    "images": [
+      {
+        "url": "https://example.com/tesla-modelx.jpg",
+        "altText": "Tesla Model X",
+        "order": 1
+      }
+    ],
+    "colorVariants": [
+      {
+        "name": "Pearl White",
+        "hex": "#FFFFFF",
+        "stock": 1
+      },
+      {
+        "name": "Deep Blue",
+        "hex": "#000080",
+        "stock": 1
+      },
+      {
+        "name": "Obsidian Black",
+        "hex": "#000000",
+        "stock": 1
+      }
+    ],
+    "specifications": {
+      "acceleration": "2.5s",
+      "topSpeed": "162 mph",
+      "charging": "15 min",
+      "warranty": "8 years",
+      "seats": 7,
+      "cargo": "27 cu ft"
+    }
+  },
+  {
+    "model": "Polestar 2",
+    "type": "sedan",
+    "price": 55000,
+    "batteryCapacity": 78,
+    "range": 270,
+    "stockQuantity": 6,
+    "description": "Premium electric fastback with Google integration",
+    "dealerId": 1,
+    "images": [
+      {
+        "url": "https://example.com/polestar2.jpg",
+        "altText": "Polestar 2",
+        "order": 1
+      }
+    ],
+    "colorVariants": [
+      {
+        "name": "Snow",
+        "hex": "#F8F8FF",
+        "stock": 2
+      },
+      {
+        "name": "Magnesium",
+        "hex": "#C0C0C0",
+        "stock": 2
+      },
+      {
+        "name": "Thunder",
+        "hex": "#2F4F4F",
+        "stock": 2
+      }
+    ],
+    "specifications": {
+      "acceleration": "4.5s",
+      "topSpeed": "127 mph",
+      "charging": "30 min",
+      "warranty": "4 years",
+      "seats": 5,
+      "cargo": "14 cu ft"
+    }
+  }
+]

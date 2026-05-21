@@ -1,0 +1,93 @@
+using SalesService.Data;
+using SalesService.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Logging;
+using QuestPDF.Infrastructure; // Required for LicenseType
+using System.Text.Json.Serialization; // Required for ReferenceHandler
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Configure QuestPDF license (with error handling for Docker/Linux)
+try
+{
+    QuestPDF.Settings.License = LicenseType.Community;
+}
+catch (Exception ex)
+{
+    // Log error but don't fail startup - QuestPDF is only used for PDF generation
+    Console.WriteLine($"[WARNING] Failed to initialize QuestPDF: {ex.Message}");
+    Console.WriteLine("[INFO] Service will continue without PDF generation support");
+}
+
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173", "http://localhost:3000")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+// Add services to the container.
+// Configure JSON serialization to handle object cycles
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Configure DbContext
+builder.Services.AddDbContext<SalesDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
+           .LogTo(Console.WriteLine, LogLevel.Information)
+           .EnableSensitiveDataLogging());
+
+// Register RabbitMQ Message Publisher
+builder.Services.AddSingleton<IMessagePublisher, RabbitMQMessagePublisher>();
+
+var app = builder.Build();
+
+// Log the database file path after app is built
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var dbContext = services.GetRequiredService<SalesDbContext>();
+        var connection = dbContext.Database.GetDbConnection();
+        if (connection is SqliteConnection sqliteConnection)
+        {
+            Console.WriteLine($"[SalesDbContext] SQLite database file path: {sqliteConnection.DataSource}");
+        }
+        else
+        {
+            Console.WriteLine($"[SalesDbContext] Database connection type: {connection.GetType().Name}. Could not determine SQLite file path.");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[SalesDbContext] Error getting database context or connection string: {ex.Message}");
+    }
+}
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+// Use CORS
+app.UseCors("AllowFrontend");
+
+app.MapControllers();
+
+app.Run();

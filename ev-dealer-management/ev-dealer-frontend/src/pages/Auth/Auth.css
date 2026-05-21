@@ -1,0 +1,98 @@
+/* Auth Pages - Modern Styling */
+
+/* FORCE BLACK TEXT FOR ALL INPUTS - ALWAYS VISIBLE */
+input {
+  color: #000000 !important;
+}
+
+/* Force all input fields to show black text on white background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #000000 !important;
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  color: #000000 !important;
+  caret-color: #000000 !important;
+}
+
+/* Modern TextField Styling */
+.MuiOutlinedInput-root {
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.MuiOutlinedInput-root:hover {
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15) !important;
+}
+
+.MuiOutlinedInput-root.Mui-focused {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25) !important;
+}
+
+/* MUI TextField specific fixes */
+.MuiTextField-root input {
+  color: #000000 !important;
+}
+
+.MuiTextField-root input:-webkit-autofill,
+.MuiTextField-root input:-webkit-autofill:hover,
+.MuiTextField-root input:-webkit-autofill:focus,
+.MuiTextField-root input:-webkit-autofill:active {
+  -webkit-text-fill-color: #000000 !important;
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  color: #000000 !important;
+  caret-color: #000000 !important;
+}
+
+/* MUI OutlinedInput specific */
+.MuiOutlinedInput-input {
+  color: #000000 !important;
+}
+
+.MuiOutlinedInput-input:-webkit-autofill,
+.MuiOutlinedInput-input:-webkit-autofill:hover,
+.MuiOutlinedInput-input:-webkit-autofill:focus,
+.MuiOutlinedInput-input:-webkit-autofill:active {
+  -webkit-text-fill-color: #000000 !important;
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  border-radius: 4px !important;
+  color: #000000 !important;
+  caret-color: #000000 !important;
+}
+
+/* Remove browser default autocomplete styling */
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="text"] {
+  color: #000000 !important;
+}
+
+input[type="email"]:-webkit-autofill,
+input[type="password"]:-webkit-autofill,
+input[type="tel"]:-webkit-autofill,
+input[type="text"]:-webkit-autofill {
+  -webkit-text-fill-color: #000000 !important;
+  color: #000000 !important;
+  background-color: white !important;
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  caret-color: #000000 !important;
+}
+
+/* Ensure text is always visible - ULTIMATE FIX */
+.MuiInputBase-input {
+  color: #000000 !important;
+}
+
+.MuiInputBase-input:-webkit-autofill,
+.MuiInputBase-input:-webkit-autofill:hover,
+.MuiInputBase-input:-webkit-autofill:focus,
+.MuiInputBase-input:-webkit-autofill:active {
+  -webkit-text-fill-color: #000000 !important;
+  color: #000000 !important;
+  caret-color: #000000 !important;
+}
+
