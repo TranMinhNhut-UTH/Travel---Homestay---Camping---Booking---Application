@@ -6,13 +6,11 @@ on:
       - '**'
   pull_request:
     types:
-      - opened
-      - synchronize
-      - reopened
       - closed
 
 jobs:
-  build-and-sync:
+  push-ci-and-in-progress:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
 
     steps:
@@ -44,7 +42,7 @@ jobs:
         id: jira_keys
         shell: bash
         run: |
-          text="${{ github.ref_name }} ${{ github.event.head_commit.message }} ${{ github.event.pull_request.title }} ${{ github.event.pull_request.body }}"
+          text="${{ github.ref_name }} ${{ github.event.head_commit.message }}"
           keys=$(printf '%s' "$text" | grep -oE '[A-Z][A-Z0-9]+-[0-9]+' || true)
           keys=$(printf '%s' "$keys" | sort -u | tr '\n' ',' | sed 's/,$//')
           echo "keys=$keys" >> "$GITHUB_OUTPUT"
@@ -70,7 +68,7 @@ jobs:
         run: node .github/scripts/jira-sync.mjs FAIL
 
       - name: Move Jira issues to In Progress after pass on push
-        if: success() && github.event_name == 'push' && github.ref != 'refs/heads/main'
+        if: success() && github.ref != 'refs/heads/main'
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
@@ -78,17 +76,38 @@ jobs:
           JIRA_ISSUE_KEYS: ${{ steps.jira_keys.outputs.keys }}
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
-          JIRA_TRANSITION_IN_PROGRESS: ${{ secrets.JIRA_TRANSITION_IN_PROGRESS }}
+          JIRA_TRANSITION_IN_PROGRESS: In Progress
         run: node .github/scripts/jira-sync.mjs IN_PROGRESS
 
+  merge-pr-to-done:
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Extract Jira issue keys from merged PR
+        id: jira_keys
+        shell: bash
+        run: |
+          text="${{ github.event.pull_request.head.ref }} ${{ github.event.pull_request.title }} ${{ github.event.pull_request.body }}"
+          keys=$(printf '%s' "$text" | grep -oE '[A-Z][A-Z0-9]+-[0-9]+' || true)
+          keys=$(printf '%s' "$keys" | sort -u | tr '\n' ',' | sed 's/,$//')
+          echo "keys=$keys" >> "$GITHUB_OUTPUT"
+
       - name: Move Jira issues to Done after merged PR
-        if: success() && github.event_name == 'pull_request' && github.event.pull_request.merged == true
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
           JIRA_ISSUE_KEYS: ${{ steps.jira_keys.outputs.keys }}
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          GITHUB_REF_NAME: ${{ github.ref_name }}
-          JIRA_TRANSITION_DONE: ${{ secrets.JIRA_TRANSITION_DONE }}
+          GITHUB_REF_NAME: ${{ github.event.pull_request.head.ref }}
+          JIRA_TRANSITION_DONE: Done
         run: node .github/scripts/jira-sync.mjs DONE
