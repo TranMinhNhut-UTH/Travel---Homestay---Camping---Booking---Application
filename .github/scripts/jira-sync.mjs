@@ -44,7 +44,7 @@ async function main() {
 
     if (state === 'DONE') {
       await addComment({ baseUrl, email, apiToken, issueKey, comment: `${comment}\nStatus: MERGED -> moving to Done` });
-      await transitionIssue({ baseUrl, email, apiToken, issueKey, transitionName: process.env.JIRA_TRANSITION_DONE || 'Done' });
+      await transitionIssue({ baseUrl, email, apiToken, issueKey, transitionName: process.env.JIRA_TRANSITION_DONE || 'DONE' });
       continue;
     }
 
