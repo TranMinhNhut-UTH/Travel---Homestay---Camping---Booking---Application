@@ -53,10 +53,10 @@ jobs:
         run: node .github/scripts/validate-postman.mjs ./ev-dealer-management.postman_collection.json
 
       - name: Restore solution
-        run: dotnet restore ev-dealer-management/DealerSystem.sln
+        run: dotnet restore ev-dealer-management/ev-dealer-management/DealerSystem.sln
 
       - name: Build solution
-        run: dotnet build ev-dealer-management/DealerSystem.sln --configuration Release --no-restore
+        run: dotnet build ev-dealer-management/ev-dealer-management/DealerSystem.sln --configuration Release --no-restore
 
       - name: Comment failure back to Jira
         if: failure()
