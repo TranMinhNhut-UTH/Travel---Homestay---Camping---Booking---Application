@@ -1,0 +1,34 @@
+[
+  {
+    "summary": "Setup GitHub Actions CI for build and validation",
+    "description": "Create a GitHub Actions workflow that restores, builds, and validates the current solution and Postman collection."
+  },
+  {
+    "summary": "Add Jira issue import workflow",
+    "description": "Create a manual workflow_dispatch action that accepts an epic key and imports task issues into Jira automatically."
+  },
+  {
+    "summary": "Add Jira status sync on push",
+    "description": "Update Jira issues to In Progress when a push build passes for a branch containing the issue key."
+  },
+  {
+    "summary": "Add Jira status sync on merged pull requests",
+    "description": "Move Jira issues to Done when a pull request is merged successfully into the main branch."
+  },
+  {
+    "summary": "Validate Postman collection in CI",
+    "description": "Check the Postman collection JSON structure in GitHub Actions to prevent invalid test assets from being merged."
+  },
+  {
+    "summary": "Document GitHub-Jira workflow and secrets",
+    "description": "Explain how to configure Jira API credentials, project key, epic key, and workflow inputs for the automation pipeline."
+  },
+  {
+    "summary": "Add branch and commit issue-key parsing",
+    "description": "Extract Jira issue keys from branch names, commit messages, and PR titles/bodies so the workflow can update the correct issue."
+  },
+  {
+    "summary": "Add failure comments back to Jira",
+    "description": "When CI fails, post a comment to the linked Jira issue so reviewers can see the failure directly in Jira."
+  }
+]

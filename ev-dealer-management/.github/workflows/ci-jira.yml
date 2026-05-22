@@ -1,0 +1,94 @@
+name: CI and Jira Sync
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - closed
+
+jobs:
+  build-and-sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate branch naming
+        shell: bash
+        run: |
+          branch="${{ github.event.pull_request.head.ref || github.ref_name }}"
+          allowed='^(main|develop|release/[0-9]+\.[0-9]+\.[0-9]+|feature/ED-[0-9]+[-a-z0-9_]*|fix/ED-[0-9]+[-a-z0-9_]*|hotfix/ED-[0-9]+[-a-z0-9_]*|chore/ED-[0-9]+[-a-z0-9_]*)$'
+          if [[ ! "$branch" =~ $allowed ]]; then
+            echo "Branch name '$branch' does not match the required pattern."
+            echo "Use main, develop, release/x.y.z, feature/ED-123-desc, fix/ED-123-desc, hotfix/ED-123-desc, or chore/ED-123-desc."
+            exit 1
+          fi
+
+      - name: Extract Jira issue keys
+        id: jira_keys
+        shell: bash
+        run: |
+          text="${{ github.ref_name }} ${{ github.event.head_commit.message }} ${{ github.event.pull_request.title }} ${{ github.event.pull_request.body }}"
+          keys=$(printf '%s' "$text" | grep -oE '[A-Z][A-Z0-9]+-[0-9]+' || true)
+          keys=$(printf '%s' "$keys" | sort -u | tr '\n' ',' | sed 's/,$//')
+          echo "keys=$keys" >> "$GITHUB_OUTPUT"
+
+      - name: Validate Postman collection
+        run: node .github/scripts/validate-postman.mjs ev-dealer-management.postman_collection.json
+
+      - name: Restore solution
+        run: dotnet restore DealerSystem.sln
+
+      - name: Build solution
+        run: dotnet build DealerSystem.sln --configuration Release --no-restore
+
+      - name: Comment failure back to Jira
+        if: failure()
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_ISSUE_KEYS: ${{ steps.jira_keys.outputs.keys }}
+          GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: node .github/scripts/jira-sync.mjs FAIL
+
+      - name: Move Jira issues to In Progress after pass on push
+        if: success() && github.event_name == 'push' && github.ref != 'refs/heads/main'
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_ISSUE_KEYS: ${{ steps.jira_keys.outputs.keys }}
+          GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          JIRA_TRANSITION_IN_PROGRESS: ${{ secrets.JIRA_TRANSITION_IN_PROGRESS }}
+        run: node .github/scripts/jira-sync.mjs IN_PROGRESS
+
+      - name: Move Jira issues to Done after merged PR
+        if: success() && github.event_name == 'pull_request' && github.event.pull_request.merged == true
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_ISSUE_KEYS: ${{ steps.jira_keys.outputs.keys }}
+          GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          JIRA_TRANSITION_DONE: ${{ secrets.JIRA_TRANSITION_DONE }}
+        run: node .github/scripts/jira-sync.mjs DONE

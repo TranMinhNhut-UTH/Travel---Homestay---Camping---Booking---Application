@@ -1,0 +1,55 @@
+name: Create Jira Issues
+
+on:
+  workflow_dispatch:
+    inputs:
+      epic_key:
+        description: 'Jira epic key, for example ED-1'
+        required: true
+        type: string
+      project_key:
+        description: 'Jira project key. Leave empty to derive from the epic key prefix.'
+        required: false
+        type: string
+      issue_type:
+        description: 'Jira issue type for child tasks'
+        required: false
+        default: Task
+        type: string
+      issues_json:
+        description: 'Optional JSON array of issue definitions. Leave empty to use the default template.'
+        required: false
+        default: ''
+        type: string
+      template_path:
+        description: 'Template file path for default issues'
+        required: false
+        default: .github/jira-templates/default-issues.json
+        type: string
+
+jobs:
+  import-issues:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Create Jira issues under epic
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_EPIC_KEY: ${{ inputs.epic_key }}
+          JIRA_PROJECT_KEY: ${{ inputs.project_key }}
+          JIRA_ISSUE_TYPE: ${{ inputs.issue_type }}
+          JIRA_ISSUES_JSON: ${{ inputs.issues_json }}
+          JIRA_TEMPLATE_PATH: ${{ inputs.template_path }}
+          JIRA_EPIC_LINK_FIELD_ID: ${{ secrets.JIRA_EPIC_LINK_FIELD_ID }}
+          JIRA_LABELS: automation,cicd,github-actions,jira-import
+        run: node .github/scripts/create-jira-issues.mjs
