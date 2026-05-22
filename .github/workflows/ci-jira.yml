@@ -109,5 +109,5 @@ jobs:
           JIRA_ISSUE_KEYS: ${{ steps.jira_keys.outputs.keys }}
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GITHUB_REF_NAME: ${{ github.event.pull_request.head.ref }}
-          JIRA_TRANSITION_DONE: Done
+          JIRA_TRANSITION_DONE: DONE
         run: node .github/scripts/jira-sync.mjs DONE
