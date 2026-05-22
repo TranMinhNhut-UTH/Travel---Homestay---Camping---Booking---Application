@@ -23,4 +23,29 @@
     "summary": "Document the team execution phases",
     "description": "Describe Phase 1 task creation, Phase 2 action-by-action fixes, and Phase 3 pipeline hardening for the team."
   }
+,
+  {
+    "summary": "Run backend unit tests",
+    "description": "Add and run unit tests for core backend services (UserService, VehicleService, SalesService)."
+  },
+  {
+    "summary": "Run backend integration tests",
+    "description": "Execute integration tests that exercise multiple services and database interactions."
+  },
+  {
+    "summary": "Verify database migrations and seeds",
+    "description": "Ensure Entity Framework migrations apply cleanly and seed data is correct for local/staging."
+  },
+  {
+    "summary": "Smoke-test key API endpoints",
+    "description": "Quick API smoke tests for auth, vehicle listing, order creation, and customer CRUD."
+  },
+  {
+    "summary": "Verify RabbitMQ message flow and consumers",
+    "description": "Confirm events are published and consumed (reservations, orders) and retry logic works."
+  },
+  {
+    "summary": "Verify NotificationService end-to-end",
+    "description": "Send test events to ensure Email and SMS flows reach SendGrid/Twilio (or mocks)."
+  }
 ]
