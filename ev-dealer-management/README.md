@@ -386,6 +386,27 @@ See [TESTING_GUIDE.md](./TESTING_GUIDE.md#common-issues--solutions)
 
 ---
 
+##  Team Execution Plan
+
+### Phase 1: Create Jira tasks first
+- Run `Create Jira Issues` with `epic_key = ED-1`.
+- Use the default template to create 6 starter tasks for the team.
+- Let each member pick one task and work independently.
+
+### Phase 2: Fix one action per person
+- One person verifies Postman validation.
+- One person fixes solution restore/build paths.
+- One person checks Jira transition to `In Progress`.
+- One person checks Jira transition to `Done` after merge.
+- One person verifies branch naming and issue-key parsing.
+- One person reviews documentation and workflow inputs.
+
+### Phase 3: Harden the pipeline
+- Add branch protection after the first round passes.
+- Then lock in CI checks before deployment work.
+
+---
+
 **Version**: 1.0.0  
 **Last Updated**: November 22, 2025  
 **Status**:  Production Ready (Core Features)

@@ -1,34 +1,26 @@
 [
   {
-    "summary": "Setup GitHub Actions CI for build and validation",
-    "description": "Create a GitHub Actions workflow that restores, builds, and validates the current solution and Postman collection."
+    "summary": "Create Jira import workflow for the team",
+    "description": "Make the manual workflow_dispatch action create Jira issues under a given epic so the whole team has tasks to pick up."
   },
   {
-    "summary": "Add Jira issue import workflow",
-    "description": "Create a manual workflow_dispatch action that accepts an epic key and imports task issues into Jira automatically."
+    "summary": "Validate the Postman collection path",
+    "description": "Confirm the collection lives at the repo root and the workflow points to the correct JSON file."
   },
   {
-    "summary": "Add Jira status sync on push",
-    "description": "Update Jira issues to In Progress when a push build passes for a branch containing the issue key."
+    "summary": "Fix solution restore and build path",
+    "description": "Make GitHub Actions restore and build the correct DealerSystem.sln path inside the nested backend folder."
   },
   {
-    "summary": "Add Jira status sync on merged pull requests",
-    "description": "Move Jira issues to Done when a pull request is merged successfully into the main branch."
+    "summary": "Verify Jira In Progress automation",
+    "description": "Ensure a successful push moves the linked Jira issue from To Do to In Progress."
   },
   {
-    "summary": "Validate Postman collection in CI",
-    "description": "Check the Postman collection JSON structure in GitHub Actions to prevent invalid test assets from being merged."
+    "summary": "Verify Jira Done automation after merge",
+    "description": "Ensure a merged pull request moves the linked Jira issue to Done."
   },
   {
-    "summary": "Document GitHub-Jira workflow and secrets",
-    "description": "Explain how to configure Jira API credentials, project key, epic key, and workflow inputs for the automation pipeline."
-  },
-  {
-    "summary": "Add branch and commit issue-key parsing",
-    "description": "Extract Jira issue keys from branch names, commit messages, and PR titles/bodies so the workflow can update the correct issue."
-  },
-  {
-    "summary": "Add failure comments back to Jira",
-    "description": "When CI fails, post a comment to the linked Jira issue so reviewers can see the failure directly in Jira."
+    "summary": "Document the team execution phases",
+    "description": "Describe Phase 1 task creation, Phase 2 action-by-action fixes, and Phase 3 pipeline hardening for the team."
   }
 ]
