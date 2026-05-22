@@ -1,0 +1,26 @@
+[
+  {
+    "summary": "Create Jira import workflow for the team",
+    "description": "Make the manual workflow_dispatch action create Jira issues under a given epic so the whole team has tasks to pick up."
+  },
+  {
+    "summary": "Validate the Postman collection path",
+    "description": "Confirm the collection lives at the repo root and the workflow points to the correct JSON file."
+  },
+  {
+    "summary": "Fix solution restore and build path",
+    "description": "Make GitHub Actions restore and build the correct DealerSystem.sln path inside the nested backend folder."
+  },
+  {
+    "summary": "Verify Jira In Progress automation",
+    "description": "Ensure a successful push moves the linked Jira issue from To Do to In Progress."
+  },
+  {
+    "summary": "Verify Jira Done automation after merge",
+    "description": "Ensure a merged pull request moves the linked Jira issue to Done."
+  },
+  {
+    "summary": "Document the team execution phases",
+    "description": "Describe Phase 1 task creation, Phase 2 action-by-action fixes, and Phase 3 pipeline hardening for the team."
+  }
+]

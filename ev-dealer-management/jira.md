@@ -270,5 +270,5 @@ API Gateway dang proxy mot phan API cong khai, nhung mot so endpoint van chi goi
 - Neu Jira khong tra ve field nay, issue van tao duoc nhung khong noi vao epic; khi do ban can set secret `JIRA_EPIC_LINK_FIELD_ID` hoac chuyen sang cach map field phu hop voi project type.
 
 ### Postman collection
-- File collection da duoc luu trong repo tai `ev-dealer-management.postman_collection.json`.
+- File collection da duoc luu tai root repo: `./ev-dealer-management.postman_collection.json`.
 - CI se validate JSON collection nay de tranh merge file loi.
