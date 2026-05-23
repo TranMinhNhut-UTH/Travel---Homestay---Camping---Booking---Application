@@ -57,7 +57,8 @@ jobs:
         run: dotnet build ev-dealer-management/ev-dealer-management/DealerSystem.sln --configuration Release --no-restore
 
       - name: Comment failure back to Jira
-        if: failure()
+        if: false
+        # if: failure()
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
