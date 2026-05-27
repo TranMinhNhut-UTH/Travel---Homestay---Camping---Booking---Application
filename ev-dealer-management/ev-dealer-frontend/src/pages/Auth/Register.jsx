@@ -169,7 +169,17 @@ const Register = () => {
       setSuccess(true)
 
     } catch (err) {
-      setError(err || 'Đăng ký thất bại. Vui lòng thử lại.')
+      let errorMessage = 'Đăng ký thất bại. Vui lòng thử lại.'
+      
+      if (err?.response?.data?.message) {
+        errorMessage = err.response.data.message
+      } else if (err?.message) {
+        errorMessage = err.message
+      } else if (typeof err === 'string') {
+        errorMessage = err
+      }
+      
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }

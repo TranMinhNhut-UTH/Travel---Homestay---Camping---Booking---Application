@@ -18,18 +18,16 @@ namespace SalesService.Controllers
     {
         private readonly ILogger<OrdersController> _logger;
         private readonly SalesDbContext _context;
-        private readonly IMessagePublisher _messagePublisher;
         private readonly IConfiguration _configuration;
 
+        // RabbitMQ removed for simplified local development
         public OrdersController(
             ILogger<OrdersController> logger, 
             SalesDbContext context,
-            IMessagePublisher messagePublisher,
             IConfiguration configuration)
         {
             _logger = logger;
             _context = context;
-            _messagePublisher = messagePublisher;
             _configuration = configuration;
         }
 
@@ -188,9 +186,8 @@ namespace SalesService.Controllers
                         CreatedAt = order.CreatedAt
                     };
 
-                    var orderCreatedQueue = _configuration["RabbitMQ:Queues:OrderCreated"] ?? "order.created";
-                    await _messagePublisher.PublishMessageAsync(orderCreatedQueue, orderCreatedEvent);
-                    _logger.LogInformation("Published OrderCreated event for Order {OrderNumber}", order.OrderNumber);
+                    // RabbitMQ removed for simplified local development - order event publishing disabled
+                    _logger.LogInformation("Order created: {OrderNumber} (Message publishing disabled)", order.OrderNumber);
 
                     // Publish SaleCompleted event (for NotificationService)
                     var saleCompletedEvent = new SaleCompletedEvent
@@ -204,14 +201,13 @@ namespace SalesService.Controllers
                         DeviceToken = null // Can be added later if available in request
                     };
 
-                    var saleCompletedQueue = _configuration["RabbitMQ:Queues:SaleCompleted"] ?? "sales.completed";
-                    await _messagePublisher.PublishMessageAsync(saleCompletedQueue, saleCompletedEvent);
-                    _logger.LogInformation("Published SaleCompleted event for Order {OrderNumber}", order.OrderNumber);
+                    // RabbitMQ removed for simplified local development - sale event publishing disabled
+                    _logger.LogInformation("Sale completed event for Order {OrderNumber} (Message publishing disabled)", order.OrderNumber);
                 }
                 catch (Exception ex)
                 {
                     // Log error but don't fail the request
-                    _logger.LogError(ex, "Error publishing events to RabbitMQ for Order {OrderNumber}", order.OrderNumber);
+                    _logger.LogError(ex, "Error processing events for Order {OrderNumber}", order.OrderNumber);
                 }
 
                 return Ok(new
@@ -319,14 +315,14 @@ namespace SalesService.Controllers
                         ChangedAt = order.UpdatedAt
                     };
 
-                    var statusChangedQueue = _configuration["RabbitMQ:Queues:OrderStatusChanged"] ?? "order.status.changed";
-                    await _messagePublisher.PublishMessageAsync(statusChangedQueue, statusChangedEvent);
-                    _logger.LogInformation("Published OrderStatusChanged event for Order {OrderNumber}", order.OrderNumber);
+                    // RabbitMQ removed for simplified local development - status change event publishing disabled
+                    _logger.LogInformation("Order status changed for Order {OrderNumber}: {OldStatus} -> {NewStatus} (Message publishing disabled)", 
+                        order.OrderNumber, oldStatus, request.Status);
                 }
                 catch (Exception ex)
                 {
                     // Log error but don't fail the request
-                    _logger.LogError(ex, "Error publishing OrderStatusChanged event for Order {OrderNumber}", order.OrderNumber);
+                    _logger.LogError(ex, "Error processing OrderStatusChanged event for Order {OrderNumber}", order.OrderNumber);
                 }
             }
             catch (DbUpdateException ex)

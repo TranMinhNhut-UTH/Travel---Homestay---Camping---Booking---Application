@@ -10,13 +10,12 @@ namespace CustomerService.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerService _customerService;
-        private readonly IMessageProducer _messageProducer;
         private readonly ILogger<CustomersController> _logger;
 
-        public CustomersController(ICustomerService customerService, IMessageProducer messageProducer, ILogger<CustomersController> logger)
+        // RabbitMQ removed for simplified local development
+        public CustomersController(ICustomerService customerService, ILogger<CustomersController> logger)
         {
             _customerService = customerService;
-            _messageProducer = messageProducer;
             _logger = logger;
         }
 
@@ -67,13 +66,13 @@ namespace CustomerService.Controllers
                         Timestamp = DateTime.UtcNow
                     };
 
-                    _messageProducer.PublishMessage(customerCreatedEvent, "customer.created");
-                    _logger.LogInformation("CustomerCreatedEvent published for customer: {CustomerName}", createdCustomer.Name);
+                    // RabbitMQ removed for simplified local development
+                    _logger.LogInformation("Customer created: {CustomerName} (Message publishing disabled)", createdCustomer.Name);
                 }
                 catch (Exception ex)
                 {
-                    // Log the failure to publish the event, but don't let it crash the whole operation
-                    _logger.LogWarning(ex, "Failed to publish CustomerCreatedEvent for customer: {CustomerName}", createCustomerRequest.Name);
+                    // Log the failure but don't let it crash the whole operation
+                    _logger.LogWarning(ex, "Error processing customer created event for customer: {CustomerName}", createCustomerRequest.Name);
                 }
                 */
 

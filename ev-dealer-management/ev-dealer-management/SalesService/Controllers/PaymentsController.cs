@@ -18,18 +18,16 @@ namespace SalesService.Controllers
     public class PaymentsController : ControllerBase
     {
         private readonly SalesDbContext _context;
-        private readonly IMessagePublisher _messagePublisher;
         private readonly IConfiguration _configuration;
         private readonly ILogger<PaymentsController> _logger;
 
+        // RabbitMQ removed for simplified local development
         public PaymentsController(
             SalesDbContext context,
-            IMessagePublisher messagePublisher,
             IConfiguration configuration,
             ILogger<PaymentsController> logger)
         {
             _context = context;
-            _messagePublisher = messagePublisher;
             _configuration = configuration;
             _logger = logger;
         }
@@ -89,14 +87,14 @@ namespace SalesService.Controllers
                     CreatedAt = payment.CreatedAt
                 };
 
-                var paymentReceivedQueue = _configuration["RabbitMQ:Queues:PaymentReceived"] ?? "payment.received";
-                await _messagePublisher.PublishMessageAsync(paymentReceivedQueue, paymentReceivedEvent);
-                _logger.LogInformation("Published PaymentReceived event for Payment {PaymentId}", payment.PaymentId);
+                // RabbitMQ removed for simplified local development - payment event publishing disabled
+                _logger.LogInformation("Payment received for Payment {PaymentId}: {Amount:C} (Message publishing disabled)", 
+                    payment.PaymentId, payment.Amount);
             }
             catch (Exception ex)
             {
                 // Log error but don't fail the request
-                _logger.LogError(ex, "Error publishing PaymentReceived event for Payment {PaymentId}", payment.PaymentId);
+                _logger.LogError(ex, "Error processing PaymentReceived event for Payment {PaymentId}", payment.PaymentId);
             }
 
             var paymentDto = new PaymentDto

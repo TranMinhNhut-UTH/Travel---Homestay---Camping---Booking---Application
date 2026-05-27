@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using VehicleService.Data;
 using VehicleService.Services;
-using VehicleService.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,11 +15,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<IVehicleService, VehicleService.Services.VehicleService>();
 
-// Existing vehicle event producer (used inside VehicleService)
-builder.Services.AddSingleton<VehicleService.Services.IMessageProducer, VehicleService.Services.RabbitMQProducerService>();
-
-// Reservation event producer (used by ReservationsController)
-builder.Services.AddSingleton<VehicleService.Messaging.IMessageProducer, VehicleService.Messaging.RabbitMQProducer>();
+// RabbitMQ removed for simplified local development
 
 builder.Services.AddHealthChecks();
 

@@ -62,12 +62,7 @@ builder.Services.AddScoped<CustomerService.Services.ITestDriveService, CustomerS
 // Register AutoMapper
 builder.Services.AddAutoMapper(typeof(CustomerService.Profiles.MappingProfile).Assembly);
 
-
-// Register RabbitMQ Producer Service
-builder.Services.AddSingleton<CustomerService.Services.IMessageProducer, CustomerService.Services.RabbitMQProducerService>();
-
-// Register Background Service for consuming VehicleReservedEvent
-builder.Services.AddHostedService<CustomerService.Consumers.VehicleReservedEventConsumer>();
+// RabbitMQ removed for simplified local development
 
 var app = builder.Build();
 

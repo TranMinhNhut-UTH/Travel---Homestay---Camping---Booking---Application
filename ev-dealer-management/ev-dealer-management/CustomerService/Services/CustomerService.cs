@@ -13,12 +13,11 @@ namespace CustomerService.Services;
 public class CustomerService : ICustomerService
 {
     private readonly CustomerDbContext _context;
-    private readonly IMessageProducer _messageProducer;
 
-    public CustomerService(CustomerDbContext context, IMessageProducer messageProducer)
+    // RabbitMQ removed for simplified local development
+    public CustomerService(CustomerDbContext context)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
-        _messageProducer = messageProducer ?? throw new ArgumentNullException(nameof(messageProducer));
     }
 
     public async Task<IEnumerable<CustomerDto>> GetAllCustomersAsync()
@@ -117,7 +116,8 @@ public class CustomerService : ICustomerService
         _context.Customers.Add(customer);
         await _context.SaveChangesAsync();
 
-        _messageProducer.PublishMessage(customer, "customer.created");
+        // RabbitMQ removed for simplified local development
+        Console.WriteLine($"[CustomerService] Customer created: {customer.Name} (Message publishing disabled)");
 
         // Return the created customer as a DTO
         return new CustomerDto
@@ -160,7 +160,8 @@ public class CustomerService : ICustomerService
 
         await _context.SaveChangesAsync();
 
-        _messageProducer.PublishMessage(customer, "customer.updated");
+        // RabbitMQ removed for simplified local development
+        Console.WriteLine($"[CustomerService] Customer updated: {customer.Name} (Message publishing disabled)");
 
         // Return the updated customer as a DTO
         return new CustomerDto
@@ -187,7 +188,10 @@ public class CustomerService : ICustomerService
         // For now, we'll just delete the customer. Consider soft delete if needed.
         _context.Customers.Remove(customer);
         await _context.SaveChangesAsync();
-        _messageProducer.PublishMessage(new { CustomerId = id, EventType = "Deleted" }, "customer.deleted");
+        
+        // RabbitMQ removed for simplified local development
+        Console.WriteLine($"[CustomerService] Customer deleted: ID {id} (Message publishing disabled)");
+        
         return true;
     }
 

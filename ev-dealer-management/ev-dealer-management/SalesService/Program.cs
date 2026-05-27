@@ -48,8 +48,7 @@ builder.Services.AddDbContext<SalesDbContext>(options =>
            .LogTo(Console.WriteLine, LogLevel.Information)
            .EnableSensitiveDataLogging());
 
-// Register RabbitMQ Message Publisher
-builder.Services.AddSingleton<IMessagePublisher, RabbitMQMessagePublisher>();
+// RabbitMQ removed for simplified local development
 
 var app = builder.Build();
 

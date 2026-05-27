@@ -83,7 +83,17 @@ const ResetPassword = () => {
         navigate('/login')
       }, 3000) // Redirect to login after 3 seconds
     } catch (err) {
-      setError(err || 'Đặt lại mật khẩu thất bại. Vui lòng thử lại.')
+      let errorMessage = 'Đặt lại mật khẩu thất bại. Vui lòng thử lại.'
+      
+      if (err?.response?.data?.message) {
+        errorMessage = err.response.data.message
+      } else if (err?.message) {
+        errorMessage = err.message
+      } else if (typeof err === 'string') {
+        errorMessage = err
+      }
+      
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }

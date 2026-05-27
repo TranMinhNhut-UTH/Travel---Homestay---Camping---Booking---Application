@@ -103,11 +103,16 @@ const Login = () => {
       navigate("/dashboard");
     } catch (err) {
       // Extract a meaningful error message
-      const errorMessage =
-        err.response?.data?.message ||
-        err.response?.data ||
-        err.message ||
-        "Đăng nhập thất bại. Vui lòng thử lại.";
+      let errorMessage = "Đăng nhập thất bại. Vui lòng thử lại.";
+      
+      if (err?.response?.data?.message && typeof err.response.data.message === 'string') {
+        errorMessage = err.response.data.message;
+      } else if (err?.message && typeof err.message === 'string') {
+        errorMessage = err.message;
+      } else if (typeof err === 'string') {
+        errorMessage = err;
+      }
+      
       setError(errorMessage);
     } finally {
       setLoading(false);

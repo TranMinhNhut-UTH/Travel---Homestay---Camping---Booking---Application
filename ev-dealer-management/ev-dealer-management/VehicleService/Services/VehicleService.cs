@@ -10,12 +10,11 @@ namespace VehicleService.Services;
 public class VehicleService : IVehicleService
 {
     private readonly ApplicationDbContext _context;
-    private readonly IMessageProducer _messageProducer;
 
-    public VehicleService(ApplicationDbContext context, IMessageProducer messageProducer)
+    // RabbitMQ removed for simplified local development
+    public VehicleService(ApplicationDbContext context)
     {
         _context = context;
-        _messageProducer = messageProducer;
     }
 
     public async Task<PaginatedResult<VehicleDto>> GetVehiclesAsync(VehicleQueryDto query)
@@ -288,7 +287,8 @@ public class VehicleService : IVehicleService
             DealerId = vehicle.DealerId,
             CreatedAt = vehicle.CreatedAt
         };
-        _messageProducer.PublishMessage(vehicleCreatedEvent);
+        // RabbitMQ removed for simplified local development
+        Console.WriteLine($"[VehicleService] Vehicle created event for Vehicle {vehicle.Model} (Message publishing disabled)");
 
         // Return the created vehicle with all related data
         return await GetVehicleByIdAsync(vehicle.Id) ?? throw new InvalidOperationException("Failed to retrieve created vehicle");
@@ -432,7 +432,8 @@ public class VehicleService : IVehicleService
             DealerId = vehicle.DealerId,
             UpdatedAt = vehicle.UpdatedAt
         };
-        _messageProducer.PublishMessage(vehicleUpdatedEvent);
+        // RabbitMQ removed for simplified local development
+        Console.WriteLine($"[VehicleService] Vehicle updated event for Vehicle {vehicle.Model} (Message publishing disabled)");
 
         return await GetVehicleByIdAsync(id);
     }
@@ -451,7 +452,8 @@ public class VehicleService : IVehicleService
             VehicleId = id,
             DeletedAt = DateTime.UtcNow
         };
-        _messageProducer.PublishMessage(vehicleDeletedEvent);
+        // RabbitMQ removed for simplified local development
+        Console.WriteLine($"[VehicleService] Vehicle deleted event for Vehicle ID {id} (Message publishing disabled)");
 
         return true;
     }
@@ -492,7 +494,8 @@ public class VehicleService : IVehicleService
             DeviceToken = request.DeviceToken
         };
 
-        _messageProducer.PublishMessage(vehicleReservedEvent);
+        // RabbitMQ removed for simplified local development
+        Console.WriteLine($"[VehicleService] Vehicle reserved event for Vehicle {vehicle.Model} (Message publishing disabled)");
 
         return vehicleReservedEvent;
     }

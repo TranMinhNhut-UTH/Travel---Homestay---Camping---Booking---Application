@@ -1,6 +1,5 @@
 using Serilog;
 using NotificationService.Services;
-using NotificationService.Consumers;
 
 // Configure Serilog
 Log.Logger = new LoggerConfiguration()
@@ -25,14 +24,7 @@ try
     // Register Firebase FCM Service (Singleton for better performance)
     builder.Services.AddSingleton<IFcmService, FirebaseFcmService>();
 
-    // Register Consumers
-    builder.Services.AddScoped<SaleCompletedConsumer>();
-    builder.Services.AddScoped<VehicleReservedConsumer>();
-    builder.Services.AddScoped<TestDriveScheduledConsumer>();
-
-    // Register RabbitMQ Consumer Service
-    builder.Services.AddSingleton<IMessageConsumer, RabbitMQConsumerService>();
-    builder.Services.AddHostedService<RabbitMQConsumerHostedService>();
+    // RabbitMQ removed for simplified local development - consumers registration removed
 
     // Add CORS
     builder.Services.AddCors(options =>

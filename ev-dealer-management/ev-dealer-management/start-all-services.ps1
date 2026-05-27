@@ -1,32 +1,26 @@
+$repoRoot = Split-Path -Parent $PSScriptRoot
+$backendRoot = Join-Path $repoRoot "ev-dealer-management"
+$frontendRoot = Join-Path $repoRoot "ev-dealer-frontend"
+
 $services = @(
-    "UserService",
-    "SalesService",
-    "VehicleService",
-    "CustomerService",
-    "ReportingService",
-    "APIGatewayService",
-    "NotificationService"
+    @{ Name = "UserService"; Path = (Join-Path $backendRoot "UserService") },
+    @{ Name = "SalesService"; Path = (Join-Path $backendRoot "SalesService") },
+    @{ Name = "VehicleService"; Path = (Join-Path $backendRoot "VehicleService") },
+    @{ Name = "CustomerService"; Path = (Join-Path $backendRoot "CustomerService") },
+    @{ Name = "ReportingService"; Path = (Join-Path $backendRoot "ReportingService") },
+    @{ Name = "APIGatewayService"; Path = (Join-Path $backendRoot "APIGatewayService") }
 )
 
-$basePath = "C:\Code\XD\project_XD\ev-dealer-management\ev-dealer-management"
-
-# Khởi tạo chuỗi lệnh cho Windows Terminal
-$wtArgs = ""
+$tabs = @()
 
 foreach ($service in $services) {
-    $servicePath = Join-Path $basePath $service
-
-    # Cấu trúc lệnh: new-tab + thư mục làm việc (-d) + tiêu đề (--title) + lệnh chạy
-    # Lưu ý: Dấu chấm phẩy (;) được dùng để ngăn cách các tab trong Windows Terminal
-    $wtArgs += "new-tab --title `"$service`" -d `"$servicePath`" powershell -NoExit -Command `"dotnet run`" ; "
+    $tabs += "new-tab --title `"$($service.Name)`" -d `"$($service.Path)`" powershell -NoExit -Command `"dotnet run`""
 }
 
-# Xóa dấu chấm phẩy thừa ở cuối chuỗi
-if ($wtArgs.EndsWith(" ; ")) {
-    $wtArgs = $wtArgs.Substring(0, $wtArgs.Length - 3)
-}
+$frontendCommand = "Set-Location `"$frontendRoot`"; if (-not (Test-Path node_modules)) { npm install }; npm run dev"
+$tabs += "new-tab --title `"Frontend`" -d `"$frontendRoot`" powershell -NoExit -Command `"$frontendCommand`""
 
-Write-Host "Opening services in Windows Terminal tabs..."
+$wtArgs = ($tabs -join ' ; ')
 
-# Gọi wt.exe (Windows Terminal) với danh sách tham số đã tạo
+Write-Host "Opening backend services and frontend in Windows Terminal tabs..."
 Start-Process wt -ArgumentList $wtArgs

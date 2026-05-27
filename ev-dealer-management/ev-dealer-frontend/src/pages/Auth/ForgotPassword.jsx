@@ -81,7 +81,17 @@ const ForgotPassword = () => {
       setSuccess(true)
       setEmail('')
     } catch (err) {
-      setError(err || 'Gửi link thất bại. Vui lòng thử lại.')
+      let errorMessage = 'Gửi link thất bại. Vui lòng thử lại.'
+      
+      if (err?.response?.data?.message) {
+        errorMessage = err.response.data.message
+      } else if (err?.message) {
+        errorMessage = err.message
+      } else if (typeof err === 'string') {
+        errorMessage = err
+      }
+      
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }

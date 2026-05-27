@@ -16,18 +16,16 @@ namespace SalesService.Controllers
     {
         private readonly SalesDbContext _context;
         private readonly ILogger<QuotesController> _logger;
-        private readonly IMessagePublisher _messagePublisher;
         private readonly IConfiguration _configuration;
 
+        // RabbitMQ removed for simplified local development
         public QuotesController(
             SalesDbContext context, 
             ILogger<QuotesController> logger,
-            IMessagePublisher messagePublisher,
             IConfiguration configuration)
         {
             _context = context;
             _logger = logger;
-            _messagePublisher = messagePublisher;
             _configuration = configuration;
         }
 
@@ -153,14 +151,13 @@ namespace SalesService.Controllers
                         CreatedAt = quote.CreatedAt
                     };
 
-                    var quoteCreatedQueue = _configuration["RabbitMQ:Queues:QuoteCreated"] ?? "quote.created";
-                    await _messagePublisher.PublishMessageAsync(quoteCreatedQueue, quoteCreatedEvent);
-                    _logger.LogInformation("Published QuoteCreated event for Quote {QuoteId}", quote.Id);
+                    // RabbitMQ removed for simplified local development - quote event publishing disabled
+                    _logger.LogInformation("Quote created for Quote {QuoteId} (Message publishing disabled)", quote.Id);
                 }
                 catch (Exception ex)
                 {
                     // Log error but don't fail the request
-                    _logger.LogError(ex, "Error publishing QuoteCreated event to RabbitMQ for Quote {QuoteId}", quote.Id);
+                    _logger.LogError(ex, "Error processing QuoteCreated event for Quote {QuoteId}", quote.Id);
                 }
 
                 return CreatedAtAction(nameof(GetAllQuotes), new { id = quote.Id }, quote); // Return 201 Created
