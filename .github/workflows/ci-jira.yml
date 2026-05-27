@@ -48,7 +48,7 @@ jobs:
           echo "keys=$keys" >> "$GITHUB_OUTPUT"
 
       - name: Validate Postman collection
-        run: node .github/scripts/validate-postman.mjs ./ev-dealer-management.postman_collection.json
+        run: node .github/scripts/validate-postman.mjs ./postman/ev-dealer-management.postman_collection.json
 
       - name: Restore solution
         run: dotnet restore ev-dealer-management/ev-dealer-management/DealerSystem.sln
