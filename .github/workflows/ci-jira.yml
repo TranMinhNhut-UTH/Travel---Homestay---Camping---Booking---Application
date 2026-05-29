@@ -27,6 +27,9 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install Newman
+        run: npm install -g newman
+
       - name: Validate branch naming
         shell: bash
         run: |
@@ -51,7 +54,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          node .github/scripts/validate-postman.mjs ./postman/ev-dealer-management.postman_collection.json 2>&1 | tee postman-validation.log
+          node .github/scripts/validate-postman.mjs ./ev-dealer-management/ev-dealer-management/EV\ Dealer\ Management\ API.postman_collection.json 2>&1 | tee postman-validation.log
 
       - name: Restore solution
         run: dotnet restore ev-dealer-management/ev-dealer-management/DealerSystem.sln
@@ -61,6 +64,65 @@ jobs:
         run: |
           set -o pipefail
           dotnet build ev-dealer-management/ev-dealer-management/DealerSystem.sln --configuration Release --no-restore 2>&1 | tee dotnet-build.log
+
+      - name: Start backend services
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ci-logs
+
+          wait_for_port() {
+            local port="$1"
+            local name="$2"
+            for _ in $(seq 1 60); do
+              if timeout 1 bash -c "</dev/tcp/127.0.0.1/${port}" >/dev/null 2>&1; then
+                echo "${name} is ready on ${port}"
+                return 0
+              fi
+              sleep 5
+            done
+            echo "Timed out waiting for ${name} on port ${port}"
+            exit 1
+          }
+
+          start_service() {
+            local name="$1"
+            local port="$2"
+            local project="$3"
+            echo "Starting ${name} on ${port}"
+            nohup env ASPNETCORE_URLS="http://127.0.0.1:${port}" dotnet run --project "${project}" --no-launch-profile > "ci-logs/${name}.log" 2>&1 &
+          }
+
+          docker compose -f ev-dealer-management/ev-dealer-management/docker-compose.yml up -d rabbitmq
+
+          start_service UserService 7001 ev-dealer-management/ev-dealer-management/UserService/UserService.csproj
+          start_service CustomerService 5039 ev-dealer-management/ev-dealer-management/CustomerService/CustomerService.csproj
+          start_service NotificationService 5051 ev-dealer-management/ev-dealer-management/NotificationService/NotificationService.csproj
+          start_service ReportingService 5208 ev-dealer-management/ev-dealer-management/ReportingService/ReportingService.csproj
+
+          wait_for_port 7001 UserService
+          wait_for_port 5039 CustomerService
+          wait_for_port 5051 NotificationService
+          wait_for_port 5208 ReportingService
+
+          wait_for_port 5672 RabbitMQ
+
+          start_service VehicleService 5068 ev-dealer-management/ev-dealer-management/VehicleService/VehicleService.csproj
+          start_service SalesService 5003 ev-dealer-management/ev-dealer-management/SalesService/SalesService.csproj
+
+          wait_for_port 5068 VehicleService
+          wait_for_port 5003 SalesService
+
+          start_service APIGatewayService 5036 ev-dealer-management/ev-dealer-management/APIGatewayService/APIGatewayService.csproj
+          wait_for_port 5036 APIGatewayService
+
+      - name: Run Postman API Tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          newman run "ev-dealer-management/ev-dealer-management/EV Dealer Management API.postman_collection.json" \
+            --env-var "baseUrl=http://127.0.0.1:5036" \
+            --reporters cli 2>&1 | tee newman.log
 
       - name: Comment failure back to Jira
         if: failure()
@@ -94,13 +156,14 @@ jobs:
           const workflowName = process.env.GITHUB_WORKFLOW_NAME || 'CI';
           const postmanLog = fs.existsSync('postman-validation.log') ? fs.readFileSync('postman-validation.log', 'utf8').trim() : '(not available)';
           const buildLog = fs.existsSync('dotnet-build.log') ? fs.readFileSync('dotnet-build.log', 'utf8').trim() : '(not available)';
+          const newmanLog = fs.existsSync('newman.log') ? fs.readFileSync('newman.log', 'utf8').trim() : '(not available)';
           const description = [
             `Workflow: ${workflowName}`,
             `Run: ${process.env.GITHUB_RUN_URL || ''}`,
             `Branch: ${process.env.GITHUB_REF_NAME || ''}`,
             '',
             'Failed paths:',
-            '- ./postman/ev-dealer-management.postman_collection.json',
+            '- ./ev-dealer-management/ev-dealer-management/EV Dealer Management API.postman_collection.json',
             '- ev-dealer-management/ev-dealer-management/DealerSystem.sln',
             '',
             'Postman log:',
@@ -108,6 +171,9 @@ jobs:
             '',
             'Build log:',
             buildLog,
+            '',
+            'Newman log:',
+            newmanLog,
           ].join('\n');
 
           const fields = buildIssueFields({
