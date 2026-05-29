@@ -45,10 +45,17 @@ jobs:
         id: jira_keys
         shell: bash
         run: |
-          text="${{ github.ref_name }} ${{ github.event.head_commit.message }}"
-          keys=$(printf '%s' "$text" | grep -oE '[A-Z][A-Z0-9]+-[0-9]+' || true)
-          keys=$(printf '%s' "$keys" | sort -u | tr '\n' ',' | sed 's/,$//')
-          echo "keys=$keys" >> "$GITHUB_OUTPUT"
+          extract_keys() {
+            printf '%s' "$1" | grep -oE 'ED-[0-9]+' || true
+          }
+
+          branch_keys=$(extract_keys "${{ github.ref_name }}")
+          commit_keys=$(extract_keys "${{ github.event.head_commit.message }}")
+          all_keys=$(printf '%s\n%s\n' "$branch_keys" "$commit_keys" | awk 'NF && !seen[$0]++' | paste -sd, -)
+          primary_key=$(printf '%s\n%s\n' "$branch_keys" "$commit_keys" | awk 'NF { print; exit }')
+
+          echo "branch_key=$primary_key" >> "$GITHUB_OUTPUT"
+          echo "keys=$all_keys" >> "$GITHUB_OUTPUT"
 
       - name: Validate Postman collection
         shell: bash
@@ -125,19 +132,18 @@ jobs:
             --reporters cli 2>&1 | tee newman.log
 
       - name: Comment failure back to Jira
-        if: failure()
-        continue-on-error: true
+        if: failure() && github.ref != 'refs/heads/main'
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          JIRA_ISSUE_KEYS: ${{ steps.jira_keys.outputs.keys }}
+          JIRA_ISSUE_KEYS: ${{ steps.jira_keys.outputs.branch_key }}
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
         run: node .github/scripts/jira-sync.mjs FAIL
 
       - name: Create Jira issue on CI failure
-        if: failure()
+        if: failure() && github.ref != 'refs/heads/main' && steps.jira_keys.outputs.branch_key != ''
         shell: bash
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
@@ -145,6 +151,8 @@ jobs:
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
           JIRA_PROJECT_KEY: ED
           JIRA_ISSUE_TYPE: Bug
+          JIRA_LINK_ISSUE_KEY: ${{ steps.jira_keys.outputs.branch_key }}
+          JIRA_TRANSITION_TO: In Progress
           GITHUB_WORKFLOW_NAME: ${{ github.workflow }}
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
@@ -152,9 +160,10 @@ jobs:
           set -euo pipefail
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          import { createIssue, buildIssueFields } from './.github/scripts/jira-client.mjs';
+          import { createIssue, buildIssueFields, linkIssues, transitionIssue } from './.github/scripts/jira-client.mjs';
 
           const workflowName = process.env.GITHUB_WORKFLOW_NAME || 'CI';
+          const branchKey = process.env.JIRA_LINK_ISSUE_KEY || '';
           const postmanLog = fs.existsSync('postman-validation.log') ? fs.readFileSync('postman-validation.log', 'utf8').trim() : '(not available)';
           const buildLog = fs.existsSync('dotnet-build.log') ? fs.readFileSync('dotnet-build.log', 'utf8').trim() : '(not available)';
           const newmanLog = fs.existsSync('newman.log') ? fs.readFileSync('newman.log', 'utf8').trim() : '(not available)';
@@ -162,6 +171,7 @@ jobs:
             `Workflow: ${workflowName}`,
             `Run: ${process.env.GITHUB_RUN_URL || ''}`,
             `Branch: ${process.env.GITHUB_REF_NAME || ''}`,
+            branchKey ? `Source issue: ${branchKey}` : '',
             '',
             'Failed paths:',
             '- ./ev-dealer-management/ev-dealer-management/EV Dealer Management API.postman_collection.json',
@@ -192,6 +202,27 @@ jobs:
             fields,
           });
 
+          if (branchKey) {
+            await linkIssues({
+              baseUrl: process.env.JIRA_BASE_URL,
+              email: process.env.JIRA_EMAIL,
+              apiToken: process.env.JIRA_API_TOKEN,
+              outwardIssueKey: result.key,
+              inwardIssueKey: branchKey,
+              linkType: 'Relates',
+            });
+          }
+
+          if ((process.env.JIRA_TRANSITION_TO || '').trim()) {
+            await transitionIssue({
+              baseUrl: process.env.JIRA_BASE_URL,
+              email: process.env.JIRA_EMAIL,
+              apiToken: process.env.JIRA_API_TOKEN,
+              issueKey: result.key,
+              transitionName: process.env.JIRA_TRANSITION_TO,
+            });
+          }
+
           console.log(JSON.stringify(result, null, 2));
           NODE
 
@@ -201,7 +232,7 @@ jobs:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          JIRA_ISSUE_KEYS: ${{ steps.jira_keys.outputs.keys }}
+          JIRA_ISSUE_KEYS: ${{ steps.jira_keys.outputs.branch_key }}
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
           JIRA_TRANSITION_IN_PROGRESS: In Progress
@@ -224,17 +255,24 @@ jobs:
         id: jira_keys
         shell: bash
         run: |
-          text="${{ github.event.pull_request.head.ref }} ${{ github.event.pull_request.title }} ${{ github.event.pull_request.body }}"
-          keys=$(printf '%s' "$text" | grep -oE '[A-Z][A-Z0-9]+-[0-9]+' || true)
-          keys=$(printf '%s' "$keys" | sort -u | tr '\n' ',' | sed 's/,$//')
-          echo "keys=$keys" >> "$GITHUB_OUTPUT"
+          extract_keys() {
+            printf '%s' "$1" | grep -oE 'ED-[0-9]+' || true
+          }
+
+          branch_keys=$(extract_keys "${{ github.event.pull_request.head.ref }}")
+          pr_keys=$(extract_keys "${{ github.event.pull_request.title }} ${{ github.event.pull_request.body }}")
+          all_keys=$(printf '%s\n%s\n' "$branch_keys" "$pr_keys" | awk 'NF && !seen[$0]++' | paste -sd, -)
+          primary_key=$(printf '%s\n%s\n' "$branch_keys" "$pr_keys" | awk 'NF { print; exit }')
+
+          echo "branch_key=$primary_key" >> "$GITHUB_OUTPUT"
+          echo "keys=$all_keys" >> "$GITHUB_OUTPUT"
 
       - name: Move Jira issues to Done after merged PR
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          JIRA_ISSUE_KEYS: ${{ steps.jira_keys.outputs.keys }}
+          JIRA_ISSUE_KEYS: ${{ steps.jira_keys.outputs.branch_key }}
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GITHUB_REF_NAME: ${{ github.event.pull_request.head.ref }}
           JIRA_TRANSITION_DONE: Done
