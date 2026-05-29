@@ -41,16 +41,6 @@ async function main() {
       continue;
     }
 
-    if (state === 'IN_PROGRESS') {
-      await addComment({ baseUrl, email, apiToken, issueKey, comment: `${comment}\nStatus: PASSED -> moving to In Progress` });
-      const target = process.env.JIRA_TRANSITION_IN_PROGRESS || 'In Progress';
-      const result = await transitionIssue({ baseUrl, email, apiToken, issueKey, transitionName: target });
-      console.log(`Transitioned issue key: ${issueKey}`);
-      console.log(`Target status: ${target}`);
-      console.log(`Transition result: ${JSON.stringify(result)}`);
-      continue;
-    }
-
     if (state === 'DONE') {
       await addComment({ baseUrl, email, apiToken, issueKey, comment: `${comment}\nStatus: MERGED -> moving to Done` });
       const target = process.env.JIRA_TRANSITION_DONE || 'DONE';

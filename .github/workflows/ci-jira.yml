@@ -162,7 +162,6 @@ jobs:
           JIRA_PROJECT_KEY: ED
           JIRA_ISSUE_TYPE: Bug
           JIRA_LINK_ISSUE_KEY: ${{ steps.jira_keys.outputs.branch_key }}
-          JIRA_TRANSITION_TO: In Progress
           JIRA_BRANCH_TYPE: ${{ steps.jira_keys.outputs.branch_type }}
           GITHUB_WORKFLOW_NAME: ${{ github.workflow }}
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -171,7 +170,7 @@ jobs:
           set -euo pipefail
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          import { createIssue, buildIssueFields, linkIssues, transitionIssue } from './.github/scripts/jira-client.mjs';
+          import { createIssue, buildIssueFields, linkIssues } from './.github/scripts/jira-client.mjs';
 
           const workflowName = process.env.GITHUB_WORKFLOW_NAME || 'CI';
           const branchKey = process.env.JIRA_LINK_ISSUE_KEY || '';
@@ -229,33 +228,8 @@ jobs:
             console.log(`Linked issues: ${result.key} -> ${branchKey}`);
           }
 
-          if ((process.env.JIRA_TRANSITION_TO || '').trim()) {
-            const transitionResult = await transitionIssue({
-              baseUrl: process.env.JIRA_BASE_URL,
-              email: process.env.JIRA_EMAIL,
-              apiToken: process.env.JIRA_API_TOKEN,
-              issueKey: result.key,
-              transitionName: process.env.JIRA_TRANSITION_TO,
-            });
-            console.log(`Transitioned issue key: ${result.key}`);
-            console.log(`Target status: ${process.env.JIRA_TRANSITION_TO}`);
-            console.log(`Transition result: ${JSON.stringify(transitionResult)}`);
-          }
-
           console.log(JSON.stringify(result, null, 2));
           NODE
-
-      - name: Move Jira issues to In Progress after pass on push
-        if: success() && github.ref != 'refs/heads/main'
-        env:
-          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
-          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          JIRA_ISSUE_KEYS: ${{ steps.jira_keys.outputs.branch_key }}
-          GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          GITHUB_REF_NAME: ${{ github.ref_name }}
-          JIRA_TRANSITION_IN_PROGRESS: In Progress
-        run: node .github/scripts/jira-sync.mjs IN_PROGRESS
 
   merge-pr-to-done:
     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
