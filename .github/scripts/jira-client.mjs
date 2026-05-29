@@ -54,6 +54,23 @@ export async function createIssue({ baseUrl, email, apiToken, fields }) {
   });
 }
 
+export async function linkIssues({ baseUrl, email, apiToken, outwardIssueKey, inwardIssueKey, linkType = 'Relates' }) {
+  if (!outwardIssueKey || !inwardIssueKey || outwardIssueKey === inwardIssueKey) {
+    return { skipped: true };
+  }
+
+  await jiraRequest(baseUrl, email, apiToken, '/issueLink', {
+    method: 'POST',
+    body: {
+      type: { name: linkType },
+      outwardIssue: { key: outwardIssueKey },
+      inwardIssue: { key: inwardIssueKey },
+    },
+  });
+
+  return { skipped: false };
+}
+
 export async function getTransitions({ baseUrl, email, apiToken, issueKey }) {
   const data = await jiraRequest(baseUrl, email, apiToken, `/issue/${encodeURIComponent(issueKey)}/transitions`);
   return data.transitions || [];
