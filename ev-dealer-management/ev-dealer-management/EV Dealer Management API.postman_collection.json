@@ -18,8 +18,8 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"FORCE CI FAIL - Login status must be 999\", function () {\r",
-                  "    pm.response.to.have.status(999);\r",
+                  "pm.test(\"Login status should be 200 or 400\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 400]);\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -30,8 +30,12 @@
             {
               "listen": "prerequest",
               "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
                 "packages": {},
-                "type": "text/javascript"
+                "requests": {}
               }
             }
           ],
