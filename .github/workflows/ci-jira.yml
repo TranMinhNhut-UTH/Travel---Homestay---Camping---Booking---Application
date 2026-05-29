@@ -45,17 +45,27 @@ jobs:
         id: jira_keys
         shell: bash
         run: |
-          extract_keys() {
-            printf '%s' "$1" | grep -oE 'ED-[0-9]+' || true
-          }
+          branch="${{ github.ref_name }}"
+          branch_type="other"
+          if [[ "$branch" == feature/* ]]; then
+            branch_type="feature"
+          elif [[ "$branch" == fix/* ]]; then
+            branch_type="fix"
+          elif [[ "$branch" == hotfix/* ]]; then
+            branch_type="hotfix"
+          elif [[ "$branch" == chore/* ]]; then
+            branch_type="chore"
+          fi
 
-          branch_keys=$(extract_keys "${{ github.ref_name }}")
-          commit_keys=$(extract_keys "${{ github.event.head_commit.message }}")
-          all_keys=$(printf '%s\n%s\n' "$branch_keys" "$commit_keys" | awk 'NF && !seen[$0]++' | paste -sd, -)
-          primary_key=$(printf '%s\n%s\n' "$branch_keys" "$commit_keys" | awk 'NF { print; exit }')
+          primary_key=$(printf '%s' "$branch" | grep -oE 'ED-[0-9]+' | head -n1 || true)
 
+          echo "branch_type=$branch_type" >> "$GITHUB_OUTPUT"
           echo "branch_key=$primary_key" >> "$GITHUB_OUTPUT"
-          echo "keys=$all_keys" >> "$GITHUB_OUTPUT"
+          echo "keys=$primary_key" >> "$GITHUB_OUTPUT"
+
+          echo "Detected branch: $branch"
+          echo "Detected branch type: $branch_type"
+          echo "Detected branch issue key: ${primary_key:-<none>}"
 
       - name: Validate Postman collection
         shell: bash
@@ -143,7 +153,7 @@ jobs:
         run: node .github/scripts/jira-sync.mjs FAIL
 
       - name: Create Jira issue on CI failure
-        if: failure() && github.ref != 'refs/heads/main' && steps.jira_keys.outputs.branch_key != ''
+        if: failure() && github.ref != 'refs/heads/main' && steps.jira_keys.outputs.branch_type == 'feature' && steps.jira_keys.outputs.branch_key != ''
         shell: bash
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
@@ -153,6 +163,7 @@ jobs:
           JIRA_ISSUE_TYPE: Bug
           JIRA_LINK_ISSUE_KEY: ${{ steps.jira_keys.outputs.branch_key }}
           JIRA_TRANSITION_TO: In Progress
+          JIRA_BRANCH_TYPE: ${{ steps.jira_keys.outputs.branch_type }}
           GITHUB_WORKFLOW_NAME: ${{ github.workflow }}
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
@@ -164,6 +175,9 @@ jobs:
 
           const workflowName = process.env.GITHUB_WORKFLOW_NAME || 'CI';
           const branchKey = process.env.JIRA_LINK_ISSUE_KEY || '';
+          const branchType = process.env.JIRA_BRANCH_TYPE || 'unknown';
+          console.log(`Detected branch type: ${branchType}`);
+          console.log(`Detected parent issue key: ${branchKey || '<none>'}`);
           const postmanLog = fs.existsSync('postman-validation.log') ? fs.readFileSync('postman-validation.log', 'utf8').trim() : '(not available)';
           const buildLog = fs.existsSync('dotnet-build.log') ? fs.readFileSync('dotnet-build.log', 'utf8').trim() : '(not available)';
           const newmanLog = fs.existsSync('newman.log') ? fs.readFileSync('newman.log', 'utf8').trim() : '(not available)';
@@ -201,6 +215,7 @@ jobs:
             apiToken: process.env.JIRA_API_TOKEN,
             fields,
           });
+          console.log(`Dynamically created bug key: ${result.key}`);
 
           if (branchKey) {
             await linkIssues({
@@ -211,16 +226,20 @@ jobs:
               inwardIssueKey: branchKey,
               linkType: 'Relates',
             });
+            console.log(`Linked issues: ${result.key} -> ${branchKey}`);
           }
 
           if ((process.env.JIRA_TRANSITION_TO || '').trim()) {
-            await transitionIssue({
+            const transitionResult = await transitionIssue({
               baseUrl: process.env.JIRA_BASE_URL,
               email: process.env.JIRA_EMAIL,
               apiToken: process.env.JIRA_API_TOKEN,
               issueKey: result.key,
               transitionName: process.env.JIRA_TRANSITION_TO,
             });
+            console.log(`Transitioned issue key: ${result.key}`);
+            console.log(`Target status: ${process.env.JIRA_TRANSITION_TO}`);
+            console.log(`Transition result: ${JSON.stringify(transitionResult)}`);
           }
 
           console.log(JSON.stringify(result, null, 2));
@@ -255,19 +274,29 @@ jobs:
         id: jira_keys
         shell: bash
         run: |
-          extract_keys() {
-            printf '%s' "$1" | grep -oE 'ED-[0-9]+' || true
-          }
+          branch="${{ github.event.pull_request.head.ref }}"
+          branch_type="other"
+          if [[ "$branch" == feature/* ]]; then
+            branch_type="feature"
+          elif [[ "$branch" == fix/* ]]; then
+            branch_type="fix"
+          elif [[ "$branch" == hotfix/* ]]; then
+            branch_type="hotfix"
+          elif [[ "$branch" == chore/* ]]; then
+            branch_type="chore"
+          fi
 
-          branch_keys=$(extract_keys "${{ github.event.pull_request.head.ref }}")
-          pr_keys=$(extract_keys "${{ github.event.pull_request.title }} ${{ github.event.pull_request.body }}")
-          all_keys=$(printf '%s\n%s\n' "$branch_keys" "$pr_keys" | awk 'NF && !seen[$0]++' | paste -sd, -)
-          primary_key=$(printf '%s\n%s\n' "$branch_keys" "$pr_keys" | awk 'NF { print; exit }')
-
+          primary_key=$(printf '%s' "$branch" | grep -oE 'ED-[0-9]+' | head -n1 || true)
+          echo "branch_type=$branch_type" >> "$GITHUB_OUTPUT"
           echo "branch_key=$primary_key" >> "$GITHUB_OUTPUT"
-          echo "keys=$all_keys" >> "$GITHUB_OUTPUT"
+          echo "keys=$primary_key" >> "$GITHUB_OUTPUT"
+
+          echo "Detected PR branch: $branch"
+          echo "Detected branch type: $branch_type"
+          echo "Detected branch issue key: ${primary_key:-<none>}"
 
       - name: Move Jira issues to Done after merged PR
+        if: steps.jira_keys.outputs.branch_type == 'fix' && steps.jira_keys.outputs.branch_key != ''
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}

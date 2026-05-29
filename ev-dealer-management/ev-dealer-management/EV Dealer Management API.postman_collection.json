@@ -18,8 +18,8 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Login status should be 200 or 400\", function () {\r",
-                  "    pm.expect(pm.response.code).to.be.oneOf([200, 400]);\r",
+                  "pm.test(\"FORCE FAIL\", function () {\r",
+                  "    pm.response.to.have.status(999);\r",
                   "});"
                 ],
                 "type": "text/javascript",
