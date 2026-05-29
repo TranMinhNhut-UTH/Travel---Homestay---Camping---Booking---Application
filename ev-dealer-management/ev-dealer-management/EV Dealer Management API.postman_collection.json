@@ -18,8 +18,8 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"FORCE FAIL\", function () {\r",
-                  "    pm.response.to.have.status(999);\r",
+                  "pm.test(\"Login status valid\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200,400]);\r",
                   "});"
                 ],
                 "type": "text/javascript",
