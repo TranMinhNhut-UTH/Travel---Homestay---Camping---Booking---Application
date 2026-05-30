@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/api/vehicles"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+body:
+  type: text
+  content: |-
+    {
+      "Model": "VinFast VF 8",
+      "Type": "SUV",
+      "Price": 1200000000,
+      "BatteryCapacity": 87.7,
+      "Range": 420,
+      "StockQuantity": 5,
+      "Description": "Demo vehicle",
+      "DealerId": {{dealerId}}
+    }
+order: 3000

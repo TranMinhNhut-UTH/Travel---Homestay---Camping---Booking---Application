@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{reportingServiceUrl}}/api/reports/debt-summary?dealerId={{dealerId}}&customerId={{customerId}}&from={{reportFrom}}&to={{reportTo}}"
+method: GET
+queryParams:
+  dealerId: "{{dealerId}}"
+  customerId: "{{customerId}}"
+  from: "{{reportFrom}}"
+  to: "{{reportTo}}"
+order: 3000

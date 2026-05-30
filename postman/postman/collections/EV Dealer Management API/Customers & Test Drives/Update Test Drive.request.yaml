@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{baseUrl}}/api/TestDrives/{{testDriveId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+body:
+  type: text
+  content: |-
+    {
+      "appointmentDate": "2026-06-02T10:00:00Z",
+      "status": "Completed",
+      "notes": "Completed demo"
+    }
+order: 10000

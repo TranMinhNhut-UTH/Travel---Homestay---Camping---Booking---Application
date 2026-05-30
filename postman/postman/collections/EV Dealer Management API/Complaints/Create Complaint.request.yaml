@@ -1,0 +1,41 @@
+$kind: http-request
+name: Create Complaint
+url: http://localhost:5039/api/Complaints
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+body:
+  type: text
+  content: |-
+    {
+      "customerId": {{customerId}},
+      "type": "Bao hanh",
+      "title": "Remote not working",
+      "description": "Customer reports a broken remote",
+      "assignedToStaffID": 10,
+      "priority": "High",
+      "relatedOrderID": {{orderId}},
+      "relatedVehicleID": {{vehicleId}}
+    }
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Complaint created\", function () {\r
+
+      \    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r
+
+      });\r
+
+      \r
+
+      const data = pm.response.json();\r
+
+      \r
+
+      if (data.id) {\r
+
+      \    pm.environment.set(\"complaintId\", data.id);\r
+
+      }"
+    language: text/javascript
+order: 3000

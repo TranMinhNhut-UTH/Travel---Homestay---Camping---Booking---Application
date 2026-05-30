@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{baseUrl}}/api/customers/{{customerId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+body:
+  type: text
+  content: |-
+    {
+      "name": "Nguyen Van B Updated",
+      "email": "customer.updated@example.com",
+      "phone": "+84923456780",
+      "address": "Hai Phong",
+      "dealerId": {{dealerId}},
+      "status": "active"
+    }
+order: 4000

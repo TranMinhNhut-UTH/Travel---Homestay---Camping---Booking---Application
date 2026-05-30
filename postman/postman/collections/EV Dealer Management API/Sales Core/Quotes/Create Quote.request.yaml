@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{salesServiceUrl}}/api/Quotes"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+body:
+  type: text
+  content: |-
+    {
+      "customerId": {{customerId}},
+      "dealerId": {{dealerId}},
+      "salespersonId": 1,
+      "vehicleId": {{vehicleId}},
+      "colorId": 1,
+      "quantity": 1,
+      "unitPrice": 1200000000,
+      "totalPrice": 1200000000,
+      "status": "Active",
+      "notes": "Demo quote"
+    }
+order: 3000

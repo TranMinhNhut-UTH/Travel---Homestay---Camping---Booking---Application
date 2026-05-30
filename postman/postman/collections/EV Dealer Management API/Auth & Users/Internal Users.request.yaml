@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{userServiceUrl}}/api/internal/users"
+method: GET
+order: 28000

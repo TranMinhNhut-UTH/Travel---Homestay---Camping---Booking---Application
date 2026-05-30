@@ -1,0 +1,48 @@
+name: EV Dealer Management Local
+values:
+  - key: baseUrl
+    value: 'http://localhost:5036'
+  - key: gatewayUrl
+    value: 'http://localhost:5036'
+  - key: userServiceUrl
+    value: 'http://localhost:7001'
+  - key: vehicleServiceUrl
+    value: 'http://localhost:5068'
+  - key: customerServiceUrl
+    value: 'http://localhost:5039'
+  - key: salesServiceUrl
+    value: 'http://localhost:5003'
+  - key: notificationServiceUrl
+    value: 'http://localhost:5051'
+  - key: reportingServiceUrl
+    value: 'http://localhost:5208'
+  - key: authToken
+    value: ''
+  - key: userId
+    value: '1'
+  - key: dealerId
+    value: '1'
+  - key: vehicleId
+    value: '1'
+  - key: customerId
+    value: '1'
+  - key: testDriveId
+    value: '1'
+  - key: complaintId
+    value: '1'
+  - key: quoteId
+    value: '1'
+  - key: orderId
+    value: '1'
+  - key: contractId
+    value: '1'
+  - key: promotionId
+    value: '1'
+  - key: reportFrom
+    value: '2026-01-01'
+  - key: reportTo
+    value: '2026-12-31'
+  - key: topic
+    value: ev-dealer-updates
+  - key: deviceToken
+    value: sample-device-token

@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{salesServiceUrl}}/api/Payments"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+body:
+  type: text
+  content: |-
+    {
+      "orderId": {{orderId}},
+      "amount": 1200000000,
+      "paymentDate": "2026-06-10T09:00:00Z",
+      "paymentMethod": "Cash",
+      "status": "Completed",
+      "transactionId": "TXN-001",
+      "notes": "Demo payment"
+    }
+order: 2000

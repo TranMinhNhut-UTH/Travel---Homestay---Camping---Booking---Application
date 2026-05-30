@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{notificationServiceUrl}}/api/notification/unsubscribe-topic"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "deviceToken": "{{deviceToken}}",
+      "topic": "{{topic}}"
+    }
+order: 3000

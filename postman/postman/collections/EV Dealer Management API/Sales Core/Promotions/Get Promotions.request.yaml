@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{salesServiceUrl}}/api/Promotions"
+method: GET
+order: 1000

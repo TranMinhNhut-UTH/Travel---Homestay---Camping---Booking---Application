@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/api/Contracts/{{contractId}}/status"
+method: PUT
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+body:
+  type: text
+  content: |-
+    {
+      "status": "Approved"
+    }
+order: 4000

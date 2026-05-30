@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{baseUrl}}/api/vehicles/{{vehicleId}}/reserve"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+body:
+  type: text
+  content: |-
+    {
+      "customerName": "Nguyen Van A",
+      "customerEmail": "customer@example.com",
+      "customerPhone": "+84912345678",
+      "colorVariantId": 1,
+      "notes": "Reserve for demo",
+      "quantity": 1,
+      "deviceToken": "{{deviceToken}}"
+    }
+order: 6000

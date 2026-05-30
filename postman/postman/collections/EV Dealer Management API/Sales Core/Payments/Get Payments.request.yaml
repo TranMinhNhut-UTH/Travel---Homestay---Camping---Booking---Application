@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{salesServiceUrl}}/api/Payments"
+method: GET
+order: 1000

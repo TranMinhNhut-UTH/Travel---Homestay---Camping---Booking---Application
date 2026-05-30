@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{reportingServiceUrl}}/api/reports/sales-by-dealer?dealerId={{dealerId}}&period=month"
+method: GET
+queryParams:
+  dealerId: "{{dealerId}}"
+  period: month
+order: 5000

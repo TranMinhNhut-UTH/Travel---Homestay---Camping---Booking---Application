@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{baseUrl}}/api/admin/users"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+body:
+  type: text
+  content: |-
+    {
+      "username": "staff01",
+      "email": "staff01@example.com",
+      "fullName": "Staff 01",
+      "password": "P@ssw0rd!",
+      "role": "Staff",
+      "dealerId": {{dealerId}}
+    }
+order: 14000

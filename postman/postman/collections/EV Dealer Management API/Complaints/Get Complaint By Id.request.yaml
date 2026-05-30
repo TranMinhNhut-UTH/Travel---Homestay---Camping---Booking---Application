@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{customerServiceUrl}}/api/Complaints/{{complaintId}}"
+method: GET
+order: 2000

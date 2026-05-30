@@ -1,0 +1,47 @@
+$kind: http-request
+name: Create Customer
+url: http://localhost:5039/api/customers
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+body:
+  type: text
+  content: |-
+    {
+      "name": "Nguyen Van B",
+      "email": "customer@example.com",
+      "phone": "+84923456789",
+      "address": "Ha Noi",
+      "dealerId": {{dealerId}},
+      "status": "active"
+    }
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Customer created successfully\", function () {\r
+
+      \    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r
+
+      });\r
+
+      \r
+
+      const data = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Customer has ID\", function () {\r
+
+      \    pm.expect(data.id).to.exist;\r
+
+      });\r
+
+      \r
+
+      if (data.id) {\r
+
+      \    pm.environment.set(\"customerId\", data.id);\r
+
+      }"
+    language: text/javascript
+order: 3000

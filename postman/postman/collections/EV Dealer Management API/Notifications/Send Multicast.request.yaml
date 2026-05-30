@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{notificationServiceUrl}}/api/notification/send-multicast"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "deviceTokens": ["{{deviceToken}}"],
+      "title": "Multicast",
+      "body": "Hello multiple devices",
+      "data": { "source": "postman" }
+    }
+order: 5000

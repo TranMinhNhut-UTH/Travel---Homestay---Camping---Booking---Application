@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/api/dealers/{{dealerId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+body:
+  type: text
+  content: |-
+    {
+      "name": "VinFast Ha Noi Updated",
+      "region": "Ha Noi",
+      "contact": "0900000001",
+      "email": "dealer.updated@example.com",
+      "address": "456 Demo Street"
+    }
+order: 10000

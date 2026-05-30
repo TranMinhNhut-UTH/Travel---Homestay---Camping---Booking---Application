@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{customerServiceUrl}}/api/Complaints/{{complaintId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+body:
+  type: text
+  content: |-
+    {
+      "type": "Bao hanh",
+      "title": "Remote not working - updated",
+      "description": "Updated description",
+      "status": "In Progress",
+      "resolution": "Under investigation",
+      "assignedToStaffID": 10,
+      "priority": "High",
+      "relatedOrderID": {{orderId}},
+      "relatedVehicleID": {{vehicleId}}
+    }
+order: 4000

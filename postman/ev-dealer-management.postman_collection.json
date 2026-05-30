@@ -19,7 +19,7 @@
     }
   ],
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:5036" },
+    { "key": "baseUrl", "value": "http://localhost:5039" },
     { "key": "gatewayUrl", "value": "http://localhost:5036" },
     { "key": "userServiceUrl", "value": "http://localhost:7001" },
     { "key": "vehicleServiceUrl", "value": "http://localhost:5068" },

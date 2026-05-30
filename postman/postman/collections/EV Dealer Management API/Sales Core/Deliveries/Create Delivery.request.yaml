@@ -1,0 +1,16 @@
+$kind: http-request
+url: "{{salesServiceUrl}}/api/Deliveries"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+body:
+  type: text
+  content: |-
+    {
+      "orderId": {{orderId}},
+      "estimatedDeliveryDate": "2026-06-15T09:00:00Z",
+      "status": "Scheduled",
+      "notes": "Demo delivery"
+    }
+order: 2000

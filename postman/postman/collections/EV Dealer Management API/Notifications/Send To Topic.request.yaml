@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{notificationServiceUrl}}/api/notification/send-to-topic"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "topic": "{{topic}}",
+      "title": "Broadcast",
+      "body": "Hello topic",
+      "data": { "source": "postman" }
+    }
+order: 4000

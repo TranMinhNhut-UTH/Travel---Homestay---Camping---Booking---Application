@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{baseUrl}}/api/TestDrives/customer/{{customerId}}"
+method: GET
+order: 7000

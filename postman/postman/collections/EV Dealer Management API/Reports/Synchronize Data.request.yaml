@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{reportingServiceUrl}}/api/reports/synchronize-data"
+method: POST
+order: 2000

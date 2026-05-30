@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{notificationServiceUrl}}/api/notification/test-fcm"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "deviceToken": "{{deviceToken}}",
+      "title": "Test notification",
+      "body": "Hello from Postman",
+      "data": { "source": "postman" }
+    }
+order: 1000

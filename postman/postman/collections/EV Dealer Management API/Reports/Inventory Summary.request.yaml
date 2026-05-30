@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{reportingServiceUrl}}/api/reports/inventory-summary?dealerId={{dealerId}}&vehicleId={{vehicleId}}"
+method: GET
+queryParams:
+  dealerId: "{{dealerId}}"
+  vehicleId: "{{vehicleId}}"
+order: 14000

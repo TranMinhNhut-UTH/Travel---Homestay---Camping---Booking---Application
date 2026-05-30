@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{salesServiceUrl}}/api/Deliveries"
+method: GET
+order: 1000

@@ -1,0 +1,7 @@
+$kind: http-request
+name: Get User By Id
+url: "{{baseUrl}}/api/users/{{userId}}"
+method: GET
+headers:
+  Authorization: Bearer {{authToken}}
+order: 15000

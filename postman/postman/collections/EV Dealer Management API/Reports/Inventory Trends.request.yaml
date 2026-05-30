@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{reportingServiceUrl}}/api/reports/inventory-trends"
+method: GET
+order: 6000

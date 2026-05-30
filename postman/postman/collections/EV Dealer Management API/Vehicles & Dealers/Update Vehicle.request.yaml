@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/api/vehicles/{{vehicleId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+body:
+  type: text
+  content: |-
+    {
+      "Model": "VinFast VF 8 Plus",
+      "Type": "SUV",
+      "Price": 1300000000,
+      "BatteryCapacity": 87.7,
+      "Range": 450,
+      "StockQuantity": 4,
+      "Description": "Updated vehicle",
+      "DealerId": {{dealerId}}
+    }
+order: 4000

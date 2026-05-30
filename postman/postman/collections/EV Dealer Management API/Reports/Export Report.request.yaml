@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{reportingServiceUrl}}/api/reports/export"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "type": "sales",
+      "from": "{{reportFrom}}",
+      "to": "{{reportTo}}"
+    }
+order: 12000

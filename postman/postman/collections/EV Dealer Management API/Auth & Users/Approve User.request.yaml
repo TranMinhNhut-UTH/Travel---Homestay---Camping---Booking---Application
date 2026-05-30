@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/api/users/{{userId}}/approve"
+method: PUT
+headers:
+  Authorization: Bearer {{authToken}}
+order: 24000

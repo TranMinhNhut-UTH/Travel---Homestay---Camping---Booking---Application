@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{salesServiceUrl}}/api/Promotions"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+body:
+  type: text
+  content: |-
+    {
+      "name": "SUMMER2026",
+      "description": "Summer promotion",
+      "discountType": "Percent",
+      "discountValue": 10,
+      "startDate": "2026-06-01T00:00:00Z",
+      "endDate": "2026-08-31T23:59:59Z"
+    }
+order: 2000

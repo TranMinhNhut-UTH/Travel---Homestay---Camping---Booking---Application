@@ -1,0 +1,32 @@
+$kind: collection
+description: Importable Postman v2.1 collection for the current EV Dealer Management project.
+variables:
+  baseUrl: http://localhost:5036
+  gatewayUrl: http://localhost:5036
+  userServiceUrl: http://localhost:7001
+  vehicleServiceUrl: http://localhost:5068
+  customerServiceUrl: http://localhost:5039
+  salesServiceUrl: http://localhost:5003
+  notificationServiceUrl: http://localhost:5051
+  reportingServiceUrl: http://localhost:5208
+  authToken: ""
+  userId: "1"
+  dealerId: "1"
+  vehicleId: "1"
+  customerId: "1"
+  testDriveId: "1"
+  complaintId: "1"
+  quoteId: "1"
+  orderId: "1"
+  contractId: "1"
+  reportFrom: 2026-01-01
+  reportTo: 2026-12-31
+  topic: ev-dealer-updates
+  deviceToken: sample-device-token
+scripts:
+  - type: http:beforeRequest
+    code: |-
+      if (!pm.collectionVariables.get('baseUrl')) {
+        pm.collectionVariables.set('baseUrl', 'http://localhost:5036');
+      }
+    language: text/javascript

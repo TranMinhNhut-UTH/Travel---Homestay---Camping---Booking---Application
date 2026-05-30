@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{reportingServiceUrl}}/api/reports/top-vehicles?limit=10"
+method: GET
+queryParams:
+  limit: "10"
+order: 11000
