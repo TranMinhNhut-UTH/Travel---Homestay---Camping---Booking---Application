@@ -1495,20 +1495,12 @@
                   "script": {
                     "exec": [
                       "pm.test(\"Status code is 200\", function () {\r",
-<<<<<<< Updated upstream
-                      "    pm.expect(pm.response.code).to.equal(200);\r",
-                      "});\r",
-                      "\r",
-                      "pm.test(\"Response is array\", function () {\r",
-                      "    pm.expect(pm.response.json()).to.be.an(\"array\");\r",
-=======
                       "    pm.response.to.have.status(200);\r",
                       "});\r",
                       "\r",
                       "pm.test(\"Response is array\", function () {\r",
                       "    const data = pm.response.json();\r",
                       "    pm.expect(data).to.be.an(\"array\");\r",
->>>>>>> Stashed changes
                       "});"
                     ],
                     "type": "text/javascript",
