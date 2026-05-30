@@ -1,6 +1,6 @@
 $kind: http-request
 name: Login
-url: "{{baseUrl}}/api/auth/login"
+url: http://localhost:7001/api/auth/login
 method: POST
 headers:
   Content-Type: application/json
@@ -8,7 +8,21 @@ body:
   type: text
   content: |-
     {
-      "username": "admin",
-      "password": "P@ssw0rd!"
+      "name": "Nguyen Van B",
+      "email": "{{randomEmail}}",
+      "phone": "+84923456789",
+      "address": "Ha Noi",
+      "dealerId": 1,
+      "status": "active"
     }
+scripts:
+  - type: beforeRequest
+    code: "pm.environment.set(\r
+
+      \  \"randomEmail\",\r
+
+      \  \"customer\" + Date.now() + \"@example.com\"\r
+
+      );"
+    language: text/javascript
 order: 1000

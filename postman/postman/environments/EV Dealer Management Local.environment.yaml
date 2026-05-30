@@ -46,3 +46,5 @@ values:
     value: ev-dealer-updates
   - key: deviceToken
     value: sample-device-token
+  - key: randomEmail
+    value: ''
