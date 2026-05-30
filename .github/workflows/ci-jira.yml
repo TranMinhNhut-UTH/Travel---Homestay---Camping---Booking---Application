@@ -71,7 +71,14 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          node .github/scripts/validate-postman.mjs ./ev-dealer-management/ev-dealer-management/EV\ Dealer\ Management\ API.postman_collection.json 2>&1 | tee postman-validation.log
+          # Tự động phát hiện file json của Postman dù Tiến đặt tên gì ở thư mục gốc
+          POSTMAN_FILE=$(find . -maxdepth 1 -name "*.json" | head -n 1)
+          if [ -f "$POSTMAN_FILE" ]; then
+            node .github/scripts/validate-postman.mjs "$POSTMAN_FILE" 2>&1 | tee postman-validation.log
+          else
+            echo "No Postman file found in root, fallback to default path"
+            node .github/scripts/validate-postman.mjs ./ev-dealer-management/ev-dealer-management/EV\ Dealer\ Management\ API.postman_collection.json 2>&1 | tee postman-validation.log
+          fi
 
       - name: Restore solution
         run: dotnet restore ev-dealer-management/ev-dealer-management/DealerSystem.sln
@@ -137,8 +144,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          newman run "ev-dealer-management/ev-dealer-management/EV Dealer Management API.postman_collection.json" \
+          # Định vị động file Postman mà Tiến push lên thư mục gốc để chạy test
+          POSTMAN_FILE=$(find . -maxdepth 1 -name "*.json" | head -n 1)
+          if [ ! -f "$POSTMAN_FILE" ]; then
+            POSTMAN_FILE="ev-dealer-management/ev-dealer-management/EV Dealer Management API.postman_collection.json"
+          fi
+          echo "Executing Newman with target collection: $POSTMAN_FILE"
+          
+          # Đúp cả 2 biến baseUrl và base_url để khớp với Postman script local của bạn
+          newman run "$POSTMAN_FILE" \
             --env-var "baseUrl=http://127.0.0.1:5036" \
+            --env-var "base_url=http://127.0.0.1:5036/api" \
             --reporters cli 2>&1 | tee newman.log
 
       - name: Comment failure back to Jira
@@ -187,8 +203,7 @@ jobs:
             branchKey ? `Source issue: ${branchKey}` : '',
             '',
             'Failed paths:',
-            '- ./ev-dealer-management/ev-dealer-management/EV Dealer Management API.postman_collection.json',
-            '- ev-dealer-management/ev-dealer-management/DealerSystem.sln',
+            '- Integration API collection tests failed.',
             '',
             'Postman log:',
             postmanLog,
@@ -202,7 +217,7 @@ jobs:
 
           const fields = buildIssueFields({
             projectKey: process.env.JIRA_PROJECT_KEY || 'ED',
-            summary: `CI Failure: ${workflowName}`,
+            summary: `CI Failure: ${workflowName} - Integration Error detected on ${branchKey}`,
             description,
             issueType: process.env.JIRA_ISSUE_TYPE || 'Bug',
             labels: ['automation', 'ci-failure'],
@@ -222,6 +237,7 @@ jobs:
               email: process.env.JIRA_EMAIL,
               apiToken: process.env.JIRA_API_TOKEN,
               outwardIssueKey: result.key,
+              indexKey: branchKey,
               inwardIssueKey: branchKey,
               linkType: 'Relates',
             });
