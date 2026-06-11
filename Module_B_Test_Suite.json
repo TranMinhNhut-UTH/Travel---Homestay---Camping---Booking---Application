@@ -48,11 +48,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/vehicles",
+              "raw": "{{base_url}}/api/vehicles",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "vehicles"
               ]
             }
@@ -74,11 +75,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/vehicles",
+              "raw": "{{base_url}}/api/vehicles",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "vehicles"
               ]
             }
@@ -112,11 +114,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/vehicles/{{current_vehicle_id}}",
+              "raw": "{{base_url}}/api/vehicles/{{current_vehicle_id}}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "vehicles",
                 "{{current_vehicle_id}}"
               ]
@@ -164,11 +167,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/dealers",
+              "raw": "{{base_url}}/api/dealers",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "dealers"
               ]
             }
@@ -200,11 +204,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/dealers?page=1&limit=10",
+              "raw": "{{base_url}}/api/dealers?page=1&limit=10",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "dealers"
               ],
               "query": [
@@ -251,11 +256,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/health",
+              "raw": "{{base_url}}/api/health",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "health"
               ]
             }

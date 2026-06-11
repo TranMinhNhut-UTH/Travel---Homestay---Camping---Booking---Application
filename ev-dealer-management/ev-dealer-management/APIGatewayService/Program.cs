@@ -142,6 +142,7 @@ var ocelotConfiguration = new ConfigurationBuilder()
         // New route for /api/dealers (route to VehicleService which exposes dealer endpoints)
         { "Routes:15:UpstreamPathTemplate", "/api/dealers" },
         { "Routes:15:UpstreamHttpMethod:0", "GET" },
+        { "Routes:15:UpstreamHttpMethod:1", "POST" },
         { "Routes:15:DownstreamPathTemplate", "/api/dealers" },
         { "Routes:15:DownstreamScheme", "http" },
         { "Routes:15:DownstreamHostAndPorts:0:Host", "localhost" },
