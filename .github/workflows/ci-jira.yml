@@ -151,10 +151,10 @@ jobs:
           fi
           echo "Executing Newman with target collection: $POSTMAN_FILE"
           
-          # Đúp cả 2 biến baseUrl và base_url để khớp với Postman script local của bạn
+          # ĐÃ SỬA: Đưa cả 2 biến về chung một gốc không chứa /api để tránh trùng lặp
           newman run "$POSTMAN_FILE" \
             --env-var "baseUrl=http://127.0.0.1:5036" \
-            --env-var "base_url=http://127.0.0.1:5036/api" \
+            --env-var "base_url=http://127.0.0.1:5036" \
             --reporters cli 2>&1 | tee newman.log
 
       - name: Comment failure back to Jira
