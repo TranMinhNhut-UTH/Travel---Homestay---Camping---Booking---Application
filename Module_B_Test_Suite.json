@@ -40,7 +40,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"vin\": \"1FA6P8CF0HXXXXXXX\",\r\n  \"model\": \"Mustang\",\r\n  \"year\": 2024,\r\n  \"dealerId\": 1,\r\n  \"typeId\": 5\r\n}",
+              "raw": "{\r\n  \"Model\": \"Mustang\",\r\n  \"Type\": \"Coupe\",\r\n  \"Price\": 55999.99,\r\n  \"BatteryCapacity\": 85.5,\r\n  \"Range\": 320,\r\n  \"StockQuantity\": 5,\r\n  \"Description\": \"Test vehicle from CI\",\r\n  \"DealerId\": 1\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -66,7 +66,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"model\": \"Mustang\",\r\n  \"year\": 2024\r\n}",
+              "raw": "{\r\n  \"Model\": \"Mustang\",\r\n  \"Type\": \"Coupe\",\r\n  \"Price\": 55999.99,\r\n  \"BatteryCapacity\": 85.5,\r\n  \"Range\": 320,\r\n  \"StockQuantity\": 5,\r\n  \"DealerId\": 1\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -156,7 +156,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"name\": \"UTC Dealer Saigon\",\r\n    \"address\": \"Phường Long Thạnh Mỹ, TP. Thủ Đức\"\r\n}",
+              "raw": "{\r\n    \"Name\": \"UTC Dealer Saigon\",\r\n    \"Region\": \"TP. Thủ Đức\",\r\n    \"Contact\": \"+84123456789\",\r\n    \"Email\": \"dealer-ci@example.com\",\r\n    \"Address\": \"Phường Long Thạnh Mỹ, TP. Thủ Đức\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
