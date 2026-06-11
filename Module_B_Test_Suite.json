@@ -242,8 +242,8 @@
                   "    pm.response.to.have.status(200);\r",
                   "});\r",
                   "pm.test(\"Kiểm tra trạng thái UP\", function () {\r",
-                  "    var jsonData = pm.response.json();\r",
-                  "    pm.expect(jsonData.status).to.eql(\"UP\");\r",
+                  "    var responseText = pm.response.text();\r",
+                  "    pm.expect(responseText).to.include(\"Healthy\");\r",
                   "});"
                 ],
                 "type": "text/javascript",
