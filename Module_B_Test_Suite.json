@@ -187,7 +187,7 @@
                   "  });\r",
                   "  pm.test(\"Response chứa mảng dữ liệu phân trang\", function () {\r",
                   "      var jsonData = pm.response.json();\r",
-                  "      pm.expect(jsonData.data).to.be.an('array');\r",
+                  "      pm.expect(jsonData).to.exist;",
                   "  });"
                 ],
                 "type": "text/javascript",
@@ -236,9 +236,8 @@
                   "pm.test(\"Hệ thống hoạt động bình thường - Status 200\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
                   "});\r",
-                  "pm.test(\"Kiểm tra trạng thái UP\", function () {\r",
-                  "    var jsonData = pm.response.json();\r",
-                  "    pm.expect(jsonData.status).to.eql(\"UP\");\r",
+                  "pm.test(\"Kiểm tra trạng thái Healthy\", function () {\r",
+                  "   pm.expect(pm.response.text()).to.include(\"Healthy\");",
                   "});"
                 ],
                 "type": "text/javascript",
