@@ -72,7 +72,7 @@ jobs:
         run: |
           set -o pipefail
           # Tự động phát hiện file json của Postman dù Tiến đặt tên gì ở thư mục gốc
-          POSTMAN_FILE=$(find . -maxdepth 1 -name "*.json" | head -n 1)
+          POSTMAN_FILE=$(find . -maxdepth 1 -name "*.postman_collection.json" | head -n 1)
           if [ -f "$POSTMAN_FILE" ]; then
             node .github/scripts/validate-postman.mjs "$POSTMAN_FILE" 2>&1 | tee postman-validation.log
           else

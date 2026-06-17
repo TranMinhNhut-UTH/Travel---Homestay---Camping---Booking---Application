@@ -139,6 +139,7 @@ var ocelotConfiguration = new ConfigurationBuilder()
         { "Routes:14:DownstreamHostAndPorts:0:Host", "localhost" },
         { "Routes:14:DownstreamHostAndPorts:0:Port", "5039" }, // CustomerService port
 
+
         // New route for /api/dealers (route to VehicleService which exposes dealer endpoints)
         { "Routes:15:UpstreamPathTemplate", "/api/dealers" },
         { "Routes:15:UpstreamHttpMethod:0", "GET" },
@@ -176,7 +177,7 @@ var ocelotConfiguration = new ConfigurationBuilder()
         // Expose a simple health check via API Gateway: /api/health -> VehicleService /health
         { "Routes:19:UpstreamPathTemplate", "/api/health" },
         { "Routes:19:UpstreamHttpMethod:0", "GET" },
-        { "Routes:19:DownstreamPathTemplate", "/health" },
+        { "Routes:19:DownstreamPathTemplate", "/api/health" },
         { "Routes:19:DownstreamScheme", "http" },
         { "Routes:19:DownstreamHostAndPorts:0:Host", "localhost" },
         { "Routes:19:DownstreamHostAndPorts:0:Port", "5068" },
@@ -198,6 +199,8 @@ var ocelotConfiguration = new ConfigurationBuilder()
         { "Routes:21:DownstreamScheme", "http" },
         { "Routes:21:DownstreamHostAndPorts:0:Host", "localhost" },
         { "Routes:21:DownstreamHostAndPorts:0:Port", "7001" }, // Assuming User Service handles admin users
+
+
 
         { "GlobalConfiguration:BaseUrl", "http://localhost:5036" }
     })
