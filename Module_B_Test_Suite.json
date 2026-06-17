@@ -246,19 +246,19 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Hệ thống hoạt động bình thường - Status 200\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});\r",
-
-                  "pm.test(\"Kiểm tra trạng thái Healthy\", function () {\r",
-                  "   pm.expect(pm.response.text()).to.include(\"Healthy\");",
-
-                  "pm.test(\"Kiểm tra trạng thái UP\", function () {\r",
-                  "    var responseText = pm.response.text();\r",
-                  "    pm.expect(responseText).to.include(\"Healthy\");\r",
-
-                  "});"
-                ],
+                      "pm.test(\"Hệ thống hoạt động bình thường - Status 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "",
+                      "pm.test(\"Kiểm tra trạng thái Healthy\", function () {\r",
+                      "   pm.expect(pm.response.text()).to.include(\"Healthy\");\r",
+                      "});\r", 
+                      "",
+                      "pm.test(\"Kiểm tra trạng thái UP\", function () {\r",
+                      "    var responseText = pm.response.text();\r",
+                      "    pm.expect(responseText).to.include(\"Healthy\");\r",
+                      "});"
+                    ],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
