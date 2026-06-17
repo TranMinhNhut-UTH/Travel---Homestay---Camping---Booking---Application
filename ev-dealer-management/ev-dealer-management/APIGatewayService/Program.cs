@@ -134,12 +134,6 @@ var ocelotConfiguration = new ConfigurationBuilder()
         { "Routes:14:UpstreamHttpMethod:1", "POST" },
         { "Routes:14:UpstreamHttpMethod:2", "PUT" },
         { "Routes:14:UpstreamHttpMethod:3", "DELETE" },
-
-        { "Routes:14:DownstreamPathTemplate", "/api/dealers" },
-        { "Routes:14:DownstreamScheme", "http" },
-        { "Routes:14:DownstreamHostAndPorts:0:Host", "localhost" },
-        { "Routes:14:DownstreamHostAndPorts:0:Port", "5068" }, // Assuming DealerService runs on port 5004
-
         { "Routes:14:DownstreamPathTemplate", "/api/Complaints/{everything}" },
         { "Routes:14:DownstreamScheme", "http" },
         { "Routes:14:DownstreamHostAndPorts:0:Host", "localhost" },
