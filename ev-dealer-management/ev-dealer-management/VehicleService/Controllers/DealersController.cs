@@ -16,10 +16,10 @@ public class DealersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<DealerDto>>> GetDealers()
+    public async Task<IActionResult> GetDealers()
     {
         var dealers = await _vehicleService.GetDealersAsync();
-        return Ok(dealers);
+        return Ok(new { data = dealers });
     }
 
     [HttpGet("{id}")]

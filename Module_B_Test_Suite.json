@@ -40,7 +40,11 @@
             "header": [],
             "body": {
               "mode": "raw",
+
               "raw": "{\r\n  \"model\": \"Mustang\",\r\n  \"type\": \"Sports Car\",\r\n  \"price\": 55000,\r\n  \"batteryCapacity\": 75,\r\n  \"range\": 450,\r\n  \"stockQuantity\": 10,\r\n  \"dealerId\": 1\r\n}",
+
+              "raw": "{\r\n  \"Model\": \"Mustang\",\r\n  \"Type\": \"Coupe\",\r\n  \"Price\": 55999.99,\r\n  \"BatteryCapacity\": 85.5,\r\n  \"Range\": 320,\r\n  \"StockQuantity\": 5,\r\n  \"Description\": \"Test vehicle from CI\",\r\n  \"DealerId\": 1\r\n}",
+
               "options": {
                 "raw": {
                   "language": "json"
@@ -48,11 +52,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/vehicles",
+              "raw": "{{base_url}}/api/vehicles",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "vehicles"
               ]
             }
@@ -66,7 +71,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"model\": \"Mustang\",\r\n  \"year\": 2024\r\n}",
+              "raw": "{\r\n  \"Model\": \"Mustang\",\r\n  \"Type\": \"Coupe\",\r\n  \"Price\": 55999.99,\r\n  \"BatteryCapacity\": 85.5,\r\n  \"Range\": 320,\r\n  \"StockQuantity\": 5,\r\n  \"DealerId\": 1\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -74,11 +79,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/vehicles",
+              "raw": "{{base_url}}/api/vehicles",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "vehicles"
               ]
             }
@@ -112,11 +118,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/vehicles/{{current_vehicle_id}}",
+              "raw": "{{base_url}}/api/vehicles/{{current_vehicle_id}}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "vehicles",
                 "{{current_vehicle_id}}"
               ]
@@ -156,7 +163,11 @@
             "header": [],
             "body": {
               "mode": "raw",
+
               "raw": "{\r\n  \"name\": \"UTC Dealer Saigon\",\r\n  \"region\": \"Ho Chi Minh\",\r\n  \"contact\": \"0901234567\",\r\n  \"email\": \"dealer@example.com\",\r\n  \"address\": \"Thu Duc City\"\r\n}",
+
+              "raw": "{\r\n    \"Name\": \"UTC Dealer Saigon\",\r\n    \"Region\": \"TP. Thủ Đức\",\r\n    \"Contact\": \"+84123456789\",\r\n    \"Email\": \"dealer-ci@example.com\",\r\n    \"Address\": \"Phường Long Thạnh Mỹ, TP. Thủ Đức\"\r\n}",
+
               "options": {
                 "raw": {
                   "language": "json"
@@ -164,11 +175,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/dealers",
+              "raw": "{{base_url}}/api/dealers",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "dealers"
               ]
             }
@@ -200,11 +212,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/dealers?page=1&limit=10",
+              "raw": "{{base_url}}/api/dealers?page=1&limit=10",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "dealers"
               ],
               "query": [
@@ -236,8 +249,14 @@
                   "pm.test(\"Hệ thống hoạt động bình thường - Status 200\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
                   "});\r",
+
                   "pm.test(\"Kiểm tra trạng thái Healthy\", function () {\r",
                   "   pm.expect(pm.response.text()).to.include(\"Healthy\");",
+
+                  "pm.test(\"Kiểm tra trạng thái UP\", function () {\r",
+                  "    var responseText = pm.response.text();\r",
+                  "    pm.expect(responseText).to.include(\"Healthy\");\r",
+
                   "});"
                 ],
                 "type": "text/javascript",
@@ -250,11 +269,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/health",
+              "raw": "{{base_url}}/api/health",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "health"
               ]
             }
