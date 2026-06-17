@@ -135,10 +135,13 @@ var ocelotConfiguration = new ConfigurationBuilder()
         // New route for /api/dealers
         { "Routes:14:UpstreamPathTemplate", "/api/dealers" },
         { "Routes:14:UpstreamHttpMethod:0", "GET" },
+        { "Routes:14:UpstreamHttpMethod:1", "POST" },
+        { "Routes:14:UpstreamHttpMethod:2", "PUT" },
+        { "Routes:14:UpstreamHttpMethod:3", "DELETE" },
         { "Routes:14:DownstreamPathTemplate", "/api/dealers" },
         { "Routes:14:DownstreamScheme", "http" },
         { "Routes:14:DownstreamHostAndPorts:0:Host", "localhost" },
-        { "Routes:14:DownstreamHostAndPorts:0:Port", "5004" }, // Assuming DealerService runs on port 5004
+        { "Routes:14:DownstreamHostAndPorts:0:Port", "5068" }, // Assuming DealerService runs on port 5004
 
         // New route for /api/vehicletypes
         { "Routes:15:UpstreamPathTemplate", "/api/vehicletypes" },
@@ -173,6 +176,22 @@ var ocelotConfiguration = new ConfigurationBuilder()
         { "Routes:18:DownstreamScheme", "http" },
         { "Routes:18:DownstreamHostAndPorts:0:Host", "localhost" },
         { "Routes:18:DownstreamHostAndPorts:0:Port", "7001" }, // Assuming User Service handles admin users
+
+        { "Routes:19:UpstreamPathTemplate", "/api/dealers/{everything}" },
+        { "Routes:19:UpstreamHttpMethod:0", "GET" },
+        { "Routes:19:UpstreamHttpMethod:1", "PUT" },
+        { "Routes:19:UpstreamHttpMethod:2", "DELETE" },
+        { "Routes:19:DownstreamPathTemplate", "/api/dealers/{everything}" },
+        { "Routes:19:DownstreamScheme", "http" },
+        { "Routes:19:DownstreamHostAndPorts:0:Host", "localhost" },
+        { "Routes:19:DownstreamHostAndPorts:0:Port", "5068" },
+
+        { "Routes:20:UpstreamPathTemplate", "/api/health" },
+        { "Routes:20:UpstreamHttpMethod:0", "GET" },
+        { "Routes:20:DownstreamPathTemplate", "/api/health" },
+        { "Routes:20:DownstreamScheme", "http" },
+        { "Routes:20:DownstreamHostAndPorts:0:Host", "localhost" },
+        { "Routes:20:DownstreamHostAndPorts:0:Port", "5068" },
 
         { "GlobalConfiguration:BaseUrl", "http://localhost:5036" }
     })
