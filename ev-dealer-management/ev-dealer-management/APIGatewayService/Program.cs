@@ -183,7 +183,7 @@ var ocelotConfiguration = new ConfigurationBuilder()
         // Expose a simple health check via API Gateway: /api/health -> VehicleService /health
         { "Routes:19:UpstreamPathTemplate", "/api/health" },
         { "Routes:19:UpstreamHttpMethod:0", "GET" },
-        { "Routes:19:DownstreamPathTemplate", "/health" },
+        { "Routes:19:DownstreamPathTemplate", "/api/health" },
         { "Routes:19:DownstreamScheme", "http" },
         { "Routes:19:DownstreamHostAndPorts:0:Host", "localhost" },
         { "Routes:19:DownstreamHostAndPorts:0:Port", "5068" },
@@ -206,21 +206,7 @@ var ocelotConfiguration = new ConfigurationBuilder()
         { "Routes:21:DownstreamHostAndPorts:0:Host", "localhost" },
         { "Routes:21:DownstreamHostAndPorts:0:Port", "7001" }, // Assuming User Service handles admin users
 
-        { "Routes:19:UpstreamPathTemplate", "/api/dealers/{everything}" },
-        { "Routes:19:UpstreamHttpMethod:0", "GET" },
-        { "Routes:19:UpstreamHttpMethod:1", "PUT" },
-        { "Routes:19:UpstreamHttpMethod:2", "DELETE" },
-        { "Routes:19:DownstreamPathTemplate", "/api/dealers/{everything}" },
-        { "Routes:19:DownstreamScheme", "http" },
-        { "Routes:19:DownstreamHostAndPorts:0:Host", "localhost" },
-        { "Routes:19:DownstreamHostAndPorts:0:Port", "5068" },
 
-        { "Routes:20:UpstreamPathTemplate", "/api/health" },
-        { "Routes:20:UpstreamHttpMethod:0", "GET" },
-        { "Routes:20:DownstreamPathTemplate", "/api/health" },
-        { "Routes:20:DownstreamScheme", "http" },
-        { "Routes:20:DownstreamHostAndPorts:0:Host", "localhost" },
-        { "Routes:20:DownstreamHostAndPorts:0:Port", "5068" },
 
         { "GlobalConfiguration:BaseUrl", "http://localhost:5036" }
     })
