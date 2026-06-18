@@ -59,6 +59,8 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var dbContext = services.GetRequiredService<SalesDbContext>();
+        // Ensure database schema is created (SQLite auto-creates tables from DbContext)
+        dbContext.Database.EnsureCreated();
         var connection = dbContext.Database.GetDbConnection();
         if (connection is SqliteConnection sqliteConnection)
         {
@@ -67,6 +69,17 @@ using (var scope = app.Services.CreateScope())
         else
         {
             Console.WriteLine($"[SalesDbContext] Database connection type: {connection.GetType().Name}. Could not determine SQLite file path.");
+        }
+        // Ensure database schema is applied so runtime queries don't fail with "no such table".
+        try
+        {
+            Console.WriteLine("[SalesDbContext] Ensuring database migrations are applied...");
+            dbContext.Database.Migrate();
+            Console.WriteLine("[SalesDbContext] Database migrations applied successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[SalesDbContext] Warning: Failed to apply migrations at startup: {ex.Message}");
         }
     }
     catch (Exception ex)
