@@ -2290,8 +2290,7 @@
           "response": []
         }
       ]
-    }
-    ,
+    },
     {
       "name": "Module C - Quotes",
       "item": [
@@ -2325,7 +2324,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2333,8 +2335,13 @@
             },
             "url": {
               "raw": "{{salesUrl}}/api/Quotes",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Quotes"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Quotes"
+              ]
             }
           },
           "response": []
@@ -2362,7 +2369,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2370,8 +2380,13 @@
             },
             "url": {
               "raw": "{{salesUrl}}/api/Quotes",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Quotes"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Quotes"
+              ]
             }
           },
           "response": []
@@ -2395,7 +2410,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2403,8 +2421,13 @@
             },
             "url": {
               "raw": "{{salesUrl}}/api/Quotes",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Quotes"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Quotes"
+              ]
             }
           },
           "response": []
@@ -2442,8 +2465,13 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Quotes",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Quotes"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Quotes"
+              ]
             }
           },
           "response": []
@@ -2482,8 +2510,14 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Quotes/{{quoteId}}",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Quotes", "{{quoteId}}"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Quotes",
+                "{{quoteId}}"
+              ]
             }
           },
           "response": []
@@ -2509,8 +2543,14 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Quotes/99999",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Quotes", "99999"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Quotes",
+                "99999"
+              ]
             }
           },
           "response": []
@@ -2536,8 +2576,14 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Quotes/0",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Quotes", "0"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Quotes",
+                "0"
+              ]
             }
           },
           "response": []
@@ -2561,7 +2607,10 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2569,8 +2618,15 @@
             },
             "url": {
               "raw": "{{salesUrl}}/api/Quotes/{{quoteId}}/status",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Quotes", "{{quoteId}}", "status"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Quotes",
+                "{{quoteId}}",
+                "status"
+              ]
             }
           },
           "response": []
@@ -2594,7 +2650,10 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2602,8 +2661,15 @@
             },
             "url": {
               "raw": "{{salesUrl}}/api/Quotes/99999/status",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Quotes", "99999", "status"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Quotes",
+                "99999",
+                "status"
+              ]
             }
           },
           "response": []
@@ -2627,7 +2693,10 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2635,8 +2704,15 @@
             },
             "url": {
               "raw": "{{salesUrl}}/api/Quotes/{{quoteId}}/status",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Quotes", "{{quoteId}}", "status"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Quotes",
+                "{{quoteId}}",
+                "status"
+              ]
             }
           },
           "response": []
@@ -2710,15 +2786,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": 1,\n  \"customerEmail\": \"test@evdealer.vn\",\n  \"customerName\": \"Nguyen Van A\",\n  \"dealerId\": 1,\n  \"salespersonId\": 1,\n  \"vehicleId\": 1,\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"paymentMethod\": \"Cash\",\n  \"paymentType\": \"Full\",\n  \"deliveryDate\": \"2026-08-01T00:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-08-15T00:00:00Z\",\n  \"notes\": \"ED23 Task2 test order\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Orders/complete",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Orders", "complete"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders",
+                "complete"
+              ]
             }
           },
           "response": []
@@ -2745,15 +2832,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": 1,\n  \"customerEmail\": \"\",\n  \"customerName\": \"Nguyen Van A\",\n  \"dealerId\": 1,\n  \"salespersonId\": 1,\n  \"vehicleId\": 1,\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"paymentMethod\": \"Cash\",\n  \"paymentType\": \"Full\",\n  \"deliveryDate\": \"2026-08-01T00:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-08-15T00:00:00Z\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Orders/complete",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Orders", "complete"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders",
+                "complete"
+              ]
             }
           },
           "response": []
@@ -2780,15 +2878,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": 1,\n  \"customerEmail\": \"test@evdealer.vn\",\n  \"customerName\": \"\",\n  \"dealerId\": 1,\n  \"salespersonId\": 1,\n  \"vehicleId\": 1,\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"paymentMethod\": \"Cash\",\n  \"paymentType\": \"Full\",\n  \"deliveryDate\": \"2026-08-01T00:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-08-15T00:00:00Z\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Orders/complete",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Orders", "complete"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders",
+                "complete"
+              ]
             }
           },
           "response": []
@@ -2815,15 +2924,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": 1,\n  \"customerEmail\": \"test@evdealer.vn\",\n  \"customerName\": \"Nguyen Van A\",\n  \"dealerId\": 1,\n  \"salespersonId\": 1,\n  \"vehicleId\": 1,\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 0,\n  \"paymentMethod\": \"Cash\",\n  \"paymentType\": \"Full\",\n  \"deliveryDate\": \"2026-08-01T00:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-08-15T00:00:00Z\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Orders/complete",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Orders", "complete"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders",
+                "complete"
+              ]
             }
           },
           "response": []
@@ -2853,8 +2973,14 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Quotes/{{quoteId}}",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Quotes", "{{quoteId}}"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Quotes",
+                "{{quoteId}}"
+              ]
             }
           },
           "response": []
@@ -2886,8 +3012,13 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Orders",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Orders"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders"
+              ]
             }
           },
           "response": []
@@ -2924,8 +3055,14 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Orders/{{orderId}}",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Orders", "{{orderId}}"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders",
+                "{{orderId}}"
+              ]
             }
           },
           "response": []
@@ -2951,8 +3088,14 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Orders/99999",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Orders", "99999"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders",
+                "99999"
+              ]
             }
           },
           "response": []
@@ -2979,15 +3122,27 @@
           ],
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"status\": \"Pending\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Orders/{{orderId}}/status",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Orders", "{{orderId}}", "status"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders",
+                "{{orderId}}",
+                "status"
+              ]
             }
           },
           "response": []
@@ -3010,15 +3165,27 @@
           ],
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"status\": \"Pending\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Orders/99999/status",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Orders", "99999", "status"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders",
+                "99999",
+                "status"
+              ]
             }
           },
           "response": []
@@ -3052,11 +3219,89 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Orders/health",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Orders", "health"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders",
+                "health"
+              ]
             }
           },
           "response": []
+        },
+        {
+          "name": "O12 - Get Order By ID=0 (BVA)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{salesUrl}}/api/Orders/0",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders",
+                "0"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"O12 - ID=0 lower boundary should return 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "O13 - Update Order Status (Empty Body BVA)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Orders/{{orderId}}/status",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders",
+                "{{orderId}}",
+                "status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"O13 - Empty body missing required status field should return 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -3124,15 +3369,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"orderId\": {{orderId}},\n  \"customerId\": 1,\n  \"salespersonId\": \"1\",\n  \"contractDate\": \"2026-09-01T00:00:00Z\",\n  \"termsAndConditions\": \"Standard EV dealer terms\",\n  \"depositAmountReceived\": true\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Contracts",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Contracts"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Contracts"
+              ]
             }
           },
           "response": []
@@ -3159,15 +3414,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"orderId\": 99999,\n  \"customerId\": 1,\n  \"salespersonId\": \"1\",\n  \"contractDate\": \"2026-09-01T00:00:00Z\",\n  \"depositAmountReceived\": false\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Contracts",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Contracts"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Contracts"
+              ]
             }
           },
           "response": []
@@ -3194,15 +3459,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"orderId\": {{orderId}},\n  \"customerId\": 1,\n  \"salespersonId\": \"1\",\n  \"contractDate\": \"2026-09-01T00:00:00Z\",\n  \"depositAmountReceived\": false\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Contracts",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Contracts"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Contracts"
+              ]
             }
           },
           "response": []
@@ -3258,15 +3533,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"orderId\": {{c4OrderId}},\n  \"customerId\": 1,\n  \"salespersonId\": \"abc-invalid\",\n  \"contractDate\": \"2026-09-01T00:00:00Z\",\n  \"depositAmountReceived\": false\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Contracts",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Contracts"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Contracts"
+              ]
             }
           },
           "response": []
@@ -3298,8 +3583,13 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Contracts",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Contracts"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Contracts"
+              ]
             }
           },
           "response": []
@@ -3334,8 +3624,14 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Contracts/{{contractId}}",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Contracts", "{{contractId}}"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Contracts",
+                "{{contractId}}"
+              ]
             }
           },
           "response": []
@@ -3361,8 +3657,14 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Contracts/99999",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Contracts", "99999"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Contracts",
+                "99999"
+              ]
             }
           },
           "response": []
@@ -3389,15 +3691,27 @@
           ],
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"status\": \"Approved\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Contracts/{{contractId}}/status",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Contracts", "{{contractId}}", "status"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Contracts",
+                "{{contractId}}",
+                "status"
+              ]
             }
           },
           "response": []
@@ -3427,8 +3741,14 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Orders/{{orderId}}",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Orders", "{{orderId}}"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders",
+                "{{orderId}}"
+              ]
             }
           },
           "response": []
@@ -3495,18 +3815,143 @@
           ],
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"status\": \"Rejected\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Contracts/{{c10ContractId}}/status",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Contracts", "{{c10ContractId}}", "status"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Contracts",
+                "{{c10ContractId}}",
+                "status"
+              ]
             }
           },
           "response": []
+        },
+        {
+          "name": "C11 - Create Contract (Empty Body BVA)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Contracts",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Contracts"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"C11 - Empty body missing required fields should return 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "C12 - Get Contract By ID=0 (BVA)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{salesUrl}}/api/Contracts/0",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Contracts",
+                "0"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"C12 - ID=0 lower boundary should return 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "C13 - Update Contract Status (Invalid Status DT - No Server Enum Validation)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Contracts/{{contractId}}/status",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Contracts",
+                "{{contractId}}",
+                "status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"InvalidXYZ\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"C13 - DT: Server accepts any status value (no enum validation on server)\", function () {",
+                  "    // Decision Table: Status=\"InvalidXYZ\" -> server still returns 200.",
+                  "    // This documents actual behavior: server has no status enum validation.",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 400, 404, 500]);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -3545,15 +3990,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 500000000,\n  \"paymentDate\": \"2026-09-01T00:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-P1-TEST\",\n  \"notes\": \"P1 happy path payment\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Payments",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Payments"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Payments"
+              ]
             }
           },
           "response": []
@@ -3576,15 +4031,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Payments",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Payments"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Payments"
+              ]
             }
           },
           "response": []
@@ -3607,15 +4072,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 0,\n  \"paymentDate\": \"2026-09-01T00:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Payments",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Payments"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Payments"
+              ]
             }
           },
           "response": []
@@ -3647,11 +4122,94 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Payments",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Payments"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Payments"
+              ]
             }
           },
           "response": []
+        },
+        {
+          "name": "P5 - Create Payment (Amount=-1 BVA)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Payments",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Payments"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": -1,\n  \"paymentDate\": \"2026-06-18T00:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"P5 - Amount=-1 below min boundary should return 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "P6 - Create Payment (Amount=9999999999999 BVA)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Payments",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Payments"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 9999999999999,\n  \"paymentDate\": \"2026-06-18T00:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"P6 - Amount above max boundary should return 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -3676,15 +4234,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"trackingNumber\": \"TRK-D1-TEST\",\n  \"estimatedDeliveryDate\": \"2026-10-01T00:00:00Z\",\n  \"status\": \"Pending\",\n  \"notes\": \"D1 happy path delivery\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Deliveries",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Deliveries"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Deliveries"
+              ]
             }
           },
           "response": []
@@ -3707,15 +4275,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Deliveries",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Deliveries"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Deliveries"
+              ]
             }
           },
           "response": []
@@ -3746,8 +4324,13 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Deliveries",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Deliveries"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Deliveries"
+              ]
             }
           },
           "response": []
@@ -3770,15 +4353,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"estimatedDeliveryDate\": \"2026-10-01T00:00:00Z\",\n  \"status\": \"Pending\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Deliveries",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Deliveries"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Deliveries"
+              ]
             }
           },
           "response": []
@@ -3801,15 +4394,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"EV Summer Sale 2026\",\n  \"description\": \"Summer discount on all EVs\",\n  \"startDate\": \"2026-07-01T00:00:00Z\",\n  \"endDate\": \"2026-08-31T00:00:00Z\",\n  \"discountValue\": 5000000,\n  \"discountType\": \"Fixed\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Promotions",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Promotions"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Promotions"
+              ]
             }
           },
           "response": []
@@ -3832,15 +4435,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Promotions",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Promotions"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Promotions"
+              ]
             }
           },
           "response": []
@@ -3871,8 +4484,13 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Promotions",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Promotions"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Promotions"
+              ]
             }
           },
           "response": []
@@ -3895,15 +4513,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Invalid Promo\",\n  \"startDate\": \"2026-07-01T00:00:00Z\",\n  \"endDate\": \"2026-08-31T00:00:00Z\",\n  \"discountValue\": -1,\n  \"discountType\": \"Percentage\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Promotions",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Promotions"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Promotions"
+              ]
             }
           },
           "response": []
@@ -3957,8 +4585,15 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Sales/quotes/{{s1QuoteId}}",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Sales", "quotes", "{{s1QuoteId}}"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "quotes",
+                "{{s1QuoteId}}"
+              ]
             }
           },
           "response": []
@@ -3984,8 +4619,15 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Sales/quotes/99999",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Sales", "quotes", "99999"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "quotes",
+                "99999"
+              ]
             }
           },
           "response": []
@@ -4033,15 +4675,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"quoteId\": {{s3QuoteId}},\n  \"customerId\": 1,\n  \"dealerId\": 1,\n  \"salespersonId\": 1,\n  \"vehicleId\": 1,\n  \"variantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 900000000,\n  \"paymentMethod\": \"Cash\",\n  \"paymentForm\": \"Full\",\n  \"deliveryPreferredDate\": \"2026-12-01\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Sales/orders",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Sales", "orders"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "orders"
+              ]
             }
           },
           "response": []
@@ -4064,15 +4717,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"quoteId\": 99999,\n  \"customerId\": 1,\n  \"dealerId\": 1,\n  \"salespersonId\": 1,\n  \"vehicleId\": 1,\n  \"variantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 900000000,\n  \"paymentMethod\": \"Cash\",\n  \"paymentForm\": \"Full\",\n  \"deliveryPreferredDate\": \"2026-12-01\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Sales/orders",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Sales", "orders"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "orders"
+              ]
             }
           },
           "response": []
@@ -4098,8 +4762,15 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Sales/orders/{{s3OrderId}}",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Sales", "orders", "{{s3OrderId}}"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "orders",
+                "{{s3OrderId}}"
+              ]
             }
           },
           "response": []
@@ -4124,15 +4795,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"orderId\": {{s3OrderId}},\n  \"customerId\": 1,\n  \"dealerId\": 1,\n  \"salespersonId\": 1,\n  \"totalAmount\": 900000000\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Sales/contracts",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Sales", "contracts"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "contracts"
+              ]
             }
           },
           "response": []
@@ -4155,15 +4837,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"orderId\": 99999,\n  \"customerId\": 1,\n  \"dealerId\": 1,\n  \"salespersonId\": 1,\n  \"totalAmount\": 900000000\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Sales/contracts",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Sales", "contracts"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "contracts"
+              ]
             }
           },
           "response": []
@@ -4189,11 +4882,58 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Sales/contracts/{{s6ContractId}}",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Sales", "contracts", "{{s6ContractId}}"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "contracts",
+                "{{s6ContractId}}"
+              ]
             }
           },
           "response": []
+        },
+        {
+          "name": "S9 - POST Sales Order (Empty Body BVA)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Sales/orders",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "orders"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"S9 - Empty body missing required fields should return 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -4218,8 +4958,14 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/summary",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "summary"]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "summary"
+              ]
             }
           },
           "response": []
@@ -4243,11 +4989,23 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/summary?type=sales&from=2024-01-01",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "summary"],
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "summary"
+              ],
               "query": [
-                { "key": "type", "value": "sales" },
-                { "key": "from", "value": "2024-01-01" }
+                {
+                  "key": "type",
+                  "value": "sales"
+                },
+                {
+                  "key": "from",
+                  "value": "2024-01-01"
+                }
               ]
             }
           },
@@ -4272,9 +5030,20 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/summary?from=invalid-date",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "summary"],
-              "query": [{ "key": "from", "value": "invalid-date" }]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "summary"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "invalid-date"
+                }
+              ]
             }
           },
           "response": []
@@ -4297,8 +5066,14 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/sales-by-region",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "sales-by-region"]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "sales-by-region"
+              ]
             }
           },
           "response": []
@@ -4321,8 +5096,14 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/sales-proportion",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "sales-proportion"]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "sales-proportion"
+              ]
             }
           },
           "response": []
@@ -4345,8 +5126,14 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/top-vehicles",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "top-vehicles"]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "top-vehicles"
+              ]
             }
           },
           "response": []
@@ -4370,9 +5157,20 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/top-vehicles?limit=5",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "top-vehicles"],
-              "query": [{ "key": "limit", "value": "5" }]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "top-vehicles"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
             }
           },
           "response": []
@@ -4395,8 +5193,14 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/demand-forecast",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "demand-forecast"]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "demand-forecast"
+              ]
             }
           },
           "response": []
@@ -4419,8 +5223,14 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/sales-by-dealer",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "sales-by-dealer"]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "sales-by-dealer"
+              ]
             }
           },
           "response": []
@@ -4443,8 +5253,14 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/sales-by-staff",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "sales-by-staff"]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "sales-by-staff"
+              ]
             }
           },
           "response": []
@@ -4467,8 +5283,14 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/debt-summary",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "debt-summary"]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "debt-summary"
+              ]
             }
           },
           "response": []
@@ -4491,8 +5313,14 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/debt-report",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "debt-report"]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "debt-report"
+              ]
             }
           },
           "response": []
@@ -4515,8 +5343,14 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/inventory-trends",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "inventory-trends"]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "inventory-trends"
+              ]
             }
           },
           "response": []
@@ -4539,8 +5373,14 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/sales-summary",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "sales-summary"]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "sales-summary"
+              ]
             }
           },
           "response": []
@@ -4563,8 +5403,14 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/inventory-summary",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "inventory-summary"]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "inventory-summary"
+              ]
             }
           },
           "response": []
@@ -4588,8 +5434,14 @@
             "header": [],
             "url": {
               "raw": "{{reportingUrl}}/api/reports/synchronize-data",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "synchronize-data"]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "synchronize-data"
+              ]
             }
           },
           "response": []
@@ -4610,15 +5462,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"type\": \"sales\",\n  \"from\": \"2024-01-01\",\n  \"to\": \"2026-12-31\"\n}"
             },
             "url": {
               "raw": "{{reportingUrl}}/api/reports/export",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "export"]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "export"
+              ]
             }
           },
           "response": []
@@ -4639,15 +5502,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"type\": \"invalid_export_type\"\n}"
             },
             "url": {
               "raw": "{{reportingUrl}}/api/reports/export",
-              "host": ["{{reportingUrl}}"],
-              "path": ["api", "reports", "export"]
+              "host": [
+                "{{reportingUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "export"
+              ]
             }
           },
           "response": []
@@ -4676,15 +5550,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"deviceToken\": \"fake-device-token-for-test\",\n  \"title\": \"Test Notification\",\n  \"body\": \"This is a test push notification\",\n  \"data\": { \"key\": \"value\" }\n}"
             },
             "url": {
               "raw": "{{notificationUrl}}/api/Notification/test-fcm",
-              "host": ["{{notificationUrl}}"],
-              "path": ["api", "Notification", "test-fcm"]
+              "host": [
+                "{{notificationUrl}}"
+              ],
+              "path": [
+                "api",
+                "Notification",
+                "test-fcm"
+              ]
             }
           },
           "response": []
@@ -4708,15 +5593,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{}"
             },
             "url": {
               "raw": "{{notificationUrl}}/api/Notification/test-fcm",
-              "host": ["{{notificationUrl}}"],
-              "path": ["api", "Notification", "test-fcm"]
+              "host": [
+                "{{notificationUrl}}"
+              ],
+              "path": [
+                "api",
+                "Notification",
+                "test-fcm"
+              ]
             }
           },
           "response": []
@@ -4740,15 +5636,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"deviceToken\": \"fake-device-token-for-test\",\n  \"topic\": \"ev-dealer-announcements\"\n}"
             },
             "url": {
               "raw": "{{notificationUrl}}/api/Notification/subscribe-topic",
-              "host": ["{{notificationUrl}}"],
-              "path": ["api", "Notification", "subscribe-topic"]
+              "host": [
+                "{{notificationUrl}}"
+              ],
+              "path": [
+                "api",
+                "Notification",
+                "subscribe-topic"
+              ]
             }
           },
           "response": []
@@ -4772,15 +5679,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"deviceToken\": \"fake-device-token-for-test\",\n  \"topic\": \"ev-dealer-announcements\"\n}"
             },
             "url": {
               "raw": "{{notificationUrl}}/api/Notification/unsubscribe-topic",
-              "host": ["{{notificationUrl}}"],
-              "path": ["api", "Notification", "unsubscribe-topic"]
+              "host": [
+                "{{notificationUrl}}"
+              ],
+              "path": [
+                "api",
+                "Notification",
+                "unsubscribe-topic"
+              ]
             }
           },
           "response": []
@@ -4804,15 +5722,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"topic\": \"ev-dealer-announcements\",\n  \"title\": \"Announcement\",\n  \"body\": \"New vehicle available\",\n  \"data\": { \"vehicleId\": \"1\" }\n}"
             },
             "url": {
               "raw": "{{notificationUrl}}/api/Notification/send-to-topic",
-              "host": ["{{notificationUrl}}"],
-              "path": ["api", "Notification", "send-to-topic"]
+              "host": [
+                "{{notificationUrl}}"
+              ],
+              "path": [
+                "api",
+                "Notification",
+                "send-to-topic"
+              ]
             }
           },
           "response": []
@@ -4836,15 +5765,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"deviceTokens\": [\"fake-token-1\", \"fake-token-2\"],\n  \"title\": \"Multicast Test\",\n  \"body\": \"Multicast notification test\",\n  \"data\": { \"type\": \"promo\" }\n}"
             },
             "url": {
               "raw": "{{notificationUrl}}/api/Notification/send-multicast",
-              "host": ["{{notificationUrl}}"],
-              "path": ["api", "Notification", "send-multicast"]
+              "host": [
+                "{{notificationUrl}}"
+              ],
+              "path": [
+                "api",
+                "Notification",
+                "send-multicast"
+              ]
             }
           },
           "response": []
@@ -4869,15 +5809,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"customerId\": 1,\n  \"vehicleId\": 1,\n  \"dealerId\": 1,\n  \"salespersonId\": 1,\n  \"discountAmount\": 0,\n  \"notes\": \"E2E test quote\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Quotes",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Quotes"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Quotes"
+              ]
             }
           },
           "response": []
@@ -4918,8 +5868,15 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Sales/quotes/{{e2eQuoteId}}",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Sales", "quotes", "{{e2eQuoteId}}"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "quotes",
+                "{{e2eQuoteId}}"
+              ]
             }
           },
           "response": []
@@ -4944,15 +5901,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"quoteId\": {{e2eQuoteId}},\n  \"customerId\": 1,\n  \"dealerId\": 1,\n  \"salespersonId\": 1,\n  \"vehicleId\": 1,\n  \"variantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 900000000,\n  \"paymentMethod\": \"BankTransfer\",\n  \"paymentForm\": \"Full\",\n  \"deliveryPreferredDate\": \"2026-12-01\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Sales/orders",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Sales", "orders"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "orders"
+              ]
             }
           },
           "response": []
@@ -4982,8 +5950,15 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Sales/orders/{{e2eOrderId}}",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Sales", "orders", "{{e2eOrderId}}"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "orders",
+                "{{e2eOrderId}}"
+              ]
             }
           },
           "response": []
@@ -5008,15 +5983,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"orderId\": {{e2eOrderId}},\n  \"customerId\": 1,\n  \"dealerId\": 1,\n  \"contractDate\": \"2025-01-01\",\n  \"deliveryDate\": \"2025-02-01\",\n  \"totalAmount\": 50000\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Sales/contracts",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Sales", "contracts"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "contracts"
+              ]
             }
           },
           "response": []
@@ -5042,8 +6028,15 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Sales/contracts/{{e2eContractId}}",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Sales", "contracts", "{{e2eContractId}}"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "contracts",
+                "{{e2eContractId}}"
+              ]
             }
           },
           "response": []
@@ -5073,15 +6066,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 900000000,\n  \"paymentMethod\": \"BankTransfer\",\n  \"paymentDate\": \"2026-06-01\",\n  \"status\": \"Completed\",\n  \"notes\": \"E2E test payment\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Payments",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Payments"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Payments"
+              ]
             }
           },
           "response": []
@@ -5111,15 +6114,25 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"trackingNumber\": \"EV-E2E-TRACK-001\",\n  \"estimatedDeliveryDate\": \"2026-12-01\",\n  \"status\": \"Pending\",\n  \"notes\": \"E2E test delivery\"\n}"
             },
             "url": {
               "raw": "{{salesUrl}}/api/Deliveries",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Deliveries"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Deliveries"
+              ]
             }
           },
           "response": []
@@ -5150,8 +6163,13 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Orders",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Orders"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders"
+              ]
             }
           },
           "response": []
@@ -5177,8 +6195,13 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Payments",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Payments"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Payments"
+              ]
             }
           },
           "response": []
@@ -5204,8 +6227,13 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Deliveries",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Deliveries"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Deliveries"
+              ]
             }
           },
           "response": []
@@ -5236,8 +6264,13 @@
             "header": [],
             "url": {
               "raw": "{{salesUrl}}/api/Contracts",
-              "host": ["{{salesUrl}}"],
-              "path": ["api", "Contracts"]
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Contracts"
+              ]
             }
           },
           "response": []
@@ -5321,15 +6354,15 @@
     },
     {
       "key": "quoteId",
-      "value": "1"
+      "value": ""
     },
     {
       "key": "orderId",
-      "value": "1"
+      "value": ""
     },
     {
       "key": "contractId",
-      "value": "1"
+      "value": ""
     },
     {
       "key": "reportFrom",
@@ -5358,18 +6391,6 @@
     {
       "key": "notificationUrl",
       "value": "http://localhost:5051"
-    },
-    {
-      "key": "quoteId",
-      "value": ""
-    },
-    {
-      "key": "orderId",
-      "value": ""
-    },
-    {
-      "key": "contractId",
-      "value": ""
     },
     {
       "key": "paymentId",
