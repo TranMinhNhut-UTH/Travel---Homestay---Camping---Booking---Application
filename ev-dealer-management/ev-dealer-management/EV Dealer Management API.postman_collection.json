@@ -1165,6 +1165,45 @@
           "item": [
             {
               "name": "Get Quotes",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response contains $values array\", function () {\r",
+                      "    let jsonData = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.have.property(\"$values\");\r",
+                      "    pm.expect(jsonData.$values).to.be.an(\"array\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Quote list is not empty\", function () {\r",
+                      "    let jsonData = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(jsonData.$values.length).to.be.greaterThan(0);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"First quote contains required fields\", function () {\r",
+                      "    let quote = pm.response.json().$values[0];\r",
+                      "\r",
+                      "    pm.expect(quote).to.have.property(\"id\");\r",
+                      "    pm.expect(quote).to.have.property(\"customerId\");\r",
+                      "    pm.expect(quote).to.have.property(\"dealerId\");\r",
+                      "    pm.expect(quote).to.have.property(\"vehicleId\");\r",
+                      "    pm.expect(quote).to.have.property(\"status\");\r",
+                      "    pm.expect(quote).to.have.property(\"createdAt\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
               "request": {
                 "method": "GET",
                 "header": [],
@@ -1183,18 +1222,69 @@
             },
             {
               "name": "Get Quote By Id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const quote = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Response is an object\", function () {\r",
+                      "    pm.expect(quote).to.be.an(\"object\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Required fields exist\", function () {\r",
+                      "    pm.expect(quote).to.have.property(\"id\");\r",
+                      "    pm.expect(quote).to.have.property(\"customerId\");\r",
+                      "    pm.expect(quote).to.have.property(\"dealerId\");\r",
+                      "    pm.expect(quote).to.have.property(\"vehicleId\");\r",
+                      "    pm.expect(quote).to.have.property(\"status\");\r",
+                      "    pm.expect(quote).to.have.property(\"createdAt\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Id must be positive\", function () {\r",
+                      "    pm.expect(quote.id).to.be.above(0);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Quantity must be greater than 0\", function () {\r",
+                      "    pm.expect(quote.quantity).to.be.above(0);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Total price must equal quantity × base price\", function () {\r",
+                      "    pm.expect(quote.totalBasePrice)\r",
+                      "        .to.equal(quote.quantity * quote.basePrice);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Status value is valid\", function () {\r",
+                      "    pm.expect(quote.status).to.be.oneOf([\r",
+                      "        \"Active\",\r",
+                      "        \"Cancelled\",\r",
+                      "        \"ConvertedToOrder\"\r",
+                      "    ]);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
               "request": {
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{salesServiceUrl}}/api/Quotes/{{quoteId}}",
+                  "raw": "{{salesServiceUrl}}/api/Quotes/1",
                   "host": [
                     "{{salesServiceUrl}}"
                   ],
                   "path": [
                     "api",
                     "Quotes",
-                    "{{quoteId}}"
+                    "1"
                   ]
                 }
               },
@@ -1202,6 +1292,64 @@
             },
             {
               "name": "Create Quote",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "const quote = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Response is an object\", function () {\r",
+                      "    pm.expect(quote).to.be.an(\"object\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Created quote has valid id\", function () {\r",
+                      "    pm.expect(quote.id).to.be.above(0);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Required fields exist\", function () {\r",
+                      "    pm.expect(quote).to.have.property(\"customerId\");\r",
+                      "    pm.expect(quote).to.have.property(\"dealerId\");\r",
+                      "    pm.expect(quote).to.have.property(\"salespersonId\");\r",
+                      "    pm.expect(quote).to.have.property(\"vehicleId\");\r",
+                      "    pm.expect(quote).to.have.property(\"quantity\");\r",
+                      "    pm.expect(quote).to.have.property(\"basePrice\");\r",
+                      "    pm.expect(quote).to.have.property(\"totalBasePrice\");\r",
+                      "    pm.expect(quote).to.have.property(\"status\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Quantity must be greater than 0\", function () {\r",
+                      "    pm.expect(quote.quantity).to.be.above(0);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Base price must be positive\", function () {\r",
+                      "    pm.expect(quote.basePrice).to.be.above(0);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Total price must equal quantity × base price\", function () {\r",
+                      "    pm.expect(quote.totalBasePrice)\r",
+                      "        .to.equal(quote.quantity * quote.basePrice);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"New quote status should be Active\", function () {\r",
+                      "    pm.expect(quote.status).to.equal(\"Active\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Created and updated timestamps exist\", function () {\r",
+                      "    pm.expect(quote.createdAt).to.exist;\r",
+                      "    pm.expect(quote.updatedAt).to.exist;\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
               "request": {
                 "method": "POST",
                 "header": [
@@ -1233,6 +1381,29 @@
             },
             {
               "name": "Update Quote Status",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 204\", function () {\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response body is empty\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.eql(\"\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is acceptable\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
               "request": {
                 "method": "PUT",
                 "header": [
@@ -1250,14 +1421,14 @@
                   "raw": "{\n  \"status\": \"ConvertedToOrder\"\n}"
                 },
                 "url": {
-                  "raw": "{{salesServiceUrl}}/api/Quotes/{{quoteId}}/status",
+                  "raw": "{{salesServiceUrl}}/api/Quotes/1/status",
                   "host": [
                     "{{salesServiceUrl}}"
                   ],
                   "path": [
                     "api",
                     "Quotes",
-                    "{{quoteId}}",
+                    "1",
                     "status"
                   ]
                 }
@@ -1271,6 +1442,21 @@
           "item": [
             {
               "name": "Complete Order",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Complete order response valid\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([200, 400, 404]);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
               "request": {
                 "method": "POST",
                 "header": [
@@ -1303,6 +1489,26 @@
             },
             {
               "name": "Get Orders",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response is array\", function () {\r",
+                      "    const data = pm.response.json();\r",
+                      "    pm.expect(data).to.be.an(\"array\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
               "request": {
                 "method": "GET",
                 "header": [],
@@ -1321,6 +1527,27 @@
             },
             {
               "name": "Get Order By Id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status is 200 or 404\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"If success, must have id field\", function () {\r",
+                      "    if (pm.response.code === 200) {\r",
+                      "        pm.expect(pm.response.json()).to.have.property(\"id\");\r",
+                      "    }\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
               "request": {
                 "method": "GET",
                 "header": [],
@@ -1340,6 +1567,21 @@
             },
             {
               "name": "Update Order Status",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200 or 400\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([200, 400]);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
               "request": {
                 "method": "PUT",
                 "header": [
@@ -2042,151 +2284,6 @@
                   "key": "vehicleId",
                   "value": "{{vehicleId}}"
                 }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Notifications",
-      "item": [
-        {
-          "name": "Test FCM",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"deviceToken\": \"{{deviceToken}}\",\n  \"title\": \"Test notification\",\n  \"body\": \"Hello from Postman\",\n  \"data\": { \"source\": \"postman\" }\n}"
-            },
-            "url": {
-              "raw": "{{notificationServiceUrl}}/api/notification/test-fcm",
-              "host": [
-                "{{notificationServiceUrl}}"
-              ],
-              "path": [
-                "api",
-                "notification",
-                "test-fcm"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Subscribe Topic",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"deviceToken\": \"{{deviceToken}}\",\n  \"topic\": \"{{topic}}\"\n}"
-            },
-            "url": {
-              "raw": "{{notificationServiceUrl}}/api/notification/subscribe-topic",
-              "host": [
-                "{{notificationServiceUrl}}"
-              ],
-              "path": [
-                "api",
-                "notification",
-                "subscribe-topic"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Unsubscribe Topic",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"deviceToken\": \"{{deviceToken}}\",\n  \"topic\": \"{{topic}}\"\n}"
-            },
-            "url": {
-              "raw": "{{notificationServiceUrl}}/api/notification/unsubscribe-topic",
-              "host": [
-                "{{notificationServiceUrl}}"
-              ],
-              "path": [
-                "api",
-                "notification",
-                "unsubscribe-topic"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Send To Topic",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"topic\": \"{{topic}}\",\n  \"title\": \"Broadcast\",\n  \"body\": \"Hello topic\",\n  \"data\": { \"source\": \"postman\" }\n}"
-            },
-            "url": {
-              "raw": "{{notificationServiceUrl}}/api/notification/send-to-topic",
-              "host": [
-                "{{notificationServiceUrl}}"
-              ],
-              "path": [
-                "api",
-                "notification",
-                "send-to-topic"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Send Multicast",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"deviceTokens\": [\"{{deviceToken}}\"],\n  \"title\": \"Multicast\",\n  \"body\": \"Hello multiple devices\",\n  \"data\": { \"source\": \"postman\" }\n}"
-            },
-            "url": {
-              "raw": "{{notificationServiceUrl}}/api/notification/send-multicast",
-              "host": [
-                "{{notificationServiceUrl}}"
-              ],
-              "path": [
-                "api",
-                "notification",
-                "send-multicast"
               ]
             }
           },
