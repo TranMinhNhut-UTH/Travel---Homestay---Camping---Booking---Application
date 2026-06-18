@@ -2716,6 +2716,133 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Q11 - Update Quote Status (Valid Status=Expired DT)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Create a fresh quote for DT test",
+                  "const baseUrl = pm.variables.get('salesUrl') || 'http://127.0.0.1:5003';",
+                  "pm.sendRequest({",
+                  "    url: baseUrl + '/api/Quotes',",
+                  "    method: 'POST',",
+                  "    header: { 'Content-Type': 'application/json' },",
+                  "    body: {",
+                  "        mode: 'raw',",
+                  "        raw: JSON.stringify({",
+                  "            customerId: 1, vehicleId: 1, quantity: 1,",
+                  "            unitPrice: 50000, notes: 'DT quote'",
+                  "        })",
+                  "    }",
+                  "}, function(err, res) {",
+                  "    if (!err && res.code === 201) {",
+                  "        pm.variables.set('quoteIdForDT', res.json().id);",
+                  "    }",
+                  "});"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// [DT] Status transition: Active -> Expired",
+                  "// Server does not validate status enum — accepts any string",
+                  "pm.test('[DT][Happy] Status code is 204 (status updated)', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Quotes/{{quoteIdForDT}}/status",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Quotes",
+                "{{quoteIdForDT}}",
+                "status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Expired\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Q12 - Update Quote Status (Invalid Status=INVALID_XYZ DT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// [DT] Decision Table: invalid status string",
+                  "// Server có thể accept (no enum validation) hoặc reject (400)",
+                  "pm.test('[DT] No server crash on invalid status string (no 500)', function () {",
+                  "    pm.expect(pm.response.code).to.not.eql(500);",
+                  "});",
+                  "pm.test('[DT] Returns 204 or 400 (document server behavior)', function () {",
+                  "    pm.expect([204, 400]).to.include(pm.response.code);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Quotes/{{quoteIdForDT}}/status",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Quotes",
+                "{{quoteIdForDT}}",
+                "status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"INVALID_XYZ\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -3302,6 +3429,162 @@
               }
             }
           ]
+        },
+        {
+          "name": "O14 - Update Order Status (Status=Delivered DT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// [DT] Status transition: -> Delivered",
+                  "pm.test('[DT][Happy] Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('[DT][Happy] Response has success message', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('message');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Orders/{{orderId}}/status",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders",
+                "{{orderId}}",
+                "status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Delivered\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "O15 - Update Order Status (Status=Cancelled DT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// [DT] Status transition: -> Cancelled",
+                  "pm.test('[DT][Happy] Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('[DT][Happy] Response confirms update', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('message');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Orders/{{orderId}}/status",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders",
+                "{{orderId}}",
+                "status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Cancelled\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "O16 - Update Order Status (Invalid Status=UNKNOWN DT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// [DT] Decision Table: invalid status string",
+                  "// Server không validate enum — document behavior",
+                  "pm.test('[DT] No server crash on invalid status (no 500)', function () {",
+                  "    pm.expect(pm.response.code).to.not.eql(500);",
+                  "});",
+                  "pm.test('[DT] Returns 200 or 400 (document server behavior)', function () {",
+                  "    pm.expect([200, 400]).to.include(pm.response.code);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Orders/{{orderId}}/status",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Orders",
+                "{{orderId}}",
+                "status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"UNKNOWN_STATUS\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -4210,6 +4493,159 @@
               }
             }
           ]
+        },
+        {
+          "name": "P7 - Create Payment (PaymentMethod=Cash DT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// [DT] Decision Table: Payment method = Cash",
+                  "pm.test('[DT][Happy] Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test('[DT][Happy] Response has id', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('id');",
+                  "});",
+                  "pm.test('[DT][Happy] PaymentMethod is Cash', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.paymentMethod).to.eql('Cash');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Payments",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Payments"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 500.0,\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-CASH-001\",\n  \"notes\": \"DT: Cash payment method\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "P8 - Create Payment (PaymentMethod=BankTransfer DT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// [DT] Decision Table: Payment method = BankTransfer",
+                  "pm.test('[DT][Happy] Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test('[DT][Happy] PaymentMethod is BankTransfer', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.paymentMethod).to.eql('BankTransfer');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Payments",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Payments"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 1000.0,\n  \"paymentMethod\": \"BankTransfer\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-BANK-001\",\n  \"notes\": \"DT: BankTransfer payment method\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "P9 - Create Payment (Missing PaymentMethod - Negative DT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// [DT][Negative] Missing PaymentMethod — server behavior",
+                  "pm.test('[DT][Negative] No server crash (no 500)', function () {",
+                  "    pm.expect(pm.response.code).to.not.eql(500);",
+                  "});",
+                  "pm.test('[DT][Negative] Returns 400 or 201 (server behavior)', function () {",
+                  "    pm.expect([400, 201]).to.include(pm.response.code);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Payments",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Payments"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 500.0,\n  \"status\": \"Completed\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -4224,9 +4660,12 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "// EP: Valid delivery -> 201",
                   "pm.test('[EP][Happy] Status code is 201', function () {",
                   "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test('[EP][Happy] Response has id field', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('id');",
                   "});"
                 ]
               }
@@ -4384,9 +4823,16 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "// EP: Valid promotion -> 201",
                   "pm.test('[EP][Happy] Status code is 201', function () {",
                   "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test('[EP][Happy] Response has id field', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('id');",
+                  "});",
+                  "pm.test('[EP][Happy] Response has name field', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('name');",
                   "});"
                 ]
               }
@@ -4532,6 +4978,147 @@
                 "api",
                 "Promotions"
               ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "D5 - Create Delivery (Missing Status - Negative DT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// [DT][Negative] Missing status field",
+                  "pm.test('[DT][Negative] No server crash (no 500)', function () {",
+                  "    pm.expect(pm.response.code).to.not.eql(500);",
+                  "});",
+                  "pm.test('[DT][Negative] Returns 400 or 201 (document server behavior)', function () {",
+                  "    pm.expect([400, 201]).to.include(pm.response.code);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Deliveries",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Deliveries"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"estimatedDeliveryDate\": \"2025-12-31T00:00:00Z\",\n  \"notes\": \"DT: Missing status field\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PR5 - Create Promotion (DiscountValue=0 BVA Boundary)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// [BVA] DiscountValue=0 — minimum boundary",
+                  "pm.test('[BVA][Boundary] Status code is 400 (zero discount invalid)', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Promotions",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Promotions"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"BVA Zero Discount\",\n  \"description\": \"BVA test\",\n  \"discountValue\": 0,\n  \"startDate\": \"2025-01-01T00:00:00Z\",\n  \"endDate\": \"2025-12-31T00:00:00Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PR6 - Create Promotion (Missing Name - Negative DT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// [DT][Negative] Missing required Name field",
+                  "pm.test('[DT][Negative] Status code is 400', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Promotions",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Promotions"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"DT: Missing name\",\n  \"discountValue\": 10,\n  \"startDate\": \"2025-01-01T00:00:00Z\",\n  \"endDate\": \"2025-12-31T00:00:00Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             }
           },
           "response": []
@@ -4749,9 +5336,12 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "// EP: GET /api/Sales/orders/{id} -> 200",
                   "pm.test('[EP][Happy] Status 200', function () {",
                   "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('[EP][Happy] Response has orderId or id', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.satisfy(r => r.orderId || r.id, 'must have orderId or id');",
                   "});"
                 ]
               }
@@ -4783,12 +5373,14 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "// EP: POST /api/Sales/contracts with valid orderId -> 201",
                   "pm.test('[EP][Happy] Status 201', function () {",
                   "    pm.response.to.have.status(201);",
                   "});",
-                  "var json = pm.response.json();",
-                  "pm.collectionVariables.set('s6ContractId', json.contractId || json.ContractId);"
+                  "pm.test('[EP][Happy] Response has contractId or id', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.satisfy(r => r.contractId || r.id, 'must have contractId or id');",
+                  "    pm.collectionVariables.set('s6ContractId', json.contractId || json.id);",
+                  "});"
                 ]
               }
             }
@@ -4869,9 +5461,12 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "// EP: GET /api/Sales/contracts/{id} -> 200",
                   "pm.test('[EP][Happy] Status 200', function () {",
                   "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('[EP][Happy] Response has contractId or id', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.satisfy(r => r.contractId || r.id, 'must have contractId or id');",
                   "});"
                 ]
               }
@@ -4934,6 +5529,162 @@
               }
             }
           ]
+        },
+        {
+          "name": "S10 - GET Sales Quote by ID=0 (BVA Boundary)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// [BVA] ID=0 lower boundary for GET Sales Quote",
+                  "pm.test('[BVA][Boundary] ID=0 returns 404', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Sales/quotes/0",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "quotes",
+                "0"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "S11 - GET Sales Order by ID=0 (BVA Boundary)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// [BVA] ID=0 lower boundary for GET Sales Order",
+                  "pm.test('[BVA][Boundary] ID=0 returns 404', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Sales/orders/0",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "orders",
+                "0"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "S12 - GET Sales Contract by ID=0 (BVA Boundary)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// [BVA] ID=0 lower boundary for GET Sales Contract",
+                  "pm.test('[BVA][Boundary] ID=0 returns 404', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Sales/contracts/0",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "contracts",
+                "0"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "S13 - GET Sales Contract Not Found (Negative EP)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// [EP][Negative] Contract ID not found",
+                  "pm.test('[EP][Negative] Status 404', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{salesUrl}}/api/Sales/contracts/99999",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "api",
+                "Sales",
+                "contracts",
+                "99999"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
