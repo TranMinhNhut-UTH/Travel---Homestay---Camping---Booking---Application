@@ -286,7 +286,7 @@ jobs:
           echo "Detected branch issue key: ${primary_key:-<none>}"
 
       - name: Move Jira issues to Done after merged PR
-        if: steps.jira_keys.outputs.branch_type == 'fix' && steps.jira_keys.outputs.branch_key != ''
+        if: (steps.jira_keys.outputs.branch_type == 'fix' || steps.jira_keys.outputs.branch_type == 'feature') && steps.jira_keys.outputs.branch_key != ''
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
