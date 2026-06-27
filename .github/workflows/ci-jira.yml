@@ -145,7 +145,7 @@ jobs:
         run: |
           set -euo pipefail
           # Định vị động file Postman mà Tiến push lên thư mục gốc để chạy test
-          POSTMAN_FILE=$(find . -maxdepth 1 -name "*.json" | head -n 1)
+          POSTMAN_FILE=$(find . -maxdepth 1 -name "*.postman_collection.json" | head -n 1)
           if [ ! -f "$POSTMAN_FILE" ]; then
             POSTMAN_FILE="ev-dealer-management/ev-dealer-management/EV Dealer Management API.postman_collection.json"
           fi
