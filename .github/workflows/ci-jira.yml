@@ -142,19 +142,13 @@ jobs:
       - name: Run Postman API Tests
         shell: bash
         run: |
-          set -euo pipefail
-          # Định vị động file Postman mà Tiến push lên thư mục gốc để chạy test
-          POSTMAN_FILE=$(find . -maxdepth 1 -name "*.postman_collection.json" | head -n 1)
-          if [ ! -f "$POSTMAN_FILE" ]; then
-            POSTMAN_FILE="ev-dealer-management/ev-dealer-management/EV Dealer Management API.postman_collection.json"
-          fi
-          echo "Executing Newman with target collection: $POSTMAN_FILE"
-          
-          # ĐÃ SỬA: Đưa cả 2 biến về chung một gốc không chứa /api để tránh trùng lặp
-          newman run "$POSTMAN_FILE" \
-            --env-var "baseUrl=http://127.0.0.1:5036" \
-            --env-var "base_url=http://127.0.0.1:5036" \
-            --reporters cli 2>&1 | tee newman.log
+         set -euo pipefail
+         POSTMAN_FILE="./ev-dealer-management.postman_collection.json"
+         echo "Executing Newman with target collection: $POSTMAN_FILE"
+         newman run "$POSTMAN_FILE" \
+         --env-var "baseUrl=http://127.0.0.1:5036" \
+         --env-var "base_url=http://127.0.0.1:5036" \
+         --reporters cli 2>&1 | tee newman.log
 
       - name: Comment failure back to Jira
         if: failure() && github.ref != 'refs/heads/main'
