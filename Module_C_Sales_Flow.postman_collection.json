@@ -1,10 +1,8 @@
 {
   "info": {
-    "_postman_id": "6250ba43-4aff-4397-a664-0b8e0cbf8f23",
+    "_postman_id": "sales-flow-automated-test",
     "name": "Module C - Sales Flow",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "55080581",
-    "_collection_link": "https://go.postman.co/collection/55080581-6250ba43-4aff-4397-a664-0b8e0cbf8f23?source=collection_link"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     {
@@ -26,8 +24,7 @@
       "key": "current_contract_id",
       "value": "",
       "type": "string"
-    }
-    ,
+    },
     {
       "key": "current_payment_id",
       "value": "",
@@ -154,82 +151,82 @@
       },
       "response": []
     },
-      {
-        "name": "5. POST - Thanh Toán Đơn Hàng (Create Payment)",
-        "event": [
+    {
+      "name": "5. POST - Thanh Toán Đơn Hàng (Create Payment)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200/201', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              "",
+              "pm.test('Payment created correctly', function () {",
+              "    var jsonData = pm.response.json();",
+              "    var paymentId = jsonData.paymentId ?? jsonData.id ?? jsonData.Id;",
+              "    pm.expect(paymentId, 'payment id should be returned').to.be.ok;",
+              "    pm.environment.set('current_payment_id', String(paymentId));",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
           {
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "pm.test('Status code is 200/201', function () {",
-                "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-                "});",
-                "",
-                "pm.test('Payment created correctly', function () {",
-                "    var jsonData = pm.response.json();",
-                "    var paymentId = jsonData.paymentId ?? jsonData.id ?? jsonData.Id;",
-                "    pm.expect(paymentId, 'payment id should be returned').to.be.ok;",
-                "    pm.environment.set('current_payment_id', String(paymentId));",
-                "});"
-              ]
-            }
+            "key": "Content-Type",
+            "value": "application/json"
           }
         ],
-        "request": {
-          "method": "POST",
-          "header": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\n  \"orderId\": {{current_order_id}},\n  \"amount\": 750.00,\n  \"paymentDate\": \"2026-07-02T23:55:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"PAYMENT-{{current_order_id}}\",\n  \"notes\": \"Payment created by Postman smoke test\"\n}"
-          },
-          "url": "{{salesServiceUrl}}/api/Payments"
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": {{current_order_id}},\n  \"amount\": 750.00,\n  \"paymentDate\": \"2026-07-02T23:55:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"PAYMENT-{{current_order_id}}\",\n  \"notes\": \"Payment created by Postman smoke test\"\n}"
         },
-        "response": []
+        "url": "{{salesServiceUrl}}/api/Payments"
       },
-      {
-        "name": "6. POST - Khởi Tạo Giao Hàng (Create Delivery)",
-        "event": [
+      "response": []
+    },
+    {
+      "name": "6. POST - Khởi Tạo Giao Hàng (Create Delivery)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200/201', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              "",
+              "pm.test('Delivery created correctly', function () {",
+              "    var jsonData = pm.response.json();",
+              "    var deliveryId = jsonData.deliveryId ?? jsonData.id ?? jsonData.Id;",
+              "    pm.expect(deliveryId, 'delivery id should be returned').to.be.ok;",
+              "    pm.environment.set('current_delivery_id', String(deliveryId));",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
           {
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "pm.test('Status code is 200/201', function () {",
-                "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-                "});",
-                "",
-                "pm.test('Delivery created correctly', function () {",
-                "    var jsonData = pm.response.json();",
-                "    var deliveryId = jsonData.deliveryId ?? jsonData.id ?? jsonData.Id;",
-                "    pm.expect(deliveryId, 'delivery id should be returned').to.be.ok;",
-                "    pm.environment.set('current_delivery_id', String(deliveryId));",
-                "});"
-              ]
-            }
+            "key": "Content-Type",
+            "value": "application/json"
           }
         ],
-        "request": {
-          "method": "POST",
-          "header": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\n  \"orderId\": {{current_order_id}},\n  \"trackingNumber\": \"TRK-{{current_order_id}}\",\n  \"estimatedDeliveryDate\": \"2026-07-05T09:00:00Z\",\n  \"actualDeliveryDate\": null,\n  \"status\": \"Scheduled\",\n  \"notes\": \"Delivery created by Postman smoke test\"\n}"
-          },
-          "url": "{{salesServiceUrl}}/api/Deliveries"
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": {{current_order_id}},\n  \"trackingNumber\": \"TRK-{{current_order_id}}\",\n  \"estimatedDeliveryDate\": \"2026-07-05T09:00:00Z\",\n  \"actualDeliveryDate\": null,\n  \"status\": \"Scheduled\",\n  \"notes\": \"Delivery created by Postman smoke test\"\n}"
         },
-        "response": []
+        "url": "{{salesServiceUrl}}/api/Deliveries"
       },
+      "response": []
+    },
     {
       "name": "4. POST - Áp Dụng Ưu Đãi (Apply Promotion)",
       "event": [
