@@ -6,6 +6,39 @@
     "_exporter_id": "55080581",
     "_collection_link": "https://go.postman.co/collection/55080581-6250ba43-4aff-4397-a664-0b8e0cbf8f23?source=collection_link"
   },
+  "variable": [
+    {
+      "key": "salesServiceUrl",
+      "value": "http://localhost:5003",
+      "type": "string"
+    },
+    {
+      "key": "current_quote_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "current_order_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "current_contract_id",
+      "value": "",
+      "type": "string"
+    }
+    ,
+    {
+      "key": "current_payment_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "current_delivery_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
   "item": [
     {
       "name": "1. POST - Tạo Báo Giá (Create Quote)",
@@ -13,91 +46,218 @@
         {
           "listen": "test",
           "script": {
-            "exec": [
-              "// 1. Kiểm tra HTTP Status Code thành công\r",
-              "pm.test(\"Status code là 200 OK\", function () {\r",
-              "    pm.response.to.have.status(200);\r",
-              "});\r",
-              "\r",
-              "// 2. Kiểm tra cấu trúc dữ liệu trả về\r",
-              "pm.test(\"Cấu trúc JSON phản hồi hợp lệ\", function () {\r",
-              "    var jsonData = pm.response.json();\r",
-              "    \r",
-              "    pm.expect(jsonData).to.have.property(\"quoteId\");\r",
-              "    pm.expect(jsonData).to.have.property(\"status\");\r",
-              "    \r",
-              "    // Lưu biến môi trường để dùng cho bước sau (Convert to Order)\r",
-              "    pm.environment.set(\"current_quote_id\", jsonData.quoteId);\r",
-              "});"
-            ],
             "type": "text/javascript",
-            "packages": {},
-            "requests": {}
+            "exec": [
+              "pm.test('Status code is 200/201', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              "",
+              "pm.test('Cấu trúc JSON phản hồi hợp lệ', function () {",
+              "    var jsonData = pm.response.json();",
+              "    var quoteId = jsonData.quoteId ?? jsonData.id ?? jsonData.QuoteId;",
+              "    pm.expect(quoteId, 'quote id should be returned').to.be.ok;",
+              "    pm.environment.set('current_quote_id', String(quoteId));",
+              "});"
+            ]
           }
         }
       ],
       "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:5003/api/Quotes/create?customerId=CUST-9921&productId=PROD-001&quantity=5&unitPrice=150",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "5003",
-          "path": [
-            "api",
-            "Quotes",
-            "create"
-          ],
-          "query": [
-            {
-              "key": "customerId",
-              "value": "CUST-9921",
-              "description": "Mã khách hàng"
-            },
-            {
-              "key": "productId",
-              "value": "PROD-001",
-              "description": "Mã sản phẩm"
-            },
-            {
-              "key": "quantity",
-              "value": "5",
-              "description": "Số lượng"
-            },
-            {
-              "key": "unitPrice",
-              "value": "150",
-              "description": "Đơn giá"
-            }
-          ]
-        }
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customerId\": 1,\n  \"dealerId\": 1,\n  \"salespersonId\": 1,\n  \"vehicleId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 5,\n  \"unitPrice\": 150,\n  \"totalPrice\": 750,\n  \"status\": \"Active\",\n  \"notes\": \"Created by Postman smoke test\"\n}"
+        },
+        "url": "{{salesServiceUrl}}/api/Quotes"
       },
       "response": []
     },
     {
       "name": "2. POST - Chuyển Quote thành Order (Convert to Order)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200/201', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              "",
+              "pm.test('Order created correctly', function () {",
+              "    var jsonData = pm.response.json();",
+              "    var orderId = jsonData.orderId ?? jsonData.id ?? jsonData.OrderId;",
+              "    pm.expect(orderId, 'order id should be returned').to.be.ok;",
+              "    pm.environment.set('current_order_id', String(orderId));",
+              "});"
+            ]
+          }
+        }
+      ],
       "request": {
-        "method": "GET",
-        "header": []
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"quoteId\": {{current_quote_id}},\n  \"customerId\": 1,\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Nguyen Van A\",\n  \"dealerId\": 1,\n  \"salespersonId\": 1,\n  \"paymentMethod\": \"Cash\",\n  \"deliveryDate\": \"2026-06-10T09:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"notes\": \"Created by Postman smoke test\",\n  \"paymentType\": \"Full\",\n  \"depositAmount\": 0,\n  \"interestRateYearly\": 0,\n  \"loanTermMonths\": 0,\n  \"vehicleId\": 1,\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 5,\n  \"unitPrice\": 150,\n  \"totalAmount\": 750,\n  \"promotionId\": null,\n  \"discountAmount\": 0,\n  \"discountPercent\": 0,\n  \"discountNote\": \"\"\n}"
+        },
+        "url": "{{salesServiceUrl}}/api/Orders/complete"
       },
       "response": []
     },
     {
       "name": "3. POST - Tạo Hợp Đồng (Create Contract)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200/201', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              "",
+              "pm.test('Contract created correctly', function () {",
+              "    var jsonData = pm.response.json();",
+              "    var contractId = jsonData.contractId ?? jsonData.id ?? jsonData.ContractId;",
+              "    pm.expect(contractId, 'contract id should be returned').to.be.ok;",
+              "    pm.environment.set('current_contract_id', String(contractId));",
+              "});"
+            ]
+          }
+        }
+      ],
       "request": {
-        "method": "GET",
-        "header": []
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": {{current_order_id}},\n  \"customerId\": 1,\n  \"salespersonId\": \"1\",\n  \"contractDate\": \"2026-06-10T09:00:00Z\",\n  \"depositAmountReceived\": true,\n  \"termsAndConditions\": \"Generated by Postman smoke test\"\n}"
+        },
+        "url": "{{salesServiceUrl}}/api/Contracts"
       },
       "response": []
     },
+      {
+        "name": "5. POST - Thanh Toán Đơn Hàng (Create Payment)",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('Status code is 200/201', function () {",
+                "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                "});",
+                "",
+                "pm.test('Payment created correctly', function () {",
+                "    var jsonData = pm.response.json();",
+                "    var paymentId = jsonData.paymentId ?? jsonData.id ?? jsonData.Id;",
+                "    pm.expect(paymentId, 'payment id should be returned').to.be.ok;",
+                "    pm.environment.set('current_payment_id', String(paymentId));",
+                "});"
+              ]
+            }
+          }
+        ],
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"orderId\": {{current_order_id}},\n  \"amount\": 750.00,\n  \"paymentDate\": \"2026-07-02T23:55:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"PAYMENT-{{current_order_id}}\",\n  \"notes\": \"Payment created by Postman smoke test\"\n}"
+          },
+          "url": "{{salesServiceUrl}}/api/Payments"
+        },
+        "response": []
+      },
+      {
+        "name": "6. POST - Khởi Tạo Giao Hàng (Create Delivery)",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('Status code is 200/201', function () {",
+                "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                "});",
+                "",
+                "pm.test('Delivery created correctly', function () {",
+                "    var jsonData = pm.response.json();",
+                "    var deliveryId = jsonData.deliveryId ?? jsonData.id ?? jsonData.Id;",
+                "    pm.expect(deliveryId, 'delivery id should be returned').to.be.ok;",
+                "    pm.environment.set('current_delivery_id', String(deliveryId));",
+                "});"
+              ]
+            }
+          }
+        ],
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"orderId\": {{current_order_id}},\n  \"trackingNumber\": \"TRK-{{current_order_id}}\",\n  \"estimatedDeliveryDate\": \"2026-07-05T09:00:00Z\",\n  \"actualDeliveryDate\": null,\n  \"status\": \"Scheduled\",\n  \"notes\": \"Delivery created by Postman smoke test\"\n}"
+          },
+          "url": "{{salesServiceUrl}}/api/Deliveries"
+        },
+        "response": []
+      },
     {
       "name": "4. POST - Áp Dụng Ưu Đãi (Apply Promotion)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200/201', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});"
+            ]
+          }
+        }
+      ],
       "request": {
-        "method": "GET",
-        "header": []
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"POSTMAN-SMOKE\",\n  \"description\": \"Promotion created by Postman smoke test\",\n  \"startDate\": \"2026-01-01T00:00:00Z\",\n  \"endDate\": \"2026-12-31T23:59:59Z\",\n  \"discountValue\": 10,\n  \"discountType\": \"Percentage\"\n}"
+        },
+        "url": "{{salesServiceUrl}}/api/Promotions"
       },
       "response": []
     }
