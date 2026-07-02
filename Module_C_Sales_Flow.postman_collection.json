@@ -1,10 +1,8 @@
 {
   "info": {
-    "_postman_id": "6250ba43-4aff-4397-a664-0b8e0cbf8f23",
+    "_postman_id": "sales-flow-automated-test",
     "name": "Module C - Sales Flow",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "55080581",
-    "_collection_link": "https://go.postman.co/collection/55080581-6250ba43-4aff-4397-a664-0b8e0cbf8f23?source=collection_link"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
@@ -14,33 +12,51 @@
           "listen": "test",
           "script": {
             "exec": [
-              "// 1. Kiểm tra HTTP Status Code thành công\r",
-              "pm.test(\"Status code là 200 OK\", function () {\r",
-              "    pm.response.to.have.status(200);\r",
-              "});\r",
-              "\r",
-              "// 2. Kiểm tra cấu trúc dữ liệu trả về\r",
-              "pm.test(\"Cấu trúc JSON phản hồi hợp lệ\", function () {\r",
-              "    var jsonData = pm.response.json();\r",
-              "    \r",
-              "    pm.expect(jsonData).to.have.property(\"quoteId\");\r",
-              "    pm.expect(jsonData).to.have.property(\"status\");\r",
-              "    \r",
-              "    // Lưu biến môi trường để dùng cho bước sau (Convert to Order)\r",
-              "    pm.environment.set(\"current_quote_id\", jsonData.quoteId);\r",
-              "});"
+              "pm.test(\"Status code là 201 Created\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Cấu trúc JSON phản hồi hợp lệ\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    var hasId = jsonData.hasOwnProperty('id') || jsonData.hasOwnProperty('Id') || jsonData.hasOwnProperty('quoteId') || jsonData.hasOwnProperty('QuoteId');",
+              "    pm.expect(hasId).to.be.true;",
+              "});",
+              "",
+              "if (pm.response.code === 201) {",
+              "    try {",
+              "        var jsonData = pm.response.json();",
+              "        var extractedId = jsonData.id || jsonData.Id || jsonData.quoteId || jsonData.QuoteId;",
+              "        pm.environment.set(\"quoteId\", extractedId);",
+              "        console.log('Đã lưu Quote ID thành công:', extractedId);",
+              "    } catch(e) {",
+              "        console.error('Không thể gán biến ID: ' + e.message);",
+              "    }",
+              "}"
             ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
+            "type": "text/javascript"
           }
         }
       ],
       "request": {
-        "method": "GET",
-        "header": [],
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customerId\": \"CUST-9921\",\n  \"productId\": \"PROD-001\",\n  \"quantity\": 5,\n  \"unitPrice\": 150\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
         "url": {
-          "raw": "http://localhost:5003/api/Quotes/create?customerId=CUST-9921&productId=PROD-001&quantity=5&unitPrice=150",
+          "raw": "http://localhost:5003/api/Quotes",
           "protocol": "http",
           "host": [
             "localhost"
@@ -48,30 +64,7 @@
           "port": "5003",
           "path": [
             "api",
-            "Quotes",
-            "create"
-          ],
-          "query": [
-            {
-              "key": "customerId",
-              "value": "CUST-9921",
-              "description": "Mã khách hàng"
-            },
-            {
-              "key": "productId",
-              "value": "PROD-001",
-              "description": "Mã sản phẩm"
-            },
-            {
-              "key": "quantity",
-              "value": "5",
-              "description": "Số lượng"
-            },
-            {
-              "key": "unitPrice",
-              "value": "150",
-              "description": "Đơn giá"
-            }
+            "Quotes"
           ]
         }
       },
@@ -79,25 +72,157 @@
     },
     {
       "name": "2. POST - Chuyển Quote thành Order (Convert to Order)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code là 201 Created hoặc 200 OK\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              "",
+              "if (pm.response.code === 200 || pm.response.code === 201) {",
+              "    try {",
+              "        var jsonData = pm.response.json();",
+              "        var orderId = jsonData.id || jsonData.Id || jsonData.orderId || jsonData.OrderId;",
+              "        pm.environment.set(\"orderId\", orderId);",
+              "        console.log('Đã lưu Order ID thành công:', orderId);",
+              "    } catch(e) {",
+              "        console.error('Không thể lấy orderId từ phản hồi: ' + e.message);",
+              "    }",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
       "request": {
-        "method": "GET",
-        "header": []
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"quoteId\": {{quoteId}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5003/api/Orders",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5003",
+          "path": [
+            "api",
+            "Orders"
+          ]
+        }
       },
       "response": []
     },
     {
       "name": "3. POST - Tạo Hợp Đồng (Create Contract)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code là 201 Created hoặc 200 OK\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
       "request": {
-        "method": "GET",
-        "header": []
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": {{orderId}},\n  \"contractNumber\": \"CON-2026-001\",\n  \"signedDate\": \"2026-06-27T00:00:00Z\",\n  \"totalAmount\": 750\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5003/api/Contracts",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5003",
+          "path": [
+            "api",
+            "Contracts"
+          ]
+        }
       },
       "response": []
     },
     {
       "name": "4. POST - Áp Dụng Ưu Đãi (Apply Promotion)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code là 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
       "request": {
-        "method": "GET",
-        "header": []
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": {{orderId}},\n  \"promotionCode\": \"SALES2026\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5003/api/Orders/apply-promotion",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5003",
+          "path": [
+            "api",
+            "Orders",
+            "apply-promotion"
+          ]
+        }
       },
       "response": []
     }
