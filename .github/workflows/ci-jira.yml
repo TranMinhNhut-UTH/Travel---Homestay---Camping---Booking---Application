@@ -68,6 +68,7 @@ jobs:
           echo "Detected branch issue key: ${primary_key:-<none>}"
 
       - name: Validate Postman collection
+        id: postman_validation
         shell: bash
         run: |
           set -o pipefail
@@ -84,12 +85,24 @@ jobs:
         run: dotnet restore ev-dealer-management/ev-dealer-management/DealerSystem.sln
 
       - name: Build solution
+        id: build
         shell: bash
         run: |
           set -o pipefail
           dotnet build ev-dealer-management/ev-dealer-management/DealerSystem.sln --configuration Release --no-restore 2>&1 | tee dotnet-build.log
 
+      - name: Run Unit Tests
+        id: unit_tests
+        shell: bash
+        run: |
+          set -o pipefail
+          dotnet test ev-dealer-management/ev-dealer-management/DealerSystem.sln \
+            --configuration Release \
+            --no-build \
+            --logger "console;verbosity=normal" 2>&1 | tee unit-test.log
+
       - name: Start backend services
+        id: services
         shell: bash
         run: |
           set -euo pipefail
@@ -141,6 +154,7 @@ jobs:
           wait_for_port 5036 APIGatewayService
 
       - name: Run Postman API Tests
+        id: api_tests
         shell: bash
         run: |
           set -euo pipefail
@@ -150,7 +164,7 @@ jobs:
             POSTMAN_FILE="ev-dealer-management/ev-dealer-management/EV Dealer Management API.postman_collection.json"
           fi
           echo "Executing Newman with target collection: $POSTMAN_FILE"
-          
+
           # ĐÃ SỬA: Đưa cả 2 biến về chung một gốc không chứa /api để tránh trùng lặp
           newman run "$POSTMAN_FILE" \
             --env-var "baseUrl=http://127.0.0.1:5036" \
@@ -168,84 +182,36 @@ jobs:
           GITHUB_REF_NAME: ${{ github.ref_name }}
         run: node .github/scripts/jira-sync.mjs FAIL
 
-      - name: Create Jira issue on CI failure
-        if: failure() && github.ref != 'refs/heads/main' && steps.jira_keys.outputs.branch_type == 'feature' && steps.jira_keys.outputs.branch_key != ''
-        shell: bash
+      - name: Publish PASS test report
+        if: success()
         env:
+          TEST_STATUS: PASS
+          POSTMAN_VALIDATION_OUTCOME: ${{ steps.postman_validation.outcome }}
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
+          UNIT_TEST_OUTCOME: ${{ steps.unit_tests.outcome }}
+          SERVICES_OUTCOME: ${{ steps.services.outcome }}
+          API_TESTS_OUTCOME: ${{ steps.api_tests.outcome }}
+          GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: node .github/scripts/jira-test-report.mjs PASS
+
+      - name: Create professional Jira Bug and publish FAIL report
+        if: failure() && github.ref != 'refs/heads/main' && steps.jira_keys.outputs.branch_type == 'feature' && steps.jira_keys.outputs.branch_key != ''
+        env:
+          TEST_STATUS: FAIL
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          JIRA_PROJECT_KEY: ED
-          JIRA_ISSUE_TYPE: Bug
+          JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
+          JIRA_REPORTER_ACCOUNT_ID: ${{ secrets.JIRA_REPORTER_ACCOUNT_ID }}
+          JIRA_DEFAULT_ASSIGNEE_ACCOUNT_ID: ${{ secrets.JIRA_DEFAULT_ASSIGNEE_ACCOUNT_ID }}
           JIRA_LINK_ISSUE_KEY: ${{ steps.jira_keys.outputs.branch_key }}
-          JIRA_BRANCH_TYPE: ${{ steps.jira_keys.outputs.branch_type }}
-          GITHUB_WORKFLOW_NAME: ${{ github.workflow }}
+          POSTMAN_VALIDATION_OUTCOME: ${{ steps.postman_validation.outcome }}
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
+          UNIT_TEST_OUTCOME: ${{ steps.unit_tests.outcome }}
+          SERVICES_OUTCOME: ${{ steps.services.outcome }}
+          API_TESTS_OUTCOME: ${{ steps.api_tests.outcome }}
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          GITHUB_REF_NAME: ${{ github.ref_name }}
-        run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          import { createIssue, buildIssueFields, linkIssues } from './.github/scripts/jira-client.mjs';
-
-          const workflowName = process.env.GITHUB_WORKFLOW_NAME || 'CI';
-          const branchKey = process.env.JIRA_LINK_ISSUE_KEY || '';
-          const branchType = process.env.JIRA_BRANCH_TYPE || 'unknown';
-          console.log(`Detected branch type: ${branchType}`);
-          console.log(`Detected parent issue key: ${branchKey || '<none>'}`);
-          const postmanLog = fs.existsSync('postman-validation.log') ? fs.readFileSync('postman-validation.log', 'utf8').trim() : '(not available)';
-          const buildLog = fs.existsSync('dotnet-build.log') ? fs.readFileSync('dotnet-build.log', 'utf8').trim() : '(not available)';
-          const newmanLog = fs.existsSync('newman.log') ? fs.readFileSync('newman.log', 'utf8').trim() : '(not available)';
-          const description = [
-            `Workflow: ${workflowName}`,
-            `Run: ${process.env.GITHUB_RUN_URL || ''}`,
-            `Branch: ${process.env.GITHUB_REF_NAME || ''}`,
-            branchKey ? `Source issue: ${branchKey}` : '',
-            '',
-            'Failed paths:',
-            '- Integration API collection tests failed.',
-            '',
-            'Postman log:',
-            postmanLog,
-            '',
-            'Build log:',
-            buildLog,
-            '',
-            'Newman log:',
-            newmanLog,
-          ].join('\n');
-
-          const fields = buildIssueFields({
-            projectKey: process.env.JIRA_PROJECT_KEY || 'ED',
-            summary: `CI Failure: ${workflowName} - Integration Error detected on ${branchKey}`,
-            description,
-            issueType: process.env.JIRA_ISSUE_TYPE || 'Bug',
-            labels: ['automation', 'ci-failure'],
-          });
-
-          const result = await createIssue({
-            baseUrl: process.env.JIRA_BASE_URL,
-            email: process.env.JIRA_EMAIL,
-            apiToken: process.env.JIRA_API_TOKEN,
-            fields,
-          });
-          console.log(`Dynamically created bug key: ${result.key}`);
-
-          if (branchKey) {
-            await linkIssues({
-              baseUrl: process.env.JIRA_BASE_URL,
-              email: process.env.JIRA_EMAIL,
-              apiToken: process.env.JIRA_API_TOKEN,
-              outwardIssueKey: result.key,
-              indexKey: branchKey,
-              inwardIssueKey: branchKey,
-              linkType: 'Relates',
-            });
-            console.log(`Linked issues: ${result.key} -> ${branchKey}`);
-          }
-
-          console.log(JSON.stringify(result, null, 2));
-          NODE
+        run: node .github/scripts/jira-test-report.mjs FAIL
 
   merge-pr-to-done:
     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true

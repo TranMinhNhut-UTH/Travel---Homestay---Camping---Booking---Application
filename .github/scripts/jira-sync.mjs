@@ -6,8 +6,39 @@ function parseIssueKeys() {
     return [...new Set(fromEnv)];
   }
 
-  const sourceText = process.env.JIRA_SOURCE_TEXT || '';
-  return extractIssueKeys(sourceText);
+  return extractIssueKeys(process.env.JIRA_SOURCE_TEXT || '');
+}
+
+function requireJiraEnvironment() {
+  const required = ['JIRA_BASE_URL', 'JIRA_EMAIL', 'JIRA_API_TOKEN'];
+  const missing = required.filter((name) => !String(process.env[name] || '').trim());
+  if (missing.length) {
+    throw new Error(`Missing required Jira environment variables: ${missing.join(', ')}`);
+  }
+}
+
+function buildVerificationComment(state) {
+  const lines = [
+    `Repo: ${process.env.GITHUB_REPOSITORY || 'unknown-repository'}`,
+    `Branch: ${process.env.GITHUB_REF_NAME || 'unknown-branch'}`,
+    `Commit: ${process.env.GITHUB_SHA || 'unknown-commit'}`,
+    `CI Run: ${process.env.GITHUB_RUN_URL || 'Not available'}`,
+  ];
+
+  if (state === 'FAIL') {
+    return [
+      ...lines,
+      'Test Status: FAIL',
+      'Created by automation for Software Verification workflow.',
+      'Fixer must create bugfix branch and reference Jira ID in commit message.',
+    ].join('\n');
+  }
+
+  if (state === 'DONE') {
+    return [...lines, 'Test Status: PASS', 'Status: MERGED -> moving to Jira DONE'].join('\n');
+  }
+
+  return [...lines, `Status: ${state || 'UPDATE'}`].join('\n');
 }
 
 async function main() {
@@ -16,48 +47,45 @@ async function main() {
   const apiToken = process.env.JIRA_API_TOKEN;
   const state = (process.argv[2] || process.env.JIRA_TARGET_STATE || '').toUpperCase();
   const issueKeys = parseIssueKeys();
-  const runUrl = process.env.GITHUB_RUN_URL || '';
-  const branchName = process.env.GITHUB_REF_NAME || '';
 
-  if (!baseUrl || !email || !apiToken) {
-    throw new Error('Missing required env vars: JIRA_BASE_URL, JIRA_EMAIL, JIRA_API_TOKEN');
-  }
+  requireJiraEnvironment();
 
   if (issueKeys.length === 0) {
     console.log('No Jira issue keys found. Skipping sync.');
     return;
   }
 
-  const comment = `GitHub Actions ${state || 'UPDATE'} for branch ${branchName}${runUrl ? `\nRun: ${runUrl}` : ''}`;
-
-  console.log(`Detected branch: ${branchName || '<none>'}`);
+  console.log(`Detected branch: ${process.env.GITHUB_REF_NAME || '<none>'}`);
   console.log(`Detected state: ${state || '<none>'}`);
   console.log(`Detected issue keys: ${issueKeys.join(', ')}`);
 
   for (const issueKey of issueKeys) {
+    await addComment({
+      baseUrl,
+      email,
+      apiToken,
+      issueKey,
+      comment: buildVerificationComment(state),
+    });
+
     if (state === 'FAIL') {
-      await addComment({ baseUrl, email, apiToken, issueKey, comment: `${comment}\nStatus: FAILED` });
       console.log(`Commented failure on issue key: ${issueKey}`);
       continue;
     }
 
     if (state === 'DONE') {
-      await addComment({ baseUrl, email, apiToken, issueKey, comment: `${comment}\nStatus: MERGED -> moving to Done` });
       const target = process.env.JIRA_TRANSITION_DONE || 'DONE';
       const result = await transitionIssue({ baseUrl, email, apiToken, issueKey, transitionName: target });
       console.log(`Transitioned issue key: ${issueKey}`);
       console.log(`Target status: ${target}`);
       console.log(`Transition result: ${JSON.stringify(result)}`);
-      continue;
     }
-
-    await addComment({ baseUrl, email, apiToken, issueKey, comment });
   }
 
   console.log(JSON.stringify({ state, issueKeys }, null, 2));
 }
 
 main().catch((error) => {
-  console.error(error.message);
+  console.error(error.stack || error.message);
   process.exit(1);
 });

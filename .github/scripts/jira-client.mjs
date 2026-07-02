@@ -38,10 +38,18 @@ async function jiraRequest(baseUrl, email, apiToken, path, options = {}) {
   }
 
   if (!response.ok) {
+    const responseBody = typeof payload === 'string' ? payload : JSON.stringify(payload);
     const message = typeof payload === 'string'
       ? payload
-      : payload?.errorMessages?.join('; ') || payload?.message || response.statusText;
-    throw new Error(`Jira request failed (${response.status}): ${message}`);
+      : [
+        ...(payload?.errorMessages || []),
+        ...Object.entries(payload?.errors || {}).map(([field, value]) => `${field}: ${value}`),
+        payload?.message,
+      ].filter(Boolean).join('; ') || response.statusText;
+    const error = new Error(`Jira request failed (${response.status}): ${message}\nResponse body: ${responseBody || '<empty>'}`);
+    error.status = response.status;
+    error.responseBody = payload;
+    throw error;
   }
 
   return payload;
@@ -119,7 +127,20 @@ export async function resolveEpicLinkFieldId({ baseUrl, email, apiToken, preferr
   return null;
 }
 
-export function buildIssueFields({ projectKey, summary, description, issueType, epicKey, epicLinkFieldId, labels = [] }) {
+export function buildIssueFields({
+  projectKey,
+  summary,
+  description,
+  issueType,
+  epicKey,
+  epicLinkFieldId,
+  labels = [],
+  priority,
+  dueDate,
+  reporterAccountId,
+  assigneeAccountId,
+  componentName,
+}) {
   const fields = {
     project: { key: projectKey },
     summary,
@@ -132,6 +153,27 @@ export function buildIssueFields({ projectKey, summary, description, issueType, 
 
   if (labels.length > 0) {
     fields.labels = labels;
+  }
+
+  if (priority) {
+    fields.priority = { name: priority };
+  }
+
+  if (dueDate) {
+    fields.duedate = dueDate;
+  }
+
+  if (reporterAccountId) {
+    fields.reporter = { accountId: reporterAccountId };
+  }
+
+  if (assigneeAccountId) {
+    fields.assignee = { accountId: assigneeAccountId };
+  }
+
+  // Components are opt-in because Jira rejects names that do not exist in the project.
+  if (componentName) {
+    fields.components = [{ name: componentName }];
   }
 
   if (epicKey && epicLinkFieldId) {
