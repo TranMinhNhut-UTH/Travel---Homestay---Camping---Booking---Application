@@ -44,16 +44,26 @@ var ocelotConfiguration = new ConfigurationBuilder()
         { "Routes:3:DownstreamHostAndPorts:0:Host", "localhost" },
         { "Routes:3:DownstreamHostAndPorts:0:Port", "5068" }, // VehicleService
 
-        { "Routes:4:UpstreamPathTemplate", "/api/customers/{everything}" },
+        // Route 4: Dành riêng cho các action trên tập hợp gốc (Thêm mới Customer & Lấy danh sách)
+        { "Routes:4:UpstreamPathTemplate", "/api/customers" },
         { "Routes:4:UpstreamHttpMethod:0", "GET" },
         { "Routes:4:UpstreamHttpMethod:1", "POST" },
-        { "Routes:4:UpstreamHttpMethod:2", "PUT" },
-        { "Routes:4:UpstreamHttpMethod:3", "DELETE" },
-        { "Routes:4:DownstreamPathTemplate", "/api/customers/{everything}" },
+        { "Routes:4:DownstreamPathTemplate", "/api/customers" },
         { "Routes:4:DownstreamScheme", "http" },
         { "Routes:4:DownstreamHostAndPorts:0:Host", "localhost" },
-        { "Routes:4:DownstreamHostAndPorts:0:Port", "5039" }, // CustomerService
+        { "Routes:4:DownstreamHostAndPorts:0:Port", "5039" }, 
         { "Routes:4:AuthenticationOptions:AuthenticationProviderKey", "JwtBearer" },
+
+        // Route 4_1: Dành riêng cho các action tác động vào 1 bản ghi cụ thể thông qua ID (Xem chi tiết, Sửa, Xóa)
+        { "Routes:4_1:UpstreamPathTemplate", "/api/customers/{id}" },
+        { "Routes:4_1:UpstreamHttpMethod:0", "GET" },
+        { "Routes:4_1:UpstreamHttpMethod:1", "PUT" },
+        { "Routes:4_1:UpstreamHttpMethod:2", "DELETE" },
+        { "Routes:4_1:DownstreamPathTemplate", "/api/customers/{id}" },
+        { "Routes:4_1:DownstreamScheme", "http" },
+        { "Routes:4_1:DownstreamHostAndPorts:0:Host", "localhost" },
+        { "Routes:4_1:DownstreamHostAndPorts:0:Port", "5039" }, 
+        { "Routes:4_1:AuthenticationOptions:AuthenticationProviderKey", "JwtBearer" },
 
         // Route for authentication service
         { "Routes:5:UpstreamPathTemplate", "/api/auth/{everything}" },
