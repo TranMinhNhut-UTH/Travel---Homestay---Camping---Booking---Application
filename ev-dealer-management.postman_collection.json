@@ -75,6 +75,7 @@
                     "const token = response.accessToken || response.token || response.access_token || response.result?.accessToken || response.data?.accessToken || response.data?.token;",
                     "if (token) {",
                     "  pm.environment.set('adminAuthToken', token);",
+                    "  pm.environment.set('authToken', token);",
                     "}"
                   ]
                 }
@@ -190,7 +191,8 @@
               { "key": "Content-Type", "value": "application/json" },
               { "key": "Authorization", "value": "Bearer {{adminAuthToken}}" }
             ],
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"staff01\",\n  \"email\": \"staff01@example.com\",\n  \"fullName\": \"Staff 01\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"Staff\",\n  \"dealerId\": {{dealerId}}\n}" },
+            "body": { "mode": "raw",
+"raw": "{\n  \"username\": \"staff01\",\n  \"email\": \"staff01@example.com\",\n  \"fullName\": \"Staff 01\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"Staff\",\n  \"dealerId\": \"{{dealerId}}\"\n}"},
             "url": "{{baseUrl}}/api/admin/users"
           }
         },
