@@ -95,21 +95,17 @@
                   "});",
                   "try {",
                   "  let response = pm.response.json();",
-                  "  // Quét sạch tất cả các kiểu đặt tên ID của Backend (id, Id, dealerId, data.id...)",
                   "  let id = response.id || response.Id || response.dealerId || response.DealerId || ",
-                  "           (response.data ? (response.data.id || response.data.Id || response.data.dealerId)) ||",
-                  "           (response.result ? (response.result.id || response.result.Id));",
+                  "           (response.data ? (response.data.id || response.data.Id || response.data.dealerId) : null) ||",
+                  "           (response.result ? (response.result.id || response.result.Id) : null);",
                   "  ",
                   "  if (id) {",
-                  "    // Ép sang kiểu string chuẩn để Postman thay thế vào {{dealerId}} không bị lỗi cú pháp",
                   "    pm.collectionVariables.set('dealerId', String(id));",
                   "    pm.environment.set('dealerId', String(id));",
                   "    console.log('Đã bắt và lưu dealerId động thành công:', id);",
-                  "  } else {",
-                  "    console.log('CẢNH BÁO: Backend trả về body thành công nhưng không tìm thấy trường ID:', JSON.stringify(response));",
                   "  }",
                   "} catch (e) {",
-                  "  console.log('Không thể parse JSON hoặc lỗi script:', e);",
+                  "  console.log('Lỗi script Create Dealer:', e);",
                   "}"
                 ]
               }
@@ -390,24 +386,24 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('Create Customer thành công', function () {",
-                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-                  "});",
-                  "try {",
-                  "  let response = pm.response.json();",
-                  "  let cId = response.id || response.Id || response.customerId || response.CustomerId || ",
-                  "            (response.data ? (response.data.id || response.data.Id || response.data.customerId)) ||",
-                  "            (response.result ? (response.result.id || response.result.Id));",
-                  "  ",
-                  "  if (cId) {",
-                  "    pm.collectionVariables.set('customerId', String(cId));",
-                  "    pm.environment.set('customerId', String(cId));",
-                  "    console.log('Đã bắt và lưu customerId động thành công:', cId);",
-                  "  }",
-                  "} catch (e) {",
-                  "  console.log('Lỗi trích xuất customerId:', e);",
-                  "}"
-                ]
+                    "pm.test('Create Customer thành công', function () {",
+                    "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                    "});",
+                    "try {",
+                    "  let response = pm.response.json();",
+                    "  let cId = response.id || response.Id || response.customerId || response.CustomerId || ",
+                    "            (response.data ? (response.data.id || response.data.Id || response.data.customerId) : null) ||",
+                    "            (response.result ? (response.result.id || response.result.Id) : null);",
+                    "  ",
+                    "  if (cId) {",
+                    "    pm.collectionVariables.set('customerId', String(cId));",
+                    "    pm.environment.set('customerId', String(cId));",
+                    "    console.log('Đã bắt và lưu customerId động thành công:', cId);",
+                    "  }",
+                    "} catch (e) {",
+                    "  console.log('Lỗi script Create Customer:', e);",
+                    "}"
+                  ]
               }
             }
           ],
