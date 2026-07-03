@@ -27,6 +27,7 @@
     { "key": "salesServiceUrl", "value": "http://localhost:5003" },
     { "key": "notificationServiceUrl", "value": "http://localhost:5051" },
     { "key": "reportingServiceUrl", "value": "http://localhost:5208" },
+    { "key": "authToken", "value": "" },
     { "key": "userId", "value": "1" },
     { "key": "dealerId", "value": "1" },
     { "key": "vehicleId", "value": "1" },
@@ -74,7 +75,8 @@
                     "try { response = pm.response.json(); } catch (error) { response = {}; }",
                     "const token = response.accessToken || response.token || response.access_token || response.result?.accessToken || response.data?.accessToken || response.data?.token;",
                     "if (token) {",
-                    "  pm.environment.set('adminAuthToken', token);",
+                    "  pm.collectionVariables.set('authToken', token);",
+                    "  pm.environment.set('authToken', token);",
                     "}"
                   ]
                 }
@@ -91,21 +93,18 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Create Dealer thành công', function () {",
-                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "  pm.response.to.have.status([200, 201]);",
                   "});",
                   "try {",
                   "  let response = pm.response.json();",
-                  "  let id = response.id || response.Id || response.dealerId || response.DealerId || ",
-                  "           (response.data ? (response.data.id || response.data.Id || response.data.dealerId) : null) ||",
-                  "           (response.result ? (response.result.id || response.result.Id) : null);",
-                  "  ",
+                  "  let id = response.id || response.data?.id || response.result?.id || response.dealerId;",
                   "  if (id) {",
-                  "    pm.collectionVariables.set('dealerId', String(id));",
-                  "    pm.environment.set('dealerId', String(id));",
-                  "    console.log('Đã bắt và lưu dealerId động thành công:', id);",
+                  "    pm.collectionVariables.set('dealerId', id);",
+                  "    pm.environment.set('dealerId', id);",
+                  "    console.log('Đã lưu dealerId mới:', id);",
                   "  }",
                   "} catch (e) {",
-                  "  console.log('Lỗi script Create Dealer:', e);",
+                  "  console.log('Không thể parse JSON response:', e);",
                   "}"
                 ]
               }
@@ -167,7 +166,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Create Admin User thành công', function () {",
-                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "  pm.response.to.have.status([200, 201]);",
                   "});",
                   "try {",
                   "  let response = pm.response.json();",
@@ -188,7 +187,7 @@
             "method": "POST",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{adminAuthToken}}" }
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
             ],
             "body": { "mode": "raw", "raw": "{\n  \"username\": \"staff01\",\n  \"email\": \"staff01@example.com\",\n  \"fullName\": \"Staff 01\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"Staff\",\n  \"dealerId\": {{dealerId}}\n}" },
             "url": "{{baseUrl}}/api/admin/users"
@@ -285,7 +284,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Create Vehicle thành công', function () {",
-                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "  pm.response.to.have.status([200, 201]);",
                   "});",
                   "try {",
                   "  let response = pm.response.json();",
@@ -386,24 +385,21 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                    "pm.test('Create Customer thành công', function () {",
-                    "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-                    "});",
-                    "try {",
-                    "  let response = pm.response.json();",
-                    "  let cId = response.id || response.Id || response.customerId || response.CustomerId || ",
-                    "            (response.data ? (response.data.id || response.data.Id || response.data.customerId) : null) ||",
-                    "            (response.result ? (response.result.id || response.result.Id) : null);",
-                    "  ",
-                    "  if (cId) {",
-                    "    pm.collectionVariables.set('customerId', String(cId));",
-                    "    pm.environment.set('customerId', String(cId));",
-                    "    console.log('Đã bắt và lưu customerId động thành công:', cId);",
-                    "  }",
-                    "} catch (e) {",
-                    "  console.log('Lỗi script Create Customer:', e);",
-                    "}"
-                  ]
+                  "pm.test('Create Customer thành công', function () {",
+                  "  pm.response.to.have.status([200, 201]);",
+                  "});",
+                  "try {",
+                  "  let response = pm.response.json();",
+                  "  let cId = response.id || response.data?.id || response.result?.id || response.customerId;",
+                  "  if (cId) {",
+                  "    pm.collectionVariables.set('customerId', cId);",
+                  "    pm.environment.set('customerId', cId);",
+                  "    console.log('Đã lưu customerId mới:', cId);",
+                  "  }",
+                  "} catch (e) {",
+                  "  console.log('Không thể parse JSON response:', e);",
+                  "}"
+                ]
               }
             }
           ],
@@ -440,7 +436,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Create Test Drive thành công', function () {",
-                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "  pm.response.to.have.status([200, 201]);",
                   "});",
                   "try {",
                   "  let response = pm.response.json();",
@@ -499,7 +495,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Create Complaint thành công', function () {",
-                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "  pm.response.to.have.status([200, 201]);",
                   "});",
                   "try {",
                   "  let response = pm.response.json();",
@@ -578,7 +574,7 @@
                     "type": "text/javascript",
                     "exec": [
                       "pm.test('Create Quote thành công', function () {",
-                      "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                      "  pm.response.to.have.status([200, 201]);",
                       "});",
                       "try {",
                       "  let response = pm.response.json();",
@@ -633,7 +629,7 @@
                     "type": "text/javascript",
                     "exec": [
                       "pm.test('Complete Order thành công', function () {",
-                      "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                      "  pm.response.to.have.status([200, 201]);",
                       "});",
                       "try {",
                       "  let response = pm.response.json();",
@@ -713,7 +709,7 @@
                     "type": "text/javascript",
                     "exec": [
                       "pm.test('Create Contract thành công', function () {",
-                      "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                      "  pm.response.to.have.status([200, 201]);",
                       "});",
                       "try {",
                       "  let response = pm.response.json();",
@@ -880,7 +876,7 @@
                     "type": "text/javascript",
                     "exec": [
                       "pm.test('Create Promotion thành công', function () {",
-                      "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                      "  pm.response.to.have.status([200, 201]);",
                       "});"
                     ]
                   }
