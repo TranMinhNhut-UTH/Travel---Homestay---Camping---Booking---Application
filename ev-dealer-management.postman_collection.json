@@ -27,16 +27,15 @@
     { "key": "salesServiceUrl", "value": "http://localhost:5003" },
     { "key": "notificationServiceUrl", "value": "http://localhost:5051" },
     { "key": "reportingServiceUrl", "value": "http://localhost:5208" },
-    { "key": "authToken", "value": "" },
-    { "key": "userId", "value": "1" },
-    { "key": "dealerId", "value": "1" },
-    { "key": "vehicleId", "value": "1" },
-    { "key": "customerId", "value": "1" },
-    { "key": "testDriveId", "value": "1" },
-    { "key": "complaintId", "value": "1" },
-    { "key": "quoteId", "value": "1" },
-    { "key": "orderId", "value": "1" },
-    { "key": "contractId", "value": "1" },
+    { "key": "userId", "value": "" },
+    { "key": "dealerId", "value": "" },
+    { "key": "vehicleId", "value": "" },
+    { "key": "customerId", "value": "" },
+    { "key": "testDriveId", "value": "" },
+    { "key": "complaintId", "value": "" },
+    { "key": "quoteId", "value": "" },
+    { "key": "orderId", "value": "" },
+    { "key": "contractId", "value": "" },
     { "key": "reportFrom", "value": "2026-01-01" },
     { "key": "reportTo", "value": "2026-12-31" },
     { "key": "topic", "value": "ev-dealer-updates" },
@@ -75,8 +74,7 @@
                     "try { response = pm.response.json(); } catch (error) { response = {}; }",
                     "const token = response.accessToken || response.token || response.access_token || response.result?.accessToken || response.data?.accessToken || response.data?.token;",
                     "if (token) {",
-                    "  pm.collectionVariables.set('authToken', token);",
-                    "  pm.environment.set('authToken', token);",
+                    "  pm.environment.set('adminAuthToken', token);",
                     "}"
                   ]
                 }
@@ -187,7 +185,7 @@
             "method": "POST",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+              { "key": "Authorization", "value": "Bearer {{adminAuthToken}}" }
             ],
             "body": { "mode": "raw", "raw": "{\n  \"username\": \"staff01\",\n  \"email\": \"staff01@example.com\",\n  \"fullName\": \"Staff 01\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"Staff\",\n  \"dealerId\": {{dealerId}}\n}" },
             "url": "{{baseUrl}}/api/admin/users"
