@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { createHash } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 import {
   addComment,
@@ -95,6 +96,27 @@ function failureOutcomeSummary(outcomes) {
   return failed.length ? failed.join(', ') : 'Failure occurred before a tracked CI step completed';
 }
 
+function normalizeFailureForFingerprint(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/\x1b\[[0-9;]*m/g, '')
+    .replace(/\b[0-9a-f]{7,64}\b/gi, '<hash>')
+    .replace(/\b\d{4}-\d{2}-\d{2}[t ][0-9:.+z-]+\b/gi, '<timestamp>')
+    .replace(/\b\d+\b/g, '<n>')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 2000);
+}
+
+export function buildFailureFingerprint({ branch, failedStepSummary, errorLog }) {
+  const source = [
+    normalizeFailureForFingerprint(branch),
+    normalizeFailureForFingerprint(failedStepSummary),
+    normalizeFailureForFingerprint(errorLog),
+  ].join('|');
+  return createHash('sha256').update(source).digest('hex').slice(0, 16);
+}
+
 export function buildProfessionalDescription(context) {
   const reporter = context.reporterAccountId
     ? `Jira accountId ${context.reporterAccountId}`
@@ -115,7 +137,8 @@ export function buildProfessionalDescription(context) {
     `*12. GitHub job:* ${context.job}`,
     `*13. Failed job/step summary:* ${context.failedStepSummary}`,
     `*14. Failure recorded at:* ${context.recordedAt}`,
-    '*15. Software Verification workflow:*',
+    `*15. Failure fingerprint:* ${context.failureFingerprint}`,
+    '*16. Software Verification workflow:*',
     '{code}feature branch -> CI fail -> Jira Bug TODO -> assign fixer -> bugfix branch -> PR -> CI pass -> merge main -> Jira DONE{code}',
   ].join('\n\n');
 }
@@ -130,6 +153,7 @@ export function buildJiraIssuePayload(context) {
       'auto-test',
       'github-actions',
       'ci-fail',
+      context.failureLabel,
       'software-verification',
       compactLabel(context.module),
     ])],
@@ -166,22 +190,15 @@ function normalizeComparable(value) {
 
 export async function findExistingCiFailureIssue(client, context) {
   const projectKey = context.projectKey.replace(/[^A-Z0-9_-]/gi, '');
-  const jql = `project = "${projectKey}" AND statusCategory != Done AND labels = "ci-fail" ORDER BY created DESC`;
-  console.log(`[Jira Dedup] Searching open CI failure issues for project ${projectKey}.`);
+  const jql = `project = "${projectKey}" AND statusCategory != Done AND labels = "${context.failureLabel}" ORDER BY created DESC`;
+  console.log(`[Jira Dedup] Searching open issues with fingerprint ${context.failureFingerprint}.`);
   const issues = await searchIssues({
     ...client,
     jql,
     maxResults: 100,
     fields: ['summary', 'description', 'status'],
   });
-  const branch = normalizeComparable(context.branch);
-  const runUrl = normalizeComparable(context.runUrl);
-  const match = issues.find((issue) => {
-    const summary = normalizeComparable(issue.fields?.summary);
-    const description = normalizeComparable(issue.fields?.description);
-    return (branch && (summary.includes(branch) || description.includes(branch)))
-      || (runUrl && description.includes(runUrl));
-  });
+  const match = issues.find((issue) => normalizeComparable(issue.key));
   console.log(`[Jira Dedup] Candidate count=${issues.length}; match=${match?.key || 'none'}.`);
   return match || null;
 }
@@ -241,6 +258,10 @@ function buildContext() {
   };
   const moduleName = inferModule(logText, outcomes);
   const testName = inferTestName(logText, outcomes);
+  const branch = env('GITHUB_REF_NAME', 'unknown-branch');
+  const errorLog = briefError(logs);
+  const failedStepSummary = failureOutcomeSummary(outcomes);
+  const failureFingerprint = buildFailureFingerprint({ branch, failedStepSummary, errorLog });
   return {
     projectKey: env('JIRA_PROJECT_KEY'),
     reporterAccountId: env('JIRA_REPORTER_ACCOUNT_ID'),
@@ -249,7 +270,7 @@ function buildContext() {
     componentName: env('JIRA_COMPONENT_NAME'),
     linkIssueKey: env('JIRA_LINK_ISSUE_KEY'),
     repository: env('GITHUB_REPOSITORY', 'unknown-repository'),
-    branch: env('GITHUB_REF_NAME', 'unknown-branch'),
+    branch,
     sha: env('GITHUB_SHA', 'unknown-commit'),
     actor: env('GITHUB_ACTOR', 'unknown-actor'),
     runUrl: env('GITHUB_RUN_URL'),
@@ -258,8 +279,10 @@ function buildContext() {
     testName,
     expectedResult: env('TEST_EXPECTED_RESULT', 'All automated checks pass without errors.'),
     actualResult: env('TEST_ACTUAL_RESULT', `${testName} failed during CI execution.`),
-    errorLog: briefError(logs),
-    failedStepSummary: failureOutcomeSummary(outcomes),
+    errorLog,
+    failedStepSummary,
+    failureFingerprint,
+    failureLabel: `ci-fp-${failureFingerprint}`,
     recordedAt: new Date().toISOString(),
     suggestedAction: env(
       'TEST_SUGGESTED_ACTION',
@@ -309,6 +332,20 @@ async function main() {
     throw new Error(`[Jira Configuration] JIRA_PROJECT_KEY must be ED for CI failure issues; received "${context.projectKey}".`);
   }
 
+  const automationIssueKey = env('JIRA_AUTOMATION_ISSUE_KEY', 'ED-33');
+  try {
+    await addComment({
+      baseUrl: env('JIRA_BASE_URL'),
+      email: env('JIRA_EMAIL'),
+      apiToken: env('JIRA_API_TOKEN'),
+      issueKey: automationIssueKey,
+      comment: `CI failed. Checking for an existing tracked Bug.\nBranch: ${context.branch}\nCommit: ${context.sha}\nRun: ${context.runUrl || 'Not available'}\nFailure fingerprint: ${context.failureFingerprint}\nTime: ${context.recordedAt}`,
+    });
+    console.log(`Initial CI failure comment added to ${automationIssueKey}.`);
+  } catch (error) {
+    console.error(`[Jira CI Report] Could not add the initial failure comment to ${automationIssueKey}: ${error.message}`);
+  }
+
   const result = await createJiraBugFromTestFailure({
     baseUrl: env('JIRA_BASE_URL'),
     email: env('JIRA_EMAIL'),
@@ -317,7 +354,6 @@ async function main() {
   const action = result.created ? 'Created' : 'Updated existing';
   console.log(`${action} Jira CI failure issue: ${result.key}`);
 
-  const automationIssueKey = env('JIRA_AUTOMATION_ISSUE_KEY', 'ED-33');
   const automationMessage = result.created
     ? `CI failed. Created linked bug: ${result.key}`
     : `CI failed. Updated existing linked bug: ${result.key}`;

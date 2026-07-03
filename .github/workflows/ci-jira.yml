@@ -178,8 +178,8 @@ jobs:
           JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
           JIRA_REPORTER_ACCOUNT_ID: ${{ secrets.JIRA_REPORTER_ACCOUNT_ID }}
           JIRA_DEFAULT_ASSIGNEE_ACCOUNT_ID: ${{ secrets.JIRA_DEFAULT_ASSIGNEE_ACCOUNT_ID }}
-          JIRA_AUTOMATION_ISSUE_KEY: ED-33
-          JIRA_LINK_ISSUE_KEY: ED-33
+          JIRA_AUTOMATION_ISSUE_KEY: ${{ steps.jira_keys.outputs.branch_key }}
+          JIRA_LINK_ISSUE_KEY: ${{ steps.jira_keys.outputs.branch_key }}
           BRANCH_VALIDATION_OUTCOME: ${{ steps.branch_validation.outcome }}
           POSTMAN_VALIDATION_OUTCOME: ${{ steps.postman_validation.outcome }}
           RESTORE_OUTCOME: ${{ steps.restore.outcome }}
