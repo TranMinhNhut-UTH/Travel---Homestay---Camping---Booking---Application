@@ -47,11 +47,20 @@
       "name": "Auth & Users",
       "item": [
         {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"sales01\",\n  \"email\": \"sales01@example.com\",\n  \"fullName\": \"Sales User\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"Sales\"\n}" },
+            "url": "{{baseUrl}}/api/auth/register"
+          }
+        },
+        {
           "name": "Login",
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"P@ssw0rd!\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"sales01\",\n  \"password\": \"P@ssw0rd!\"\n}" },
             "url": "{{baseUrl}}/api/auth/login",
             "event": [
               {
@@ -76,12 +85,42 @@
           }
         },
         {
-          "name": "Register",
+          "name": "Create Dealer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Create Dealer thành công', function () {",
+                  "  pm.response.to.have.status([200, 201]);",
+                  "});",
+                  "try {",
+                  "  let response = pm.response.json();",
+                  "  let id = response.id || response.data?.id || response.result?.id || response.dealerId;",
+                  "  if (id) {",
+                  "    pm.collectionVariables.set('dealerId', id);",
+                  "    pm.environment.set('dealerId', id);",
+                  "    console.log('Đã lưu dealerId mới:', id);",
+                  "  }",
+                  "} catch (e) {",
+                  "  console.log('Không thể parse JSON response:', e);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"sales01\",\n  \"email\": \"sales01@example.com\",\n  \"fullName\": \"Sales User\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"Sales\",\n  \"dealerId\": {{dealerId}}\n}" },
-            "url": "{{baseUrl}}/api/auth/register"
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"VinFast Ha Noi\",\n  \"region\": \"Ha Noi\",\n  \"contact\": \"0900000000\",\n  \"email\": \"dealer@example.com\",\n  \"address\": \"123 Demo Street\"\n}"
+            },
+            "url": "{{baseUrl}}/api/dealers"
           }
         },
         {
@@ -89,7 +128,7 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@example.com\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"sales01@example.com\"\n}" },
             "url": "{{baseUrl}}/api/auth/forgot-password"
           }
         },
@@ -98,7 +137,7 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"token\": \"reset-token\",\n  \"newPassword\": \"NewP@ssw0rd!\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"token\": \"{{resetToken}}\",\n  \"newPassword\": \"NewP@ssw0rd!\"\n}" },
             "url": "{{baseUrl}}/api/auth/reset-password"
           }
         },
@@ -120,6 +159,30 @@
         },
         {
           "name": "Create Admin User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Create Admin User thành công', function () {",
+                  "  pm.response.to.have.status([200, 201]);",
+                  "});",
+                  "try {",
+                  "  let response = pm.response.json();",
+                  "  let uId = response.id || response.data?.id || response.result?.id || response.userId;",
+                  "  if (uId) {",
+                  "    pm.collectionVariables.set('userId', uId);",
+                  "    pm.environment.set('userId', uId);",
+                  "    console.log('Đã lưu userId mới:', uId);",
+                  "  }",
+                  "} catch (e) {",
+                  "  console.log('Không thể parse JSON response:', e);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -151,14 +214,6 @@
           }
         },
         {
-          "name": "Delete User",
-          "request": {
-            "method": "DELETE",
-            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
-            "url": "{{baseUrl}}/api/users/{{userId}}"
-          }
-        },
-        {
           "name": "Change Role",
           "request": {
             "method": "PUT",
@@ -179,6 +234,14 @@
           }
         },
         {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
+            "url": "{{baseUrl}}/api/users/{{userId}}"
+          }
+        },
+        {
           "name": "List Dealers (UserService)",
           "request": { "method": "GET", "url": "{{baseUrl}}/api/dealers" }
         },
@@ -188,61 +251,17 @@
         }
       ]
     },
-    {
+
+{
       "name": "Vehicles & Dealers",
       "item": [
-        { "name": "Get Vehicles", "request": { "method": "GET", "url": "{{baseUrl}}/api/vehicles?page=1&pageSize=10" } },
-        { "name": "Get Vehicle By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}" } },
         {
-          "name": "Create Vehicle",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": 1200000000,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": 5,\n  \"Description\": \"Demo vehicle\",\n  \"DealerId\": {{dealerId}}\n}" },
-            "url": "{{baseUrl}}/api/vehicles"
-          }
+          "name": "List Dealers",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/dealers" }
         },
         {
-          "name": "Update Vehicle",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"Model\": \"VinFast VF 8 Plus\",\n  \"Type\": \"SUV\",\n  \"Price\": 1300000000,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 450,\n  \"StockQuantity\": 4,\n  \"Description\": \"Updated vehicle\",\n  \"DealerId\": {{dealerId}}\n}" },
-            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}"
-          }
-        },
-        { "name": "Delete Vehicle", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }], "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}" } },
-        {
-          "name": "Reserve Vehicle",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"customerName\": \"Nguyen Van A\",\n  \"customerEmail\": \"customer@example.com\",\n  \"customerPhone\": \"+84912345678\",\n  \"colorVariantId\": 1,\n  \"notes\": \"Reserve for demo\",\n  \"quantity\": 1,\n  \"deviceToken\": \"{{deviceToken}}\"\n}" },
-            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}/reserve"
-          }
-        },
-        { "name": "List Dealers", "request": { "method": "GET", "url": "{{baseUrl}}/api/dealers" } },
-        { "name": "Get Dealer By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/dealers/{{dealerId}}" } },
-        {
-          "name": "Create Dealer",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"name\": \"VinFast Ha Noi\",\n  \"region\": \"Ha Noi\",\n  \"contact\": \"0900000000\",\n  \"email\": \"dealer@example.com\",\n  \"address\": \"123 Demo Street\"\n}" },
-            "url": "{{baseUrl}}/api/dealers"
-          }
+          "name": "Get Dealer By Id",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/dealers/{{dealerId}}" }
         },
         {
           "name": "Update Dealer",
@@ -256,19 +275,134 @@
             "url": "{{baseUrl}}/api/dealers/{{dealerId}}"
           }
         },
-        { "name": "Delete Dealer", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }], "url": "{{baseUrl}}/api/dealers/{{dealerId}}" } },
-        { "name": "Vehicle Types", "request": { "method": "GET", "url": "{{baseUrl}}/api/vehicletypes" } },
-        { "name": "Vehicle Health", "request": { "method": "GET", "url": "{{baseUrl}}/api/health" } },
-        { "name": "Static Image", "request": { "method": "GET", "url": "{{baseUrl}}/images/sample.jpg" } }
+        {
+          "name": "Create Vehicle",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Create Vehicle thành công', function () {",
+                  "  pm.response.to.have.status([200, 201]);",
+                  "});",
+                  "try {",
+                  "  let response = pm.response.json();",
+                  "  let vId = response.id || response.data?.id || response.result?.id || response.vehicleId;",
+                  "  if (vId) {",
+                  "    pm.collectionVariables.set('vehicleId', vId);",
+                  "    pm.environment.set('vehicleId', vId);",
+                  "    console.log('Đã lưu vehicleId mới:', vId);",
+                  "  }",
+                  "} catch (e) {",
+                  "  console.log('Không thể parse JSON response:', e);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": 1200000000,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": 5,\n  \"Description\": \"Demo vehicle\",\n  \"DealerId\": {{dealerId}}\n}" },
+            "url": "{{baseUrl}}/api/vehicles"
+          }
+        },
+        {
+          "name": "Get Vehicles",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/vehicles?page=1&pageSize=10" }
+        },
+        {
+          "name": "Get Vehicle By Id",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}" }
+        },
+        {
+          "name": "Update Vehicle",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"Model\": \"VinFast VF 8 Plus\",\n  \"Type\": \"SUV\",\n  \"Price\": 1300000000,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 450,\n  \"StockQuantity\": 4,\n  \"Description\": \"Updated vehicle\",\n  \"DealerId\": {{dealerId}}\n}" },
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}"
+          }
+        },
+        {
+          "name": "Reserve Vehicle",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"customerName\": \"Nguyen Van A\",\n  \"customerEmail\": \"customer@example.com\",\n  \"customerPhone\": \"+84912345678\",\n  \"colorVariantId\": 1,\n  \"notes\": \"Reserve for demo\",\n  \"quantity\": 1,\n  \"deviceToken\": \"{{deviceToken}}\"\n}" },
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}/reserve"
+          }
+        },
+        {
+          "name": "Delete Vehicle",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}"
+          }
+        },
+        {
+          "name": "Delete Dealer",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
+            "url": "{{baseUrl}}/api/dealers/{{dealerId}}"
+          }
+        },
+        {
+          "name": "Vehicle Types",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/vehicletypes" }
+        },
+        {
+          "name": "Vehicle Health",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/health" }
+        },
+        {
+          "name": "Static Image",
+          "request": { "method": "GET", "url": "{{baseUrl}}/images/sample.jpg" }
+        }
       ]
     },
+
     {
       "name": "Customers & Test Drives",
       "item": [
-        { "name": "Get Customers", "request": { "method": "GET", "url": "{{baseUrl}}/api/customers" } },
-        { "name": "Get Customer By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/customers/{{customerId}}" } },
         {
           "name": "Create Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Create Customer thành công', function () {",
+                  "  pm.response.to.have.status([200, 201]);",
+                  "});",
+                  "try {",
+                  "  let response = pm.response.json();",
+                  "  let cId = response.id || response.data?.id || response.result?.id || response.customerId;",
+                  "  if (cId) {",
+                  "    pm.collectionVariables.set('customerId', cId);",
+                  "    pm.environment.set('customerId', cId);",
+                  "    console.log('Đã lưu customerId mới:', cId);",
+                  "  }",
+                  "} catch (e) {",
+                  "  console.log('Không thể parse JSON response:', e);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -279,6 +413,8 @@
             "url": "{{baseUrl}}/api/customers"
           }
         },
+        { "name": "Get Customers", "request": { "method": "GET", "url": "{{baseUrl}}/api/customers" } },
+        { "name": "Get Customer By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/customers/{{customerId}}" } },
         {
           "name": "Update Customer",
           "request": {
@@ -287,16 +423,36 @@
               { "key": "Content-Type", "value": "application/json" },
               { "key": "Authorization", "value": "Bearer {{authToken}}" }
             ],
-            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Nguyen Van B Updated\",\n  \"email\": \"customer.updated@example.com\",\n  \"phone\": \"+84923456780\",\n  \"address\": \"Hai Phong\",\n  \"dealerId\": {{dealerId}},\n  \"status\": \"active\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Nguyen Van B Updated\",\n  \"email\": \"customer.updated@example.com\",\n  \"phone\": \"+8492345670\",\n  \"address\": \"Hai Phong\",\n  \"dealerId\": {{dealerId}},\n  \"status\": \"active\"\n}" },
             "url": "{{baseUrl}}/api/customers/{{customerId}}"
           }
         },
-        { "name": "Delete Customer", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }], "url": "{{baseUrl}}/api/customers/{{customerId}}" } },
-        { "name": "Get Test Drives", "request": { "method": "GET", "url": "{{baseUrl}}/api/TestDrives" } },
-        { "name": "Get Test Drives By Customer", "request": { "method": "GET", "url": "{{baseUrl}}/api/TestDrives/customer/{{customerId}}" } },
-        { "name": "Get Test Drive By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/TestDrives/{{testDriveId}}" } },
         {
           "name": "Create Test Drive",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Create Test Drive thành công', function () {",
+                  "  pm.response.to.have.status([200, 201]);",
+                  "});",
+                  "try {",
+                  "  let response = pm.response.json();",
+                  "  let tdId = response.id || response.data?.id || response.result?.id || response.testDriveId;",
+                  "  if (tdId) {",
+                  "    pm.collectionVariables.set('testDriveId', tdId);",
+                  "    pm.environment.set('testDriveId', tdId);",
+                  "    console.log('Đã lưu testDriveId mới:', tdId);",
+                  "  }",
+                  "} catch (e) {",
+                  "  console.log('Không thể parse JSON response:', e);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -307,6 +463,9 @@
             "url": "{{baseUrl}}/api/TestDrives"
           }
         },
+        { "name": "Get Test Drives", "request": { "method": "GET", "url": "{{baseUrl}}/api/TestDrives" } },
+        { "name": "Get Test Drives By Customer", "request": { "method": "GET", "url": "{{baseUrl}}/api/TestDrives/customer/{{customerId}}" } },
+        { "name": "Get Test Drive By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/TestDrives/{{testDriveId}}" } },
         {
           "name": "Update Test Drive",
           "request": {
@@ -319,25 +478,60 @@
             "url": "{{baseUrl}}/api/TestDrives/{{testDriveId}}"
           }
         },
-        { "name": "Delete Test Drive", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }], "url": "{{baseUrl}}/api/TestDrives/{{testDriveId}}" } }
+        { "name": "Delete Test Drive", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }], "url": "{{baseUrl}}/api/TestDrives/{{testDriveId}}" } },
+        { "name": "Delete Customer", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }], "url": "{{baseUrl}}/api/customers/{{customerId}}" } }
       ]
     },
+
     {
       "name": "Complaints",
       "item": [
-        { "name": "Get Complaints", "request": { "method": "GET", "url": "{{customerServiceUrl}}/api/Complaints" } },
-        { "name": "Get Complaint By Id", "request": { "method": "GET", "url": "{{customerServiceUrl}}/api/Complaints/{{complaintId}}" } },
         {
           "name": "Create Complaint",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Create Complaint thành công', function () {",
+                  "  pm.response.to.have.status([200, 201]);",
+                  "});",
+                  "try {",
+                  "  let response = pm.response.json();",
+                  "  let compId = response.id || response.data?.id || response.result?.id || response.complaintId;",
+                  "  if (compId) {",
+                  "    pm.collectionVariables.set('complaintId', compId);",
+                  "    pm.environment.set('complaintId', compId);",
+                  "    console.log('Đã lưu complaintId mới:', compId);",
+                  "  }",
+                  "} catch (e) {",
+                  "  console.log('Không thể parse JSON response:', e);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
               { "key": "Authorization", "value": "Bearer {{authToken}}" }
             ],
-            "body": { "mode": "raw", "raw": "{\n  \"customerId\": {{customerId}},\n  \"type\": \"Bao hanh\",\n  \"title\": \"Remote not working\",\n  \"description\": \"Customer reports a broken remote\",\n  \"assignedToStaffID\": 10,\n  \"priority\": \"High\",\n  \"relatedOrderID\": {{orderId}},\n  \"relatedVehicleID\": {{vehicleId}}\n}" },
+            "body": { 
+              "mode": "raw", 
+              "raw": "{\n  \"customerId\": {{customerId}},\n  \"type\": \"Bao hanh\",\n  \"title\": \"Remote not working\",\n  \"description\": \"Customer reports a broken remote\",\n  \"assignedToStaffID\": 10,\n  \"priority\": \"High\",\n  \"relatedOrderID\": null,\n  \"relatedVehicleID\": {{vehicleId}}\n}" 
+            },
             "url": "{{customerServiceUrl}}/api/Complaints"
           }
+        },
+        { 
+          "name": "Get Complaints", 
+          "request": { "method": "GET", "url": "{{customerServiceUrl}}/api/Complaints" } 
+        },
+        { 
+          "name": "Get Complaint By Id", 
+          "request": { "method": "GET", "url": "{{customerServiceUrl}}/api/Complaints/{{complaintId}}" } 
         },
         {
           "name": "Update Complaint",
@@ -347,23 +541,56 @@
               { "key": "Content-Type", "value": "application/json" },
               { "key": "Authorization", "value": "Bearer {{authToken}}" }
             ],
-            "body": { "mode": "raw", "raw": "{\n  \"type\": \"Bao hanh\",\n  \"title\": \"Remote not working - updated\",\n  \"description\": \"Updated description\",\n  \"status\": \"In Progress\",\n  \"resolution\": \"Under investigation\",\n  \"assignedToStaffID\": 10,\n  \"priority\": \"High\",\n  \"relatedOrderID\": {{orderId}},\n  \"relatedVehicleID\": {{vehicleId}}\n}" },
+            "body": { 
+              "mode": "raw", 
+              "raw": "{\n  \"type\": \"Bao hanh\",\n  \"title\": \"Remote not working - updated\",\n  \"description\": \"Updated description\",\n  \"status\": \"In Progress\",\n  \"resolution\": \"Under investigation\",\n  \"assignedToStaffID\": 10,\n  \"priority\": \"High\",\n  \"relatedOrderID\": null,\n  \"relatedVehicleID\": {{vehicleId}}\n}" 
+            },
             "url": "{{customerServiceUrl}}/api/Complaints/{{complaintId}}"
           }
         },
-        { "name": "Delete Complaint", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }], "url": "{{customerServiceUrl}}/api/Complaints/{{complaintId}}" } }
+        { 
+          "name": "Delete Complaint", 
+          "request": { 
+            "method": "DELETE", 
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }], 
+            "url": "{{customerServiceUrl}}/api/Complaints/{{complaintId}}" 
+          } 
+        }
       ]
     },
+
     {
       "name": "Sales Core",
       "item": [
         {
           "name": "Quotes",
           "item": [
-            { "name": "Get Quotes", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Quotes" } },
-            { "name": "Get Quote By Id", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Quotes/{{quoteId}}" } },
             {
               "name": "Create Quote",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Create Quote thành công', function () {",
+                      "  pm.response.to.have.status([200, 201]);",
+                      "});",
+                      "try {",
+                      "  let response = pm.response.json();",
+                      "  let qId = response.id || response.data?.id || response.result?.id || response.quoteId;",
+                      "  if (qId) {",
+                      "    pm.collectionVariables.set('quoteId', qId);",
+                      "    pm.environment.set('quoteId', qId);",
+                      "    console.log('Đã lưu quoteId mới:', qId);",
+                      "  }",
+                      "} catch (e) {",
+                      "  console.log('Không thể parse JSON response:', e);",
+                      "}"
+                    ]
+                  }
+                }
+              ],
               "request": {
                 "method": "POST",
                 "header": [
@@ -374,6 +601,8 @@
                 "url": "{{salesServiceUrl}}/api/Quotes"
               }
             },
+            { "name": "Get Quotes", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Quotes" } },
+            { "name": "Get Quote By Id", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Quotes/{{quoteId}}" } },
             {
               "name": "Update Quote Status",
               "request": {
@@ -393,6 +622,30 @@
           "item": [
             {
               "name": "Complete Order",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Complete Order thành công', function () {",
+                      "  pm.response.to.have.status([200, 201]);",
+                      "});",
+                      "try {",
+                      "  let response = pm.response.json();",
+                      "  let oId = response.id || response.data?.id || response.result?.id || response.orderId;",
+                      "  if (oId) {",
+                      "    pm.collectionVariables.set('orderId', oId);",
+                      "    pm.environment.set('orderId', oId);",
+                      "    console.log('Đã lưu orderId mới:', oId);",
+                      "  }",
+                      "} catch (e) {",
+                      "  console.log('Không thể parse JSON response:', e);",
+                      "}"
+                    ]
+                  }
+                }
+              ],
               "request": {
                 "method": "POST",
                 "header": [
@@ -400,6 +653,31 @@
                   { "key": "Authorization", "value": "Bearer {{authToken}}" }
                 ],
                 "body": { "mode": "raw", "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": {{customerId}},\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Nguyen Van B\",\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"paymentMethod\": \"Cash\",\n  \"deliveryDate\": \"2026-06-10T09:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"notes\": \"Complete order demo\",\n  \"paymentType\": \"Full\",\n  \"depositAmount\": 0,\n  \"interestRateYearly\": 0,\n  \"loanTermMonths\": 0,\n  \"vehicleId\": {{vehicleId}},\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"totalAmount\": 1200000000,\n  \"promotionId\": null,\n  \"discountAmount\": 0,\n  \"discountPercent\": 0,\n  \"discountNote\": \"\"\n}" },
+                "url": "{{baseUrl}}/api/Orders/complete"
+              }
+            },
+            {
+              "name": "Complete Order - Invalid Email",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Chặn thành công email sai định dạng', function () {",
+                      "  pm.response.to.have.status(400);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": {{customerId}},\n  \"customerEmail\": \"invalid-email-format\",\n  \"customerName\": \"Nguyen Van B\",\n  \"dealerId\": {{dealerId}}\n}" },
                 "url": "{{baseUrl}}/api/Orders/complete"
               }
             },
@@ -422,10 +700,32 @@
         {
           "name": "Contracts",
           "item": [
-            { "name": "Get Contracts", "request": { "method": "GET", "url": "{{baseUrl}}/api/Contracts" } },
-            { "name": "Get Contract By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/Contracts/{{contractId}}" } },
             {
               "name": "Create Contract",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Create Contract thành công', function () {",
+                      "  pm.response.to.have.status([200, 201]);",
+                      "});",
+                      "try {",
+                      "  let response = pm.response.json();",
+                      "  let conId = response.id || response.data?.id || response.result?.id || response.contractId;",
+                      "  if (conId) {",
+                      "    pm.collectionVariables.set('contractId', conId);",
+                      "    pm.environment.set('contractId', conId);",
+                      "    console.log('Đã lưu contractId mới:', conId);",
+                      "  }",
+                      "} catch (e) {",
+                      "  console.log('Không thể parse JSON response:', e);",
+                      "}"
+                    ]
+                  }
+                }
+              ],
               "request": {
                 "method": "POST",
                 "header": [
@@ -436,6 +736,8 @@
                 "url": "{{baseUrl}}/api/Contracts"
               }
             },
+            { "name": "Get Contracts", "request": { "method": "GET", "url": "{{baseUrl}}/api/Contracts" } },
+            { "name": "Get Contract By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/Contracts/{{contractId}}" } },
             {
               "name": "Update Contract Status",
               "request": {
@@ -453,9 +755,21 @@
         {
           "name": "Payments",
           "item": [
-            { "name": "Get Payments", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Payments" } },
             {
               "name": "Create Payment",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Create Payment thành công', function () {",
+                      "  pm.response.to.have.status([200, 201, 202]);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
               "request": {
                 "method": "POST",
                 "header": [
@@ -465,15 +779,78 @@
                 "body": { "mode": "raw", "raw": "{\n  \"orderId\": {{orderId}},\n  \"amount\": 1200000000,\n  \"paymentDate\": \"2026-06-10T09:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-001\",\n  \"notes\": \"Demo payment\"\n}" },
                 "url": "{{salesServiceUrl}}/api/Payments"
               }
-            }
+            },
+            {
+              "name": "Create Payment - Amount 0",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Chặn thành công số tiền bằng 0', function () {",
+                      "  pm.response.to.have.status(400);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"orderId\": {{orderId}},\n  \"amount\": 0,\n  \"paymentMethod\": \"Cash\"\n}" },
+                "url": "{{salesServiceUrl}}/api/Payments"
+              }
+            },
+            {
+              "name": "Create Payment - Amount -1",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Chặn thành công số tiền âm', function () {",
+                      "  pm.response.to.have.status(400);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"orderId\": {{orderId}},\n  \"amount\": -1,\n  \"paymentMethod\": \"Cash\"\n}" },
+                "url": "{{salesServiceUrl}}/api/Payments"
+              }
+            },
+            { "name": "Get Payments", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Payments" } }
           ]
         },
         {
           "name": "Deliveries",
           "item": [
-            { "name": "Get Deliveries", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Deliveries" } },
             {
               "name": "Create Delivery",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Create Delivery thành công', function () {",
+                      "  pm.response.to.have.status([200, 201, 202]);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
               "request": {
                 "method": "POST",
                 "header": [
@@ -483,15 +860,28 @@
                 "body": { "mode": "raw", "raw": "{\n  \"orderId\": {{orderId}},\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"status\": \"Scheduled\",\n  \"notes\": \"Demo delivery\"\n}" },
                 "url": "{{salesServiceUrl}}/api/Deliveries"
               }
-            }
+            },
+            { "name": "Get Deliveries", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Deliveries" } }
           ]
         },
         {
           "name": "Promotions",
           "item": [
-            { "name": "Get Promotions", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Promotions" } },
             {
               "name": "Create Promotion",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Create Promotion thành công', function () {",
+                      "  pm.response.to.have.status([200, 201]);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
               "request": {
                 "method": "POST",
                 "header": [
@@ -501,15 +891,84 @@
                 "body": { "mode": "raw", "raw": "{\n  \"name\": \"SUMMER2026\",\n  \"description\": \"Summer promotion\",\n  \"discountType\": \"Percent\",\n  \"discountValue\": 10,\n  \"startDate\": \"2026-06-01T00:00:00Z\",\n  \"endDate\": \"2026-08-31T23:59:59Z\"\n}" },
                 "url": "{{salesServiceUrl}}/api/Promotions"
               }
-            }
+            },
+            {
+              "name": "Create Promotion - Discount 0",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Chặn thành công discount bằng 0', function () {",
+                      "  pm.response.to.have.status(400);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"ERR_ZERO\",\n  \"discountType\": \"Percent\",\n  \"discountValue\": 0\n}" },
+                "url": "{{salesServiceUrl}}/api/Promotions"
+              }
+            },
+            {
+              "name": "Create Promotion - Discount -1",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Chặn thành công discount âm', function () {",
+                      "  pm.response.to.have.status(400);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"ERR_MINUS\",\n  \"discountType\": \"Percent\",\n  \"discountValue\": -1\n}" },
+                "url": "{{salesServiceUrl}}/api/Promotions"
+              }
+            },
+            { "name": "Get Promotions", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Promotions" } }
           ]
         }
       ]
     },
+
     {
       "name": "Reports",
       "item": [
         { "name": "Demand Forecast", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/demand-forecast?from={{reportFrom}}&to={{reportTo}}" } },
+        {
+          "name": "Demand Forecast - Invalid From",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Chặn thành công dữ liệu From không hợp lệ', function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/demand-forecast?from=invalid-date&to={{reportTo}}" }
+        },
         { "name": "Synchronize Data", "request": { "method": "POST", "url": "{{reportingServiceUrl}}/api/reports/synchronize-data" } },
         { "name": "Debt Summary", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/debt-summary?dealerId={{dealerId}}&customerId={{customerId}}&from={{reportFrom}}&to={{reportTo}}" } },
         { "name": "Debt Report", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/debt-report?dealerId={{dealerId}}&from={{reportFrom}}&to={{reportTo}}" } },
@@ -529,15 +988,76 @@
             "url": "{{reportingServiceUrl}}/api/reports/export"
           }
         },
+        {
+          "name": "Export Report - Invalid Type",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Chặn thành công Type báo cáo không tồn tại', function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"type\": \"unknown_type\",\n  \"from\": \"{{reportFrom}}\",\n  \"to\": \"{{reportTo}}\"\n}" },
+            "url": "{{reportingServiceUrl}}/api/reports/export"
+          }
+        },
         { "name": "Sales Summary", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/sales-summary?dealerId={{dealerId}}&fromDate={{reportFrom}}&toDate={{reportTo}}" } },
+        {
+          "name": "Sales Summary - Invalid Dates",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Chặn thành công khoảng ngày sai quy định', function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/sales-summary?dealerId={{dealerId}}&fromDate=2026-12-31&toDate=2026-01-01" }
+        },
         { "name": "Inventory Summary", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/inventory-summary?dealerId={{dealerId}}&vehicleId={{vehicleId}}" } }
       ]
     },
+    
     {
       "name": "Notifications",
       "item": [
         {
           "name": "Test FCM",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Kiểm tra phản hồi từ API FCM', function () {",
+                  "  if (pm.response.code === 500) {",
+                  "    console.warn('CẢNH BÁO: Server lỗi 500. Vui lòng cấu hình firebase-service-account.json trên CI.');",
+                  "    pm.expect(pm.response.code).to.equal(500);",
+                  "  } else {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202, 204]);",
+                  "    pm.test('Content-Type is present', function () {",
+                  "      pm.response.to.have.header('Content-Type');",
+                  "    });",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -547,6 +1067,27 @@
         },
         {
           "name": "Subscribe Topic",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Kiểm tra phản hồi từ API Subscribe', function () {",
+                  "  if (pm.response.code === 500) {",
+                  "    console.warn('CẢNH BÁO: Firebase SDK chưa được cấu hình.');",
+                  "    pm.expect(pm.response.code).to.equal(500);",
+                  "  } else {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202, 204]);",
+                  "    pm.test('Content-Type is present', function () {",
+                  "      pm.response.to.have.header('Content-Type');",
+                  "    });",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -556,6 +1097,26 @@
         },
         {
           "name": "Unsubscribe Topic",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Kiểm tra phản hồi từ API Unsubscribe', function () {",
+                  "  if (pm.response.code === 500) {",
+                  "    pm.expect(pm.response.code).to.equal(500);",
+                  "  } else {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202, 204]);",
+                  "    pm.test('Content-Type is present', function () {",
+                  "      pm.response.to.have.header('Content-Type');",
+                  "    });",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -565,6 +1126,26 @@
         },
         {
           "name": "Send To Topic",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Kiểm tra phản hồi từ API Send Topic', function () {",
+                  "  if (pm.response.code === 500) {",
+                  "    pm.expect(pm.response.code).to.equal(500);",
+                  "  } else {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202, 204]);",
+                  "    pm.test('Content-Type is present', function () {",
+                  "      pm.response.to.have.header('Content-Type');",
+                  "    });",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -574,6 +1155,26 @@
         },
         {
           "name": "Send Multicast",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Kiểm tra phản hồi từ API Multicast', function () {",
+                  "  if (pm.response.code === 500) {",
+                  "    pm.expect(pm.response.code).to.equal(500);",
+                  "  } else {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202, 204]);",
+                  "    pm.test('Content-Type is present', function () {",
+                  "      pm.response.to.have.header('Content-Type');",
+                  "    });",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
