@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="a917fc3c-5f01-423b-8635-74cce07213b9" name="voloa@MSI 2026-07-03 19:45:22" runUser="MSI\voloa" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-07-03T19:45:22.6773245+07:00" queuing="2026-07-03T19:45:22.6773248+07:00" start="2026-07-03T19:45:20.0555265+07:00" finish="2026-07-03T19:45:31.0138164+07:00" />
+  <TestSettings name="default" id="538031c0-5314-4fa0-8db2-627b32c05aa4">
+    <Deployment runDeploymentRoot="voloa_MSI_2026-07-03_19_45_22" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="42ea1741-352b-4e19-9f9c-22fcc7906942" testId="fe3d53ae-e72d-e1ea-6ffd-31efbe52d247" testName="SalesService.Tests.ContractsControllerTests.CreateContract_InvalidModelState_ReturnsBadRequest" computerName="MSI" duration="00:00:00.5241917" startTime="2026-07-03T19:45:22.3625900+07:00" endTime="2026-07-03T19:45:22.3625904+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="42ea1741-352b-4e19-9f9c-22fcc7906942" />
+    <UnitTestResult executionId="9cd6f497-f64c-4e43-9e1f-90b45898b98d" testId="6b028799-ed5f-5180-7042-7e6a381612d1" testName="SalesService.Tests.ContractsControllerTests.UpdateContractStatus_Approved_SetsOrderReadyForDelivery_ReturnsOk" computerName="MSI" duration="00:00:00.0012465" startTime="2026-07-03T19:45:22.6555988+07:00" endTime="2026-07-03T19:45:22.6555989+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9cd6f497-f64c-4e43-9e1f-90b45898b98d" />
+    <UnitTestResult executionId="fa5a8b8d-0ea7-455c-a4b7-f2a5439c441b" testId="6d5f5e56-4c32-56a0-d759-e5d661036fe4" testName="SalesService.Tests.ContractsControllerTests.UpdateContractStatus_Rejected_RemovesContractAndOrder_ReturnsOk" computerName="MSI" duration="00:00:00.2729845" startTime="2026-07-03T19:45:22.6355596+07:00" endTime="2026-07-03T19:45:22.6355598+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fa5a8b8d-0ea7-455c-a4b7-f2a5439c441b" />
+    <UnitTestResult executionId="7a057b4f-62ac-438a-b6ce-fd98e48baf3c" testId="9a8d5f6e-6466-d6e1-bdaf-bef54e0dae2d" testName="SalesService.Tests.OrdersControllerTests.CompleteOrder_TotalPriceZero_ReturnsBadRequest" computerName="MSI" duration="00:00:00.0308799" startTime="2026-07-03T19:45:22.3934825+07:00" endTime="2026-07-03T19:45:22.3934828+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7a057b4f-62ac-438a-b6ce-fd98e48baf3c" />
+    <UnitTestResult executionId="096ca7f7-b56e-46c9-95c5-9f17f6df7da8" testId="23723a29-8504-255f-6aa5-9e6e52e241ca" testName="SalesService.Tests.ContractsControllerTests.CreateContract_ContractAlreadyExists_ReturnsBadRequest" computerName="MSI" duration="00:00:00.0065682" startTime="2026-07-03T19:45:22.6540873+07:00" endTime="2026-07-03T19:45:22.6540874+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="096ca7f7-b56e-46c9-95c5-9f17f6df7da8" />
+    <UnitTestResult executionId="8d5bf7b0-f487-4821-adc8-25059efd68c3" testId="0e11e80c-51de-79f3-c855-f9c1107898e0" testName="SalesService.Tests.OrdersControllerTests.CompleteOrder_MissingName_ReturnsBadRequest" computerName="MSI" duration="00:00:00.5242099" startTime="2026-07-03T19:45:22.3634196+07:00" endTime="2026-07-03T19:45:22.3634198+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8d5bf7b0-f487-4821-adc8-25059efd68c3" />
+    <UnitTestResult executionId="cbefaf42-bea2-41c6-ba18-8a715538ba9b" testId="6470fdd6-3b29-2605-288d-d98543cdc620" testName="SalesService.Tests.OrdersControllerTests.CompleteOrder_ValidRequest_DiscountAmount_ReturnsOk" computerName="MSI" duration="00:00:04.1774553" startTime="2026-07-03T19:45:26.5730645+07:00" endTime="2026-07-03T19:45:26.5730648+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cbefaf42-bea2-41c6-ba18-8a715538ba9b" />
+    <UnitTestResult executionId="c417e144-86dd-41cb-95db-a85b088a6ac0" testId="3495f506-7638-730f-3215-c7b3a015d33a" testName="SalesService.Tests.QuotesControllerTests.CreateQuote_InvalidModelState_ReturnsBadRequest" computerName="MSI" duration="00:00:00.0010864" startTime="2026-07-03T19:45:22.4601864+07:00" endTime="2026-07-03T19:45:22.4601866+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c417e144-86dd-41cb-95db-a85b088a6ac0" />
+    <UnitTestResult executionId="4f9e883b-3fab-4b1c-b2ba-b945a2dedff9" testId="be31442b-08e0-f58e-e75b-fdae2ce27f37" testName="SalesService.Tests.OrdersControllerTests.CompleteOrder_ValidRequest_DiscountPercent_UpdatesQuote_ReturnsOk" computerName="MSI" duration="00:00:04.0689345" startTime="2026-07-03T19:45:30.6544389+07:00" endTime="2026-07-03T19:45:30.6544391+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4f9e883b-3fab-4b1c-b2ba-b945a2dedff9" />
+    <UnitTestResult executionId="e2115145-d5ad-4c0e-bc6a-7d14ee83eec5" testId="4e6d4a9b-1caf-f3fa-acfa-01d1487a0831" testName="SalesService.Tests.UnitTest1.Test1" computerName="MSI" duration="00:00:00.0028362" startTime="2026-07-03T19:45:21.8525786+07:00" endTime="2026-07-03T19:45:21.8526164+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e2115145-d5ad-4c0e-bc6a-7d14ee83eec5" />
+    <UnitTestResult executionId="8ef20dd3-d0ee-40df-94d4-060d9181b7fc" testId="71ebaacd-106f-69de-cecb-fad6b25ebca1" testName="SalesService.Tests.ContractsControllerTests.CreateContract_ValidRequest_DepositTrue_ReturnsCreated" computerName="MSI" duration="00:00:00.0025636" startTime="2026-07-03T19:45:22.6551316+07:00" endTime="2026-07-03T19:45:22.6551317+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8ef20dd3-d0ee-40df-94d4-060d9181b7fc" />
+    <UnitTestResult executionId="348a98c8-0e6a-4296-afb7-2dea667a9faf" testId="80e1e150-4ce4-b83d-04f3-f5a63c2e72f2" testName="SalesService.Tests.QuotesControllerTests.CreateQuote_ValidDto_ReturnsCreated" computerName="MSI" duration="00:00:00.6183208" startTime="2026-07-03T19:45:22.4565244+07:00" endTime="2026-07-03T19:45:22.4565247+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="348a98c8-0e6a-4296-afb7-2dea667a9faf" />
+    <UnitTestResult executionId="48c7bbc0-3c2b-45bb-bbb8-ec94c341aace" testId="e7542e75-80a2-60ec-b3b5-561bf086a17e" testName="SalesService.Tests.ContractsControllerTests.UpdateContractStatus_ContractNotFound_ReturnsNotFound" computerName="MSI" duration="00:00:00.0006202" startTime="2026-07-03T19:45:22.6553876+07:00" endTime="2026-07-03T19:45:22.6553877+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="48c7bbc0-3c2b-45bb-bbb8-ec94c341aace" />
+    <UnitTestResult executionId="54ae041c-328e-4fac-b2ab-6c4fc2768c7b" testId="c2d634cb-7c92-8403-a6cb-f05a7f52e4fa" testName="SalesService.Tests.ContractsControllerTests.CreateContract_InvalidSalespersonId_ReturnsBadRequest" computerName="MSI" duration="00:00:00.0011521" startTime="2026-07-03T19:45:22.6548080+07:00" endTime="2026-07-03T19:45:22.6548081+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="54ae041c-328e-4fac-b2ab-6c4fc2768c7b" />
+    <UnitTestResult executionId="89a4f6d9-1531-49c4-ba95-05c353ea444a" testId="4bf99022-3e59-bab7-f989-518d552c5188" testName="SalesService.Tests.OrdersControllerTests.UpdateOrderStatus_OrderNotFound_ReturnsNotFound" computerName="MSI" duration="00:00:00.0074394" startTime="2026-07-03T19:45:26.5842353+07:00" endTime="2026-07-03T19:45:26.5842354+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="89a4f6d9-1531-49c4-ba95-05c353ea444a" />
+    <UnitTestResult executionId="f0df1557-5c6d-4237-940f-c1b7cdef3ce4" testId="b23fe4a5-4c45-bc22-616f-40597d70ea76" testName="SalesService.Tests.OrdersControllerTests.CompleteOrder_MissingEmail_ReturnsBadRequest" computerName="MSI" duration="00:00:00.0008758" startTime="2026-07-03T19:45:26.5852580+07:00" endTime="2026-07-03T19:45:26.5852582+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f0df1557-5c6d-4237-940f-c1b7cdef3ce4" />
+    <UnitTestResult executionId="fd84115f-fa86-4b4c-b222-fbf080f75dc8" testId="0bfec96d-8210-8239-125b-77df18e1068e" testName="SalesService.Tests.ContractsControllerTests.CreateContract_OrderNotFound_ReturnsNotFound" computerName="MSI" duration="00:00:00.0012676" startTime="2026-07-03T19:45:22.6544260+07:00" endTime="2026-07-03T19:45:22.6544261+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fd84115f-fa86-4b4c-b222-fbf080f75dc8" />
+    <UnitTestResult executionId="3e324d9e-6ae2-43f7-98e6-1e9f3472f0aa" testId="95366a2d-900d-8601-dc83-c3a33190134a" testName="SalesService.Tests.ContractsControllerTests.UpdateContractStatus_OtherStatus_UpdatesBoth_ReturnsOk" computerName="MSI" duration="00:00:00.0045484" startTime="2026-07-03T19:45:22.6536704+07:00" endTime="2026-07-03T19:45:22.6536705+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3e324d9e-6ae2-43f7-98e6-1e9f3472f0aa" />
+    <UnitTestResult executionId="df2d2ac0-c9d7-4ffa-be25-a77b13bf9b24" testId="1dab0b62-ee6d-827b-f3f4-dbcdac16c36d" testName="SalesService.Tests.QuotesControllerTests.CreateQuote_DatabaseException_Returns500" computerName="MSI" duration="00:00:00.0024112" startTime="2026-07-03T19:45:22.4590256+07:00" endTime="2026-07-03T19:45:22.4590257+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="df2d2ac0-c9d7-4ffa-be25-a77b13bf9b24" />
+    <UnitTestResult executionId="17eb41cf-5a3a-49c4-ba4e-d6f5f86ed64e" testId="b27cca86-2b97-6655-4466-e3d07230040f" testName="SalesService.Tests.OrdersControllerTests.UpdateOrderStatus_ValidId_UpdatesStatus_ReturnsOk" computerName="MSI" duration="00:00:00.0026867" startTime="2026-07-03T19:45:26.5767239+07:00" endTime="2026-07-03T19:45:26.5767241+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="17eb41cf-5a3a-49c4-ba4e-d6f5f86ed64e" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="SalesService.Tests.ContractsControllerTests.CreateContract_ValidRequest_DepositTrue_ReturnsCreated" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="71ebaacd-106f-69de-cecb-fad6b25ebca1">
+      <Execution id="8ef20dd3-d0ee-40df-94d4-060d9181b7fc" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.ContractsControllerTests" name="CreateContract_ValidRequest_DepositTrue_ReturnsCreated" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.QuotesControllerTests.CreateQuote_InvalidModelState_ReturnsBadRequest" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="3495f506-7638-730f-3215-c7b3a015d33a">
+      <Execution id="c417e144-86dd-41cb-95db-a85b088a6ac0" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.QuotesControllerTests" name="CreateQuote_InvalidModelState_ReturnsBadRequest" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.OrdersControllerTests.UpdateOrderStatus_OrderNotFound_ReturnsNotFound" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="4bf99022-3e59-bab7-f989-518d552c5188">
+      <Execution id="89a4f6d9-1531-49c4-ba95-05c353ea444a" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.OrdersControllerTests" name="UpdateOrderStatus_OrderNotFound_ReturnsNotFound" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.OrdersControllerTests.CompleteOrder_ValidRequest_DiscountPercent_UpdatesQuote_ReturnsOk" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="be31442b-08e0-f58e-e75b-fdae2ce27f37">
+      <Execution id="4f9e883b-3fab-4b1c-b2ba-b945a2dedff9" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.OrdersControllerTests" name="CompleteOrder_ValidRequest_DiscountPercent_UpdatesQuote_ReturnsOk" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.OrdersControllerTests.CompleteOrder_TotalPriceZero_ReturnsBadRequest" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="9a8d5f6e-6466-d6e1-bdaf-bef54e0dae2d">
+      <Execution id="7a057b4f-62ac-438a-b6ce-fd98e48baf3c" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.OrdersControllerTests" name="CompleteOrder_TotalPriceZero_ReturnsBadRequest" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.ContractsControllerTests.UpdateContractStatus_Approved_SetsOrderReadyForDelivery_ReturnsOk" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="6b028799-ed5f-5180-7042-7e6a381612d1">
+      <Execution id="9cd6f497-f64c-4e43-9e1f-90b45898b98d" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.ContractsControllerTests" name="UpdateContractStatus_Approved_SetsOrderReadyForDelivery_ReturnsOk" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.QuotesControllerTests.CreateQuote_ValidDto_ReturnsCreated" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="80e1e150-4ce4-b83d-04f3-f5a63c2e72f2">
+      <Execution id="348a98c8-0e6a-4296-afb7-2dea667a9faf" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.QuotesControllerTests" name="CreateQuote_ValidDto_ReturnsCreated" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.ContractsControllerTests.CreateContract_InvalidSalespersonId_ReturnsBadRequest" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="c2d634cb-7c92-8403-a6cb-f05a7f52e4fa">
+      <Execution id="54ae041c-328e-4fac-b2ab-6c4fc2768c7b" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.ContractsControllerTests" name="CreateContract_InvalidSalespersonId_ReturnsBadRequest" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.OrdersControllerTests.UpdateOrderStatus_ValidId_UpdatesStatus_ReturnsOk" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="b27cca86-2b97-6655-4466-e3d07230040f">
+      <Execution id="17eb41cf-5a3a-49c4-ba4e-d6f5f86ed64e" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.OrdersControllerTests" name="UpdateOrderStatus_ValidId_UpdatesStatus_ReturnsOk" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.OrdersControllerTests.CompleteOrder_MissingEmail_ReturnsBadRequest" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="b23fe4a5-4c45-bc22-616f-40597d70ea76">
+      <Execution id="f0df1557-5c6d-4237-940f-c1b7cdef3ce4" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.OrdersControllerTests" name="CompleteOrder_MissingEmail_ReturnsBadRequest" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.ContractsControllerTests.CreateContract_InvalidModelState_ReturnsBadRequest" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="fe3d53ae-e72d-e1ea-6ffd-31efbe52d247">
+      <Execution id="42ea1741-352b-4e19-9f9c-22fcc7906942" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.ContractsControllerTests" name="CreateContract_InvalidModelState_ReturnsBadRequest" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.OrdersControllerTests.CompleteOrder_ValidRequest_DiscountAmount_ReturnsOk" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="6470fdd6-3b29-2605-288d-d98543cdc620">
+      <Execution id="cbefaf42-bea2-41c6-ba18-8a715538ba9b" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.OrdersControllerTests" name="CompleteOrder_ValidRequest_DiscountAmount_ReturnsOk" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.ContractsControllerTests.CreateContract_OrderNotFound_ReturnsNotFound" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="0bfec96d-8210-8239-125b-77df18e1068e">
+      <Execution id="fd84115f-fa86-4b4c-b222-fbf080f75dc8" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.ContractsControllerTests" name="CreateContract_OrderNotFound_ReturnsNotFound" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.QuotesControllerTests.CreateQuote_DatabaseException_Returns500" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="1dab0b62-ee6d-827b-f3f4-dbcdac16c36d">
+      <Execution id="df2d2ac0-c9d7-4ffa-be25-a77b13bf9b24" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.QuotesControllerTests" name="CreateQuote_DatabaseException_Returns500" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.OrdersControllerTests.CompleteOrder_MissingName_ReturnsBadRequest" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="0e11e80c-51de-79f3-c855-f9c1107898e0">
+      <Execution id="8d5bf7b0-f487-4821-adc8-25059efd68c3" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.OrdersControllerTests" name="CompleteOrder_MissingName_ReturnsBadRequest" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.ContractsControllerTests.UpdateContractStatus_OtherStatus_UpdatesBoth_ReturnsOk" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="95366a2d-900d-8601-dc83-c3a33190134a">
+      <Execution id="3e324d9e-6ae2-43f7-98e6-1e9f3472f0aa" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.ContractsControllerTests" name="UpdateContractStatus_OtherStatus_UpdatesBoth_ReturnsOk" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.ContractsControllerTests.UpdateContractStatus_ContractNotFound_ReturnsNotFound" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="e7542e75-80a2-60ec-b3b5-561bf086a17e">
+      <Execution id="48c7bbc0-3c2b-45bb-bbb8-ec94c341aace" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.ContractsControllerTests" name="UpdateContractStatus_ContractNotFound_ReturnsNotFound" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.UnitTest1.Test1" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="4e6d4a9b-1caf-f3fa-acfa-01d1487a0831">
+      <Execution id="e2115145-d5ad-4c0e-bc6a-7d14ee83eec5" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.UnitTest1" name="Test1" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.ContractsControllerTests.CreateContract_ContractAlreadyExists_ReturnsBadRequest" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="23723a29-8504-255f-6aa5-9e6e52e241ca">
+      <Execution id="096ca7f7-b56e-46c9-95c5-9f17f6df7da8" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.ContractsControllerTests" name="CreateContract_ContractAlreadyExists_ReturnsBadRequest" />
+    </UnitTest>
+    <UnitTest name="SalesService.Tests.ContractsControllerTests.UpdateContractStatus_Rejected_RemovesContractAndOrder_ReturnsOk" storage="e:\kcpm\travel---homestay---camping---booking---application\ev-dealer-management\ev-dealer-management\salesservice.tests\bin\debug\net8.0\salesservice.tests.dll" id="6d5f5e56-4c32-56a0-d759-e5d661036fe4">
+      <Execution id="fa5a8b8d-0ea7-455c-a4b7-f2a5439c441b" />
+      <TestMethod codeBase="E:\KCPM\Travel---Homestay---Camping---Booking---Application\ev-dealer-management\ev-dealer-management\SalesService.Tests\bin\Debug\net8.0\SalesService.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SalesService.Tests.ContractsControllerTests" name="UpdateContractStatus_Rejected_RemovesContractAndOrder_ReturnsOk" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="fe3d53ae-e72d-e1ea-6ffd-31efbe52d247" executionId="42ea1741-352b-4e19-9f9c-22fcc7906942" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6b028799-ed5f-5180-7042-7e6a381612d1" executionId="9cd6f497-f64c-4e43-9e1f-90b45898b98d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6d5f5e56-4c32-56a0-d759-e5d661036fe4" executionId="fa5a8b8d-0ea7-455c-a4b7-f2a5439c441b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9a8d5f6e-6466-d6e1-bdaf-bef54e0dae2d" executionId="7a057b4f-62ac-438a-b6ce-fd98e48baf3c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="23723a29-8504-255f-6aa5-9e6e52e241ca" executionId="096ca7f7-b56e-46c9-95c5-9f17f6df7da8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0e11e80c-51de-79f3-c855-f9c1107898e0" executionId="8d5bf7b0-f487-4821-adc8-25059efd68c3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6470fdd6-3b29-2605-288d-d98543cdc620" executionId="cbefaf42-bea2-41c6-ba18-8a715538ba9b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3495f506-7638-730f-3215-c7b3a015d33a" executionId="c417e144-86dd-41cb-95db-a85b088a6ac0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="be31442b-08e0-f58e-e75b-fdae2ce27f37" executionId="4f9e883b-3fab-4b1c-b2ba-b945a2dedff9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4e6d4a9b-1caf-f3fa-acfa-01d1487a0831" executionId="e2115145-d5ad-4c0e-bc6a-7d14ee83eec5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="71ebaacd-106f-69de-cecb-fad6b25ebca1" executionId="8ef20dd3-d0ee-40df-94d4-060d9181b7fc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="80e1e150-4ce4-b83d-04f3-f5a63c2e72f2" executionId="348a98c8-0e6a-4296-afb7-2dea667a9faf" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e7542e75-80a2-60ec-b3b5-561bf086a17e" executionId="48c7bbc0-3c2b-45bb-bbb8-ec94c341aace" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c2d634cb-7c92-8403-a6cb-f05a7f52e4fa" executionId="54ae041c-328e-4fac-b2ab-6c4fc2768c7b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4bf99022-3e59-bab7-f989-518d552c5188" executionId="89a4f6d9-1531-49c4-ba95-05c353ea444a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b23fe4a5-4c45-bc22-616f-40597d70ea76" executionId="f0df1557-5c6d-4237-940f-c1b7cdef3ce4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0bfec96d-8210-8239-125b-77df18e1068e" executionId="fd84115f-fa86-4b4c-b222-fbf080f75dc8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="95366a2d-900d-8601-dc83-c3a33190134a" executionId="3e324d9e-6ae2-43f7-98e6-1e9f3472f0aa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1dab0b62-ee6d-827b-f3f4-dbcdac16c36d" executionId="df2d2ac0-c9d7-4ffa-be25-a77b13bf9b24" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b27cca86-2b97-6655-4466-e3d07230040f" executionId="17eb41cf-5a3a-49c4-ba4e-d6f5f86ed64e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="20" executed="20" passed="20" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.27)&#xD;
+[xUnit.net 00:00:00.09]   Discovering: SalesService.Tests&#xD;
+[xUnit.net 00:00:00.13]   Discovered:  SalesService.Tests&#xD;
+[xUnit.net 00:00:00.13]   Starting:    SalesService.Tests&#xD;
+[xUnit.net 00:00:08.99]   Finished:    SalesService.Tests&#xD;
+</StdOut>
+    </Output>
+    <CollectorDataEntries>
+      <Collector agentName="MSI" uri="datacollector://microsoft/CoverletCodeCoverage/1.0" collectorDisplayName="XPlat code coverage">
+        <UriAttachments>
+          <UriAttachment>
+            <A href="MSI\coverage.cobertura.xml"></A>
+          </UriAttachment>
+        </UriAttachments>
+      </Collector>
+    </CollectorDataEntries>
+  </ResultSummary>
+</TestRun>
