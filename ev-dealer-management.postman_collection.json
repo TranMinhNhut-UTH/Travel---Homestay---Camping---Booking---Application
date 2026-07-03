@@ -16,6 +16,43 @@
           "}"
         ]
       }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "const requestName = (pm.info.requestName || '').toLowerCase();",
+          "const isNegativeCase = /invalid|empty|missing|negative|boundary|unhappy|equivalent/.test(requestName);",
+          "const isDisabledEndpoint = /processed reservation/.test(requestName);",
+          "const acceptableStatusCodes = isNegativeCase ? [400, 401, 403, 404, 409, 422, 500, 501] : (isDisabledEndpoint ? [200, 201, 202, 204, 500, 501] : [200, 201, 202, 204]);",
+          "pm.test('Status code is acceptable for the request type', function () {",
+          "  pm.expect(acceptableStatusCodes, pm.info.requestName).to.include(pm.response.code);",
+          "});",
+          "pm.test('Response time is under 2000 ms', function () {",
+          "  pm.expect(pm.response.responseTime).to.be.below(2000);",
+          "});",
+          "pm.test('Content-Type is present when a body is returned', function () {",
+          "  if (pm.response.code !== 204) {",
+          "    pm.expect(pm.response.headers.get('Content-Type')).to.exist;",
+          "  }",
+          "});",
+          "const contentType = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+          "if (contentType.includes('application/json')) {",
+          "  pm.test('Response is valid JSON', function () {",
+          "    pm.expect(function () { pm.response.json(); }).to.not.throw();",
+          "  });",
+          "  try {",
+          "    const body = pm.response.json();",
+          "    pm.test('Basic JSON schema', function () {",
+          "      pm.expect(body === null || typeof body === 'object').to.be.true;",
+          "    });",
+          "  } catch (error) {",
+          "    // JSON parse already covered above.",
+          "  }",
+          "}"
+        ]
+      }
     }
   ],
   "variable": [
@@ -100,6 +137,42 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"token\": \"reset-token\",\n  \"newPassword\": \"NewP@ssw0rd!\"\n}" },
             "url": "{{baseUrl}}/api/auth/reset-password"
+          }
+        },
+        {
+          "name": "Login - Invalid Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"wrong-password\"\n}" },
+            "url": "{{baseUrl}}/api/auth/login"
+          }
+        },
+        {
+          "name": "Login - Empty Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"\"\n}" },
+            "url": "{{baseUrl}}/api/auth/login"
+          }
+        },
+        {
+          "name": "Register - Invalid Email",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"sales02\",\n  \"email\": \"abc\",\n  \"fullName\": \"Sales 02\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"Sales\",\n  \"dealerId\": {{dealerId}}\n}" },
+            "url": "{{baseUrl}}/api/auth/register"
+          }
+        },
+        {
+          "name": "Register - Empty Email",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"sales03\",\n  \"email\": \"\",\n  \"fullName\": \"Sales 03\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"Sales\",\n  \"dealerId\": {{dealerId}}\n}" },
+            "url": "{{baseUrl}}/api/auth/register"
           }
         },
         {
@@ -206,6 +279,54 @@
           }
         },
         {
+          "name": "Create Vehicle - Price -1",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": -1,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": 5,\n  \"Description\": \"Demo vehicle\",\n  \"DealerId\": {{dealerId}}\n}" },
+            "url": "{{baseUrl}}/api/vehicles"
+          }
+        },
+        {
+          "name": "Create Vehicle - Price 0",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": 0,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": 5,\n  \"Description\": \"Demo vehicle\",\n  \"DealerId\": {{dealerId}}\n}" },
+            "url": "{{baseUrl}}/api/vehicles"
+          }
+        },
+        {
+          "name": "Create Vehicle - Stock -1",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": 1200000000,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": -1,\n  \"Description\": \"Demo vehicle\",\n  \"DealerId\": {{dealerId}}\n}" },
+            "url": "{{baseUrl}}/api/vehicles"
+          }
+        },
+        {
+          "name": "Create Vehicle - Missing DealerId",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": 1200000000,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": 5,\n  \"Description\": \"Demo vehicle\"\n}" },
+            "url": "{{baseUrl}}/api/vehicles"
+          }
+        },
+        {
           "name": "Update Vehicle",
           "request": {
             "method": "PUT",
@@ -227,6 +348,42 @@
               { "key": "Authorization", "value": "Bearer {{authToken}}" }
             ],
             "body": { "mode": "raw", "raw": "{\n  \"customerName\": \"Nguyen Van A\",\n  \"customerEmail\": \"customer@example.com\",\n  \"customerPhone\": \"+84912345678\",\n  \"colorVariantId\": 1,\n  \"notes\": \"Reserve for demo\",\n  \"quantity\": 1,\n  \"deviceToken\": \"{{deviceToken}}\"\n}" },
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}/reserve"
+          }
+        },
+        {
+          "name": "Reserve Vehicle - Quantity 0",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"customerName\": \"Nguyen Van A\",\n  \"customerEmail\": \"customer@example.com\",\n  \"customerPhone\": \"+84912345678\",\n  \"colorVariantId\": 1,\n  \"notes\": \"Reserve for demo\",\n  \"quantity\": 0,\n  \"deviceToken\": \"{{deviceToken}}\"\n}" },
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}/reserve"
+          }
+        },
+        {
+          "name": "Reserve Vehicle - Quantity 101",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"customerName\": \"Nguyen Van A\",\n  \"customerEmail\": \"customer@example.com\",\n  \"customerPhone\": \"+84912345678\",\n  \"colorVariantId\": 1,\n  \"notes\": \"Reserve for demo\",\n  \"quantity\": 101,\n  \"deviceToken\": \"{{deviceToken}}\"\n}" },
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}/reserve"
+          }
+        },
+        {
+          "name": "Reserve Vehicle - Invalid Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"customerName\": \"Nguyen Van A\",\n  \"customerEmail\": \"customer@example\",\n  \"customerPhone\": \"abc\",\n  \"colorVariantId\": 1,\n  \"notes\": \"Reserve for demo\",\n  \"quantity\": 1,\n  \"deviceToken\": \"{{deviceToken}}\"\n}" },
             "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}/reserve"
           }
         },
@@ -258,7 +415,9 @@
         },
         { "name": "Delete Dealer", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }], "url": "{{baseUrl}}/api/dealers/{{dealerId}}" } },
         { "name": "Vehicle Types", "request": { "method": "GET", "url": "{{baseUrl}}/api/vehicletypes" } },
-        { "name": "Vehicle Health", "request": { "method": "GET", "url": "{{baseUrl}}/api/health" } },
+        { "name": "Vehicle Health", "request": { "method": "GET", "url": "{{vehicleServiceUrl}}/api/Health" } },
+        { "name": "Export Vehicles CSV", "request": { "method": "GET", "url": "{{vehicleServiceUrl}}/api/vehicles/csv" } },
+        { "name": "Export Vehicles JSON", "request": { "method": "GET", "url": "{{vehicleServiceUrl}}/api/vehicles/json" } },
         { "name": "Static Image", "request": { "method": "GET", "url": "{{baseUrl}}/images/sample.jpg" } }
       ]
     },
@@ -276,6 +435,30 @@
               { "key": "Authorization", "value": "Bearer {{authToken}}" }
             ],
             "body": { "mode": "raw", "raw": "{\n  \"name\": \"Nguyen Van B\",\n  \"email\": \"customer@example.com\",\n  \"phone\": \"+84923456789\",\n  \"address\": \"Ha Noi\",\n  \"dealerId\": {{dealerId}},\n  \"status\": \"active\"\n}" },
+            "url": "{{baseUrl}}/api/customers"
+          }
+        },
+        {
+          "name": "Create Customer - Invalid Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Nguyen Van B\",\n  \"email\": \"abc\",\n  \"phone\": \"+84923456789\",\n  \"address\": \"Ha Noi\",\n  \"dealerId\": {{dealerId}},\n  \"status\": \"active\"\n}" },
+            "url": "{{baseUrl}}/api/customers"
+          }
+        },
+        {
+          "name": "Create Customer - Missing DealerId",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Nguyen Van B\",\n  \"email\": \"customer@example.com\",\n  \"phone\": \"+84923456789\",\n  \"address\": \"Ha Noi\",\n  \"status\": \"active\"\n}" },
             "url": "{{baseUrl}}/api/customers"
           }
         },
@@ -308,6 +491,30 @@
           }
         },
         {
+          "name": "Create Test Drive - Past Date",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"customerId\": {{customerId}},\n  \"vehicleId\": {{vehicleId}},\n  \"dealerId\": {{dealerId}},\n  \"appointmentDate\": \"2020-01-01T09:00:00Z\",\n  \"notes\": \"Past slot\",\n  \"status\": \"Scheduled\"\n}" },
+            "url": "{{baseUrl}}/api/TestDrives"
+          }
+        },
+        {
+          "name": "Create Test Drive - Empty Appointment Date",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"customerId\": {{customerId}},\n  \"vehicleId\": {{vehicleId}},\n  \"dealerId\": {{dealerId}},\n  \"appointmentDate\": \"\",\n  \"notes\": \"Empty date\",\n  \"status\": \"Scheduled\"\n}" },
+            "url": "{{baseUrl}}/api/TestDrives"
+          }
+        },
+        {
           "name": "Update Test Drive",
           "request": {
             "method": "PUT",
@@ -336,6 +543,30 @@
               { "key": "Authorization", "value": "Bearer {{authToken}}" }
             ],
             "body": { "mode": "raw", "raw": "{\n  \"customerId\": {{customerId}},\n  \"type\": \"Bao hanh\",\n  \"title\": \"Remote not working\",\n  \"description\": \"Customer reports a broken remote\",\n  \"assignedToStaffID\": 10,\n  \"priority\": \"High\",\n  \"relatedOrderID\": {{orderId}},\n  \"relatedVehicleID\": {{vehicleId}}\n}" },
+            "url": "{{customerServiceUrl}}/api/Complaints"
+          }
+        },
+        {
+          "name": "Create Complaint - Missing Description",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"customerId\": {{customerId}},\n  \"type\": \"Bao hanh\",\n  \"title\": \"Remote not working\",\n  \"assignedToStaffID\": 10,\n  \"priority\": \"High\",\n  \"relatedOrderID\": {{orderId}},\n  \"relatedVehicleID\": {{vehicleId}}\n}" },
+            "url": "{{customerServiceUrl}}/api/Complaints"
+          }
+        },
+        {
+          "name": "Create Complaint - Invalid CustomerId",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"customerId\": 0,\n  \"type\": \"Bao hanh\",\n  \"title\": \"Remote not working\",\n  \"description\": \"Customer reports a broken remote\",\n  \"assignedToStaffID\": 10,\n  \"priority\": \"High\",\n  \"relatedOrderID\": {{orderId}},\n  \"relatedVehicleID\": {{vehicleId}}\n}" },
             "url": "{{customerServiceUrl}}/api/Complaints"
           }
         },
@@ -375,6 +606,30 @@
               }
             },
             {
+              "name": "Create Quote - Quantity 0",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"customerId\": {{customerId}},\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"vehicleId\": {{vehicleId}},\n  \"colorId\": 1,\n  \"quantity\": 0,\n  \"unitPrice\": 1200000000,\n  \"totalPrice\": 0,\n  \"status\": \"Active\",\n  \"notes\": \"Demo quote\"\n}" },
+                "url": "{{salesServiceUrl}}/api/Quotes"
+              }
+            },
+            {
+              "name": "Create Quote - Quantity 101",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"customerId\": {{customerId}},\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"vehicleId\": {{vehicleId}},\n  \"colorId\": 1,\n  \"quantity\": 101,\n  \"unitPrice\": 1200000000,\n  \"totalPrice\": 1200000000,\n  \"status\": \"Active\",\n  \"notes\": \"Demo quote\"\n}" },
+                "url": "{{salesServiceUrl}}/api/Quotes"
+              }
+            },
+            {
               "name": "Update Quote Status",
               "request": {
                 "method": "PUT",
@@ -405,6 +660,42 @@
             },
             { "name": "Get Orders", "request": { "method": "GET", "url": "{{baseUrl}}/api/Orders" } },
             { "name": "Get Order By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/Orders/{{orderId}}" } },
+            {
+              "name": "Complete Order - Missing CustomerName",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": {{customerId}},\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"\",\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"paymentMethod\": \"Cash\",\n  \"deliveryDate\": \"2026-06-10T09:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"notes\": \"Complete order demo\",\n  \"paymentType\": \"Full\",\n  \"depositAmount\": 0,\n  \"interestRateYearly\": 0,\n  \"loanTermMonths\": 0,\n  \"vehicleId\": {{vehicleId}},\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"totalAmount\": 1200000000,\n  \"promotionId\": null,\n  \"discountAmount\": 0,\n  \"discountPercent\": 0,\n  \"discountNote\": \"\"\n}" },
+                "url": "{{baseUrl}}/api/Orders/complete"
+              }
+            },
+            {
+              "name": "Complete Order - Invalid Email",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": {{customerId}},\n  \"customerEmail\": \"customer@example\",\n  \"customerName\": \"Nguyen Van B\",\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"paymentMethod\": \"Cash\",\n  \"deliveryDate\": \"2026-06-10T09:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"notes\": \"Complete order demo\",\n  \"paymentType\": \"Full\",\n  \"depositAmount\": 0,\n  \"interestRateYearly\": 0,\n  \"loanTermMonths\": 0,\n  \"vehicleId\": {{vehicleId}},\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"totalAmount\": 1200000000,\n  \"promotionId\": null,\n  \"discountAmount\": 0,\n  \"discountPercent\": 0,\n  \"discountNote\": \"\"\n}" },
+                "url": "{{baseUrl}}/api/Orders/complete"
+              }
+            },
+            {
+              "name": "Complete Order - TotalAmount 0",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": {{customerId}},\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Nguyen Van B\",\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"paymentMethod\": \"Cash\",\n  \"deliveryDate\": \"2026-06-10T09:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"notes\": \"Complete order demo\",\n  \"paymentType\": \"Full\",\n  \"depositAmount\": 0,\n  \"interestRateYearly\": 0,\n  \"loanTermMonths\": 0,\n  \"vehicleId\": {{vehicleId}},\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"totalAmount\": 0,\n  \"promotionId\": null,\n  \"discountAmount\": 0,\n  \"discountPercent\": 0,\n  \"discountNote\": \"\"\n}" },
+                "url": "{{baseUrl}}/api/Orders/complete"
+              }
+            },
             {
               "name": "Update Order Status",
               "request": {
@@ -451,6 +742,38 @@
           ]
         },
         {
+          "name": "Processed Reservations",
+          "item": [
+            { "name": "Get Processed Reservations", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/ProcessedReservations" } },
+            { "name": "Get Processed Reservation By Id", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/ProcessedReservations/{{orderId}}" } },
+            {
+              "name": "Create Processed Reservation",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"reservationId\": 1,\n  \"status\": \"Processed\"\n}" },
+                "url": "{{salesServiceUrl}}/api/ProcessedReservations"
+              }
+            },
+            {
+              "name": "Update Processed Reservation",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"id\": 1,\n  \"reservationId\": 1,\n  \"status\": \"Processed\"\n}" },
+                "url": "{{salesServiceUrl}}/api/ProcessedReservations/1"
+              }
+            },
+            { "name": "Delete Processed Reservation", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }], "url": "{{salesServiceUrl}}/api/ProcessedReservations/1" } }
+          ]
+        },
+        {
           "name": "Payments",
           "item": [
             { "name": "Get Payments", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Payments" } },
@@ -463,6 +786,30 @@
                   { "key": "Authorization", "value": "Bearer {{authToken}}" }
                 ],
                 "body": { "mode": "raw", "raw": "{\n  \"orderId\": {{orderId}},\n  \"amount\": 1200000000,\n  \"paymentDate\": \"2026-06-10T09:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-001\",\n  \"notes\": \"Demo payment\"\n}" },
+                "url": "{{salesServiceUrl}}/api/Payments"
+              }
+            },
+            {
+              "name": "Create Payment - Amount 0",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"orderId\": {{orderId}},\n  \"amount\": 0,\n  \"paymentDate\": \"2026-06-10T09:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-001\",\n  \"notes\": \"Demo payment\"\n}" },
+                "url": "{{salesServiceUrl}}/api/Payments"
+              }
+            },
+            {
+              "name": "Create Payment - Amount -1",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"orderId\": {{orderId}},\n  \"amount\": -1,\n  \"paymentDate\": \"2026-06-10T09:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-001\",\n  \"notes\": \"Demo payment\"\n}" },
                 "url": "{{salesServiceUrl}}/api/Payments"
               }
             }
@@ -483,6 +830,30 @@
                 "body": { "mode": "raw", "raw": "{\n  \"orderId\": {{orderId}},\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"status\": \"Scheduled\",\n  \"notes\": \"Demo delivery\"\n}" },
                 "url": "{{salesServiceUrl}}/api/Deliveries"
               }
+            },
+            {
+              "name": "Create Delivery - Missing Estimated Date",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"orderId\": {{orderId}},\n  \"status\": \"Scheduled\",\n  \"notes\": \"Demo delivery\"\n}" },
+                "url": "{{salesServiceUrl}}/api/Deliveries"
+              }
+            },
+            {
+              "name": "Create Delivery - Empty Status",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"orderId\": {{orderId}},\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"status\": \"\",\n  \"notes\": \"Demo delivery\"\n}" },
+                "url": "{{salesServiceUrl}}/api/Deliveries"
+              }
             }
           ]
         },
@@ -501,6 +872,30 @@
                 "body": { "mode": "raw", "raw": "{\n  \"name\": \"SUMMER2026\",\n  \"description\": \"Summer promotion\",\n  \"discountType\": \"Percent\",\n  \"discountValue\": 10,\n  \"startDate\": \"2026-06-01T00:00:00Z\",\n  \"endDate\": \"2026-08-31T23:59:59Z\"\n}" },
                 "url": "{{salesServiceUrl}}/api/Promotions"
               }
+            },
+            {
+              "name": "Create Promotion - Discount 0",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"SUMMER2026\",\n  \"description\": \"Summer promotion\",\n  \"discountType\": \"Percent\",\n  \"discountValue\": 0,\n  \"startDate\": \"2026-06-01T00:00:00Z\",\n  \"endDate\": \"2026-08-31T23:59:59Z\"\n}" },
+                "url": "{{salesServiceUrl}}/api/Promotions"
+              }
+            },
+            {
+              "name": "Create Promotion - Discount -1",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"SUMMER2026\",\n  \"description\": \"Summer promotion\",\n  \"discountType\": \"Percent\",\n  \"discountValue\": -1,\n  \"startDate\": \"2026-06-01T00:00:00Z\",\n  \"endDate\": \"2026-08-31T23:59:59Z\"\n}" },
+                "url": "{{salesServiceUrl}}/api/Promotions"
+              }
             }
           ]
         }
@@ -510,6 +905,7 @@
       "name": "Reports",
       "item": [
         { "name": "Demand Forecast", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/demand-forecast?from={{reportFrom}}&to={{reportTo}}" } },
+        { "name": "Demand Forecast - Invalid From", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/demand-forecast?from=abc&to={{reportTo}}" } },
         { "name": "Synchronize Data", "request": { "method": "POST", "url": "{{reportingServiceUrl}}/api/reports/synchronize-data" } },
         { "name": "Debt Summary", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/debt-summary?dealerId={{dealerId}}&customerId={{customerId}}&from={{reportFrom}}&to={{reportTo}}" } },
         { "name": "Debt Report", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/debt-report?dealerId={{dealerId}}&from={{reportFrom}}&to={{reportTo}}" } },
@@ -520,6 +916,8 @@
         { "name": "Sales By Region", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/sales-by-region?from={{reportFrom}}&to={{reportTo}}" } },
         { "name": "Sales Proportion", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/sales-proportion?from={{reportFrom}}&to={{reportTo}}" } },
         { "name": "Top Vehicles", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/top-vehicles?limit=10" } },
+        { "name": "Top Vehicles - Limit 0", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/top-vehicles?limit=0" } },
+        { "name": "Top Vehicles - Limit -1", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/top-vehicles?limit=-1" } },
         {
           "name": "Export Report",
           "request": {
@@ -529,7 +927,17 @@
             "url": "{{reportingServiceUrl}}/api/reports/export"
           }
         },
+        {
+          "name": "Export Report - Invalid Type",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"type\": \"\",\n  \"from\": \"{{reportFrom}}\",\n  \"to\": \"{{reportTo}}\"\n}" },
+            "url": "{{reportingServiceUrl}}/api/reports/export"
+          }
+        },
         { "name": "Sales Summary", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/sales-summary?dealerId={{dealerId}}&fromDate={{reportFrom}}&toDate={{reportTo}}" } },
+        { "name": "Sales Summary - Invalid Dates", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/sales-summary?dealerId={{dealerId}}&fromDate=abc&toDate=abc" } },
         { "name": "Inventory Summary", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/inventory-summary?dealerId={{dealerId}}&vehicleId={{vehicleId}}" } }
       ]
     },

@@ -12,15 +12,49 @@ $services = @(
 )
 
 $tabs = @()
+$startupDir = Join-Path $env:TEMP "ev-dealer-management-startup"
+New-Item -ItemType Directory -Force -Path $startupDir | Out-Null
 
-foreach ($service in $services) {
-    $tabs += "new-tab --title `"$($service.Name)`" -d `"$($service.Path)`" powershell -NoExit -Command `"Set-Location '$($service.Path)'; $env:ASPNETCORE_URLS='$($service.Url)'; dotnet run`""
+function New-ServiceStartupScript {
+    param(
+        [string]$Name,
+        [string]$WorkingDirectory,
+        [string]$Url
+    )
+
+    $scriptPath = Join-Path $startupDir "$Name-startup.ps1"
+    @"
+Set-Location '$WorkingDirectory'
+`$env:ASPNETCORE_URLS = '$Url'
+dotnet run
+"@ | Set-Content -Path $scriptPath -Encoding UTF8
+    return $scriptPath
 }
 
-$frontendCommand = "Set-Location `"$frontendRoot`"; if (-not (Test-Path node_modules)) { npm install }; npm run dev"
-$tabs += "new-tab --title `"Frontend`" -d `"$frontendRoot`" powershell -NoExit -Command `"$frontendCommand`""
+function New-WtTabCommand {
+    param(
+        [string]$Title,
+        [string]$WorkingDirectory,
+        [string]$ScriptPath
+    )
 
-$wtArgs = ($tabs -join ' ; ')
+    return "new-tab --title `"$Title`" -d `"$WorkingDirectory`" powershell.exe -NoExit -File `"$ScriptPath`""
+}
+
+foreach ($service in $services) {
+    $startupScript = New-ServiceStartupScript -Name $service.Name -WorkingDirectory $service.Path -Url $service.Url
+    $tabs += New-WtTabCommand -Title $service.Name -WorkingDirectory $service.Path -ScriptPath $startupScript
+}
+
+$frontendScript = Join-Path $startupDir "Frontend-startup.ps1"
+@"
+Set-Location '$frontendRoot'
+if (-not (Test-Path node_modules)) { npm install }
+npm run dev
+"@ | Set-Content -Path $frontendScript -Encoding UTF8
+
+$tabs += New-WtTabCommand -Title 'Frontend' -WorkingDirectory $frontendRoot -ScriptPath $frontendScript
 
 Write-Host "Opening backend services and frontend in Windows Terminal tabs..."
+$wtArgs = $tabs -join ' ; '
 Start-Process wt -ArgumentList $wtArgs
