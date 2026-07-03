@@ -93,7 +93,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Create Dealer thành công', function () {",
-                  "  pm.response.to.have.status([200, 201]);",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
                   "});",
                   "try {",
                   "  let response = pm.response.json();",
@@ -166,7 +166,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Create Admin User thành công', function () {",
-                  "  pm.response.to.have.status([200, 201]);",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
                   "});",
                   "try {",
                   "  let response = pm.response.json();",
@@ -284,7 +284,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Create Vehicle thành công', function () {",
-                  "  pm.response.to.have.status([200, 201]);",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
                   "});",
                   "try {",
                   "  let response = pm.response.json();",
@@ -386,7 +386,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Create Customer thành công', function () {",
-                  "  pm.response.to.have.status([200, 201]);",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
                   "});",
                   "try {",
                   "  let response = pm.response.json();",
@@ -436,7 +436,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Create Test Drive thành công', function () {",
-                  "  pm.response.to.have.status([200, 201]);",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
                   "});",
                   "try {",
                   "  let response = pm.response.json();",
@@ -495,7 +495,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Create Complaint thành công', function () {",
-                  "  pm.response.to.have.status([200, 201]);",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
                   "});",
                   "try {",
                   "  let response = pm.response.json();",
@@ -574,7 +574,7 @@
                     "type": "text/javascript",
                     "exec": [
                       "pm.test('Create Quote thành công', function () {",
-                      "  pm.response.to.have.status([200, 201]);",
+                      "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
                       "});",
                       "try {",
                       "  let response = pm.response.json();",
@@ -629,7 +629,7 @@
                     "type": "text/javascript",
                     "exec": [
                       "pm.test('Complete Order thành công', function () {",
-                      "  pm.response.to.have.status([200, 201]);",
+                      "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
                       "});",
                       "try {",
                       "  let response = pm.response.json();",
@@ -709,7 +709,7 @@
                     "type": "text/javascript",
                     "exec": [
                       "pm.test('Create Contract thành công', function () {",
-                      "  pm.response.to.have.status([200, 201]);",
+                      "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
                       "});",
                       "try {",
                       "  let response = pm.response.json();",
@@ -876,7 +876,7 @@
                     "type": "text/javascript",
                     "exec": [
                       "pm.test('Create Promotion thành công', function () {",
-                      "  pm.response.to.have.status([200, 201]);",
+                      "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
                       "});"
                     ]
                   }
