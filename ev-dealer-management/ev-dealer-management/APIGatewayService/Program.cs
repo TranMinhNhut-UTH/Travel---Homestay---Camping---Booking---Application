@@ -45,14 +45,16 @@ var ocelotConfiguration = new ConfigurationBuilder()
         { "Routes:3:DownstreamHostAndPorts:0:Port", "5068" }, // VehicleService
 
         // Route 4: Dành riêng cho các action trên tập hợp gốc (Thêm mới Customer & Lấy danh sách)
-        { "Routes:4:UpstreamPathTemplate", "/api/customers" },
+        { "Routes:4:UpstreamPathTemplate", "/api/customers/{everything}" },
         { "Routes:4:UpstreamHttpMethod:0", "GET" },
         { "Routes:4:UpstreamHttpMethod:1", "POST" },
-        { "Routes:4:DownstreamPathTemplate", "/api/customers" },
+        { "Routes:4:UpstreamHttpMethod:2", "PUT" },
+        { "Routes:4:UpstreamHttpMethod:3", "DELETE" },
+        { "Routes:4:DownstreamPathTemplate", "/api/customers{everything}" }, // <-- Xóa dấu gạch chéo / trước {everything}
         { "Routes:4:DownstreamScheme", "http" },
         { "Routes:4:DownstreamHostAndPorts:0:Host", "localhost" },
-        { "Routes:4:DownstreamHostAndPorts:0:Port", "5039" }, 
-        { "Routes:4:AuthenticationOptions:AuthenticationProviderKey", "JwtBearer" },
+        { "Routes:4:DownstreamHostAndPorts:0:Port", "5039" },
+        { "Routes:4:AuthenticationOptions:AuthenticationProviderKey", "JwtBearer" }, // <-- Chỉ thêm duy nhất dòng này ở cuối block 4
 
 
         // Route for authentication service
@@ -206,17 +208,7 @@ var ocelotConfiguration = new ConfigurationBuilder()
         { "Routes:21:DownstreamHostAndPorts:0:Host", "localhost" },
         { "Routes:21:DownstreamHostAndPorts:0:Port", "7001" }, // UserService handles admin users
         { "Routes:21:AuthenticationOptions:AuthenticationProviderKey", "JwtBearer" },
-        
-        { "Routes:22:UpstreamPathTemplate", "/api/customers/{id}" },
-        { "Routes:22:UpstreamHttpMethod:0", "GET" },
-        { "Routes:22:UpstreamHttpMethod:1", "PUT" },
-        { "Routes:22:UpstreamHttpMethod:2", "DELETE" },
-        { "Routes:22:DownstreamPathTemplate", "/api/customers/{id}" },
-        { "Routes:22:DownstreamScheme", "http" },
-        { "Routes:22:DownstreamHostAndPorts:0:Host", "localhost" },
-        { "Routes:22:DownstreamHostAndPorts:0:Port", "5039" }, 
-        { "Routes:22:AuthenticationOptions:AuthenticationProviderKey", "JwtBearer" },
-        
+
         { "GlobalConfiguration:BaseUrl", "http://localhost:5036" }
     })
     .Build();
