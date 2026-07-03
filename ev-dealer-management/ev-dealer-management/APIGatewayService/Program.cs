@@ -53,6 +53,7 @@ var ocelotConfiguration = new ConfigurationBuilder()
         { "Routes:4:DownstreamScheme", "http" },
         { "Routes:4:DownstreamHostAndPorts:0:Host", "localhost" },
         { "Routes:4:DownstreamHostAndPorts:0:Port", "5039" }, // CustomerService
+        { "Routes:4:AuthenticationOptions:AuthenticationProviderKey", "JwtBearer" },
 
         // Route for authentication service
         { "Routes:5:UpstreamPathTemplate", "/api/auth/{everything}" },
@@ -112,6 +113,7 @@ var ocelotConfiguration = new ConfigurationBuilder()
         { "Routes:11:DownstreamScheme", "http" },
         { "Routes:11:DownstreamHostAndPorts:0:Host", "localhost" },
         { "Routes:11:DownstreamHostAndPorts:0:Port", "5039" }, // CustomerService
+        { "Routes:11:AuthenticationOptions:AuthenticationProviderKey", "JwtBearer" },
 
         // Route for creating TestDrives
         { "Routes:12:UpstreamPathTemplate", "/api/TestDrives" },
@@ -120,6 +122,7 @@ var ocelotConfiguration = new ConfigurationBuilder()
         { "Routes:12:DownstreamScheme", "http" },
         { "Routes:12:DownstreamHostAndPorts:0:Host", "localhost" },
         { "Routes:12:DownstreamHostAndPorts:0:Port", "5039" }, // CustomerService
+        { "Routes:12:AuthenticationOptions:AuthenticationProviderKey", "JwtBearer" },
 
         // Route for getting all TestDrives
         { "Routes:13:UpstreamPathTemplate", "/api/TestDrives" },
@@ -128,6 +131,7 @@ var ocelotConfiguration = new ConfigurationBuilder()
         { "Routes:13:DownstreamScheme", "http" },
         { "Routes:13:DownstreamHostAndPorts:0:Host", "localhost" },
         { "Routes:13:DownstreamHostAndPorts:0:Port", "5039" }, // CustomerService
+        { "Routes:13:AuthenticationOptions:AuthenticationProviderKey", "JwtBearer" },
 
         // Route for Complaints (CustomerService)
         { "Routes:14:UpstreamPathTemplate", "/api/CustomerService/Complaints/{everything}" },
@@ -190,6 +194,7 @@ var ocelotConfiguration = new ConfigurationBuilder()
         { "Routes:20:DownstreamScheme", "http" },
         { "Routes:20:DownstreamHostAndPorts:0:Host", "localhost" },
         { "Routes:20:DownstreamHostAndPorts:0:Port", "7001" }, // UserService handles admin users
+        { "Routes:20:AuthenticationOptions:AuthenticationProviderKey", "JwtBearer" },
 
         // Route for admin users (general: GET /api/admin/users/{id}, PUT, DELETE)
         { "Routes:21:UpstreamPathTemplate", "/api/admin/users/{everything}" },
@@ -200,7 +205,8 @@ var ocelotConfiguration = new ConfigurationBuilder()
         { "Routes:21:DownstreamScheme", "http" },
         { "Routes:21:DownstreamHostAndPorts:0:Host", "localhost" },
         { "Routes:21:DownstreamHostAndPorts:0:Port", "7001" }, // UserService handles admin users
-
+        { "Routes:21:AuthenticationOptions:AuthenticationProviderKey", "JwtBearer" },
+        
         { "GlobalConfiguration:BaseUrl", "http://localhost:5036" }
     })
     .Build();
