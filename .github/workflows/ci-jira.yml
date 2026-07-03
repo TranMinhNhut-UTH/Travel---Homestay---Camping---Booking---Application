@@ -31,6 +31,7 @@ jobs:
         run: npm install -g newman
 
       - name: Validate branch naming
+        id: branch_validation
         shell: bash
         run: |
           branch="${{ github.event.pull_request.head.ref || github.ref_name }}"
@@ -42,6 +43,7 @@ jobs:
           fi
 
       - name: Extract Jira issue keys
+        if: always()
         id: jira_keys
         shell: bash
         run: |
@@ -82,6 +84,7 @@ jobs:
           fi
 
       - name: Restore solution
+        id: restore
         run: dotnet restore ev-dealer-management/ev-dealer-management/DealerSystem.sln
 
       - name: Build solution
@@ -165,21 +168,37 @@ jobs:
             --env-var "base_url=http://127.0.0.1:5036" \
             --reporters cli 2>&1 | tee newman.log
 
-      - name: Jira comment on FAIL
-        if: failure() && github.ref != 'refs/heads/main' && steps.jira_keys.outputs.branch_key != ''
+      - name: Create or update Jira issue for CI failure
+        if: ${{ always() && failure() }}
         env:
+          TEST_STATUS: FAIL
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
           JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
-          JIRA_ISSUE_KEYS: ${{ steps.jira_keys.outputs.branch_key }}
-          JIRA_BRANCH_TYPE: ${{ steps.jira_keys.outputs.branch_type }}
+          JIRA_REPORTER_ACCOUNT_ID: ${{ secrets.JIRA_REPORTER_ACCOUNT_ID }}
+          JIRA_DEFAULT_ASSIGNEE_ACCOUNT_ID: ${{ secrets.JIRA_DEFAULT_ASSIGNEE_ACCOUNT_ID }}
+          JIRA_AUTOMATION_ISSUE_KEY: ED-33
+          JIRA_LINK_ISSUE_KEY: ED-33
+          BRANCH_VALIDATION_OUTCOME: ${{ steps.branch_validation.outcome }}
+          POSTMAN_VALIDATION_OUTCOME: ${{ steps.postman_validation.outcome }}
+          RESTORE_OUTCOME: ${{ steps.restore.outcome }}
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
+          UNIT_TEST_OUTCOME: ${{ steps.unit_tests.outcome }}
+          SERVICES_OUTCOME: ${{ steps.services.outcome }}
+          API_TESTS_OUTCOME: ${{ steps.api_tests.outcome }}
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
-        run: node .github/scripts/jira-sync.mjs FAIL
+        shell: bash
+        run: |
+          echo "Jira CI failure reporting step started (always + failure)."
+          echo "Branch: ${GITHUB_REF_NAME}"
+          echo "Commit: ${GITHUB_SHA}"
+          echo "Run: ${GITHUB_RUN_URL}"
+          node .github/scripts/jira-test-report.mjs FAIL
 
       - name: Publish PASS test report
-        if: success()
+        if: ${{ always() && success() }}
         env:
           TEST_STATUS: PASS
           POSTMAN_VALIDATION_OUTCOME: ${{ steps.postman_validation.outcome }}
@@ -191,7 +210,7 @@ jobs:
         run: node .github/scripts/jira-test-report.mjs PASS
 
       - name: Jira update on PASS
-        if: success() && steps.jira_keys.outputs.branch_key != ''
+        if: ${{ always() && success() && steps.jira_keys.outputs.branch_key != '' }}
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
@@ -203,25 +222,6 @@ jobs:
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
         run: node .github/scripts/jira-sync.mjs PASS
-
-      - name: Create Jira Bug only when needed
-        if: failure() && github.ref != 'refs/heads/main' && steps.jira_keys.outputs.branch_type == 'feature' && steps.jira_keys.outputs.is_module_parent == 'true'
-        env:
-          TEST_STATUS: FAIL
-          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
-          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
-          JIRA_REPORTER_ACCOUNT_ID: ${{ secrets.JIRA_REPORTER_ACCOUNT_ID }}
-          JIRA_DEFAULT_ASSIGNEE_ACCOUNT_ID: ${{ secrets.JIRA_DEFAULT_ASSIGNEE_ACCOUNT_ID }}
-          JIRA_LINK_ISSUE_KEY: ${{ steps.jira_keys.outputs.branch_key }}
-          POSTMAN_VALIDATION_OUTCOME: ${{ steps.postman_validation.outcome }}
-          BUILD_OUTCOME: ${{ steps.build.outcome }}
-          UNIT_TEST_OUTCOME: ${{ steps.unit_tests.outcome }}
-          SERVICES_OUTCOME: ${{ steps.services.outcome }}
-          API_TESTS_OUTCOME: ${{ steps.api_tests.outcome }}
-          GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: node .github/scripts/jira-test-report.mjs FAIL
 
   merge-pr-to-done:
     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true

@@ -16,6 +16,7 @@ export function extractIssueKeys(text) {
 
 async function jiraRequest(baseUrl, email, apiToken, path, options = {}) {
   const url = `${normalizeBaseUrl(baseUrl)}/rest/api/${apiVersion}${path}`;
+  console.log(`[Jira API] ${options.method || 'GET'} ${url}`);
   const response = await fetch(url, {
     method: options.method || 'GET',
     headers: {
@@ -53,6 +54,16 @@ async function jiraRequest(baseUrl, email, apiToken, path, options = {}) {
   }
 
   return payload;
+}
+
+export async function searchIssues({ baseUrl, email, apiToken, jql, maxResults = 100, fields = [] }) {
+  const query = new URLSearchParams({
+    jql,
+    maxResults: String(maxResults),
+    fields: fields.join(','),
+  });
+  const data = await jiraRequest(baseUrl, email, apiToken, `/search/jql?${query.toString()}`);
+  return data.issues || [];
 }
 
 export async function createIssue({ baseUrl, email, apiToken, fields }) {
