@@ -21,8 +21,16 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    // Register Firebase FCM Service (Singleton for better performance)
-    builder.Services.AddSingleton<IFcmService, FirebaseFcmService>();
+    // Register Firebase FCM Service (Singleton for better performance).
+    // CI/Postman runs use a fake implementation so API tests do not require real Firebase credentials.
+    if (string.Equals(builder.Configuration["USE_FAKE_FCM"], "true", StringComparison.OrdinalIgnoreCase))
+    {
+        builder.Services.AddSingleton<IFcmService, FakeFcmService>();
+    }
+    else
+    {
+        builder.Services.AddSingleton<IFcmService, FirebaseFcmService>();
+    }
 
     // RabbitMQ removed for simplified local development - consumers registration removed
 

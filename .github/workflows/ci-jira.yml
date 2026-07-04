@@ -130,7 +130,11 @@ jobs:
             local port="$2"
             local project="$3"
             echo "Starting ${name} on ${port}"
-            nohup env ASPNETCORE_URLS="http://127.0.0.1:${port}" dotnet run --project "${project}" --no-launch-profile > "ci-logs/${name}.log" 2>&1 &
+            if [ "$name" = "NotificationService" ]; then
+              nohup env ASPNETCORE_URLS="http://127.0.0.1:${port}" USE_FAKE_FCM=true dotnet run --project "${project}" --no-launch-profile > "ci-logs/${name}.log" 2>&1 &
+            else
+              nohup env ASPNETCORE_URLS="http://127.0.0.1:${port}" dotnet run --project "${project}" --no-launch-profile > "ci-logs/${name}.log" 2>&1 &
+            fi
           }
 
           docker compose -f ev-dealer-management/ev-dealer-management/docker-compose.yml up -d rabbitmq
@@ -162,10 +166,331 @@ jobs:
         run: |
           set -euo pipefail
           POSTMAN_FILE="./ev-dealer-management.postman_collection.json"
+          POSTMAN_ENV="./postman/ev-dealer-management.postman_environment.json"
           echo "Executing Newman with target collection: $POSTMAN_FILE"
+
+          bootstrap_token="$(node <<'NODE'
+          const crypto = require('node:crypto');
+          const base64url = (value) => Buffer.from(JSON.stringify(value))
+            .toString('base64')
+            .replace(/=/g, '')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_');
+          const now = Math.floor(Date.now() / 1000);
+          const header = { alg: 'HS256', typ: 'JWT' };
+          const payload = {
+            id: '1',
+            unique_name: 'ci-bootstrap-admin',
+            role: 'Admin',
+            'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': 'Admin',
+            nbf: now - 60,
+            exp: now + 3600,
+            iss: 'evm.local',
+            aud: 'evm.local'
+          };
+          const signingInput = `${base64url(header)}.${base64url(payload)}`;
+          const signature = crypto
+            .createHmac('sha256', 'ReplaceThisWithASecretKeyForDevelopment')
+            .update(signingInput)
+            .digest('base64')
+            .replace(/=/g, '')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_');
+          console.log(`${signingInput}.${signature}`);
+          NODE
+          )"
+
+          seed_payload='{"username":"admin","email":"admin@example.com","fullName":"CI Admin","password":"P@ssw0rd!","role":"Admin","dealerId":1}'
+          seed_status="$(curl -sS -o seed-admin-response.json -w "%{http_code}" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${bootstrap_token}" \
+            -d "$seed_payload" \
+            http://127.0.0.1:5036/api/admin/users || true)"
+
+          if [[ "$seed_status" != "201" && "$seed_status" != "200" && "$seed_status" != "400" ]]; then
+            echo "Failed to seed CI admin user. HTTP status: $seed_status"
+            cat seed-admin-response.json || true
+            exit 1
+          fi
+
+          login_status="$(curl -sS -o login-response.json -w "%{http_code}" \
+            -H "Content-Type: application/json" \
+            -d '{"username":"admin","password":"P@ssw0rd!"}' \
+            http://127.0.0.1:5036/api/auth/login)"
+
+          if [[ "$login_status" != "200" ]]; then
+            echo "Failed to login CI admin user. HTTP status: $login_status"
+            cat login-response.json || true
+            exit 1
+          fi
+
+          auth_token="$(node -e "const fs=require('node:fs'); const body=JSON.parse(fs.readFileSync('login-response.json','utf8')); if(!body.token){ console.error('Login response did not include token'); process.exit(1); } process.stdout.write(body.token);")"
+          auth_user_id="$(node -e "const fs=require('node:fs'); const body=JSON.parse(fs.readFileSync('login-response.json','utf8')); process.stdout.write(String(body.userId || body.user?.id || 1));")"
+
+          AUTH_TOKEN="$auth_token" node <<'NODE' > postman-ci-vars.env
+          const token = process.env.AUTH_TOKEN;
+          const runId = process.env.GITHUB_RUN_ID || Date.now().toString();
+          const headers = {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          };
+
+          function findNumber(value, keys) {
+            if (!value || typeof value !== 'object') return undefined;
+            for (const key of keys) {
+              if (Number.isInteger(value[key])) return value[key];
+            }
+            for (const item of Object.values(value)) {
+              const found = findNumber(item, keys);
+              if (found !== undefined) return found;
+            }
+            return undefined;
+          }
+
+          async function requestJson(method, url, body, allowed = [200, 201, 204, 400, 409]) {
+            const response = await fetch(url, {
+              method,
+              headers,
+              body: body ? JSON.stringify(body) : undefined
+            });
+            const text = await response.text();
+            let json = {};
+            if (text) {
+              try { json = JSON.parse(text); } catch { json = { raw: text }; }
+            }
+            if (!allowed.includes(response.status)) {
+              console.error(`${method} ${url} failed with ${response.status}`);
+              console.error(text);
+              process.exit(1);
+            }
+            return json;
+          }
+
+          async function main() {
+          const dealer = await requestJson('POST', 'http://127.0.0.1:5036/api/dealers', {
+            name: `CI Delete Dealer ${runId}`,
+            region: 'CI',
+            contact: '0900000000',
+            email: `ci-delete-dealer-${runId}@example.com`,
+            address: 'CI temporary dealer'
+          });
+          const deleteDealerId = findNumber(dealer, ['id', 'dealerId']) || 1;
+
+          const vehicle = await requestJson('POST', 'http://127.0.0.1:5036/api/vehicles', {
+            model: `CI Seed Vehicle ${runId}`,
+            type: 'SUV',
+            price: 1200000000,
+            batteryCapacity: 87.7,
+            range: 420,
+            stockQuantity: 5,
+            description: 'CI seed vehicle',
+            dealerId: 1
+          });
+          const vehicleId = findNumber(vehicle, ['id', 'vehicleId']) || 1;
+
+          const deleteVehicle = await requestJson('POST', 'http://127.0.0.1:5036/api/vehicles', {
+            model: `CI Delete Vehicle ${runId}`,
+            type: 'SUV',
+            price: 1200000000,
+            batteryCapacity: 87.7,
+            range: 420,
+            stockQuantity: 1,
+            description: 'CI vehicle used only by delete request',
+            dealerId: 1
+          });
+          const deleteVehicleId = findNumber(deleteVehicle, ['id', 'vehicleId']) || vehicleId;
+
+          const customer = await requestJson('POST', 'http://127.0.0.1:5036/api/customers', {
+            name: 'CI Customer',
+            email: `ci-customer-${runId}@example.com`,
+            phone: '+84900000000',
+            address: 'CI address',
+            dealerId: 1,
+            status: 'active'
+          });
+          const customerId = findNumber(customer, ['id', 'customerId']) || 1;
+
+          const deleteCustomer = await requestJson('POST', 'http://127.0.0.1:5036/api/customers', {
+            name: 'CI Delete Customer',
+            email: `ci-delete-customer-${runId}@example.com`,
+            phone: '+84900000001',
+            address: 'CI delete address',
+            dealerId: 1,
+            status: 'active'
+          });
+          const deleteCustomerId = findNumber(deleteCustomer, ['id', 'customerId']) || customerId;
+
+          const testDrive = await requestJson('POST', 'http://127.0.0.1:5036/api/TestDrives', {
+            customerId,
+            vehicleId,
+            dealerId: 1,
+            appointmentDate: '2026-06-01T09:00:00Z',
+            notes: 'CI seed test drive',
+            status: 'Scheduled'
+          });
+          const testDriveId = findNumber(testDrive, ['testDriveId', 'id']) || 1;
+
+          const complaint = await requestJson('POST', 'http://127.0.0.1:5039/api/Complaints', {
+            customerId,
+            type: 'Bao hanh',
+            title: 'CI complaint',
+            description: 'CI seed complaint',
+            assignedToStaffID: 1,
+            priority: 'High',
+            relatedOrderID: null,
+            relatedVehicleID: vehicleId
+          });
+          const complaintId = findNumber(complaint, ['id', 'complaintId']) || 1;
+
+          const quote = await requestJson('POST', 'http://127.0.0.1:5003/api/Quotes', {
+            customerId,
+            dealerId: 1,
+            salespersonId: 1,
+            vehicleId,
+            colorId: 1,
+            quantity: 1,
+            unitPrice: 1200000000,
+            totalPrice: 1200000000,
+            status: 'Active',
+            notes: 'CI seed quote'
+          });
+          const quoteId = findNumber(quote, ['id', 'quoteId']) || 1;
+
+          const order = await requestJson('POST', 'http://127.0.0.1:5036/api/Orders/complete', {
+            quoteId,
+            customerId,
+            customerEmail: `ci-customer-${runId}@example.com`,
+            customerName: 'CI Customer',
+            dealerId: 1,
+            salespersonId: 1,
+            paymentMethod: 'Cash',
+            deliveryDate: '2026-06-10T09:00:00Z',
+            estimatedDeliveryDate: '2026-06-15T09:00:00Z',
+            notes: 'CI seed order',
+            paymentType: 'Full',
+            depositAmount: 0,
+            interestRateYearly: 0,
+            loanTermMonths: 0,
+            vehicleId,
+            vehicleVariantId: 1,
+            colorId: 1,
+            quantity: 1,
+            unitPrice: 1200000000,
+            totalAmount: 1200000000,
+            promotionId: null,
+            discountAmount: 0,
+            discountPercent: 0,
+            discountNote: ''
+          });
+          const orderId = findNumber(order, ['id', 'orderId']) || 1;
+
+          const contract = await requestJson('POST', 'http://127.0.0.1:5036/api/Contracts', {
+            orderId,
+            customerId,
+            salespersonId: '1',
+            contractDate: '2026-06-10T09:00:00Z',
+            depositAmountReceived: true,
+            termsAndConditions: 'CI seed contract'
+          });
+          const contractId = findNumber(contract, ['id', 'contractId']) || 1;
+
+          const newContractOrder = await requestJson('POST', 'http://127.0.0.1:5036/api/Orders/complete', {
+            quoteId,
+            customerId,
+            customerEmail: `ci-customer-${runId}@example.com`,
+            customerName: 'CI Customer',
+            dealerId: 1,
+            salespersonId: 1,
+            paymentMethod: 'Cash',
+            deliveryDate: '2026-06-10T09:00:00Z',
+            estimatedDeliveryDate: '2026-06-15T09:00:00Z',
+            notes: 'CI order for contract create request',
+            paymentType: 'Full',
+            depositAmount: 0,
+            interestRateYearly: 0,
+            loanTermMonths: 0,
+            vehicleId,
+            vehicleVariantId: 1,
+            colorId: 1,
+            quantity: 1,
+            unitPrice: 1200000000,
+            totalAmount: 1200000000,
+            promotionId: null,
+            discountAmount: 0,
+            discountPercent: 0,
+            discountNote: ''
+          });
+          const newContractOrderId = findNumber(newContractOrder, ['id', 'orderId']) || orderId;
+
+          const managedUser = await requestJson('POST', 'http://127.0.0.1:5036/api/admin/users', {
+            username: `manageduser${runId}`,
+            email: `managed-user-${runId}@example.com`,
+            fullName: 'CI Managed User',
+            password: 'P@ssw0rd!',
+            role: 'DealerStaff',
+            dealerId: 1
+          }, [200, 201]);
+          const managedUserId = findNumber(managedUser, ['userId', 'id']) || 1;
+
+          const deleteUser = await requestJson('POST', 'http://127.0.0.1:5036/api/admin/users', {
+            username: `deleteuser${runId}`,
+            email: `delete-user-${runId}@example.com`,
+            fullName: 'CI Delete User',
+            password: 'P@ssw0rd!',
+            role: 'DealerStaff',
+            dealerId: 1
+          }, [200, 201]);
+          const deleteUserId = findNumber(deleteUser, ['userId', 'id']) || 1;
+
+          console.log(`vehicleId=${vehicleId}`);
+          console.log(`deleteVehicleId=${deleteVehicleId}`);
+          console.log(`deleteDealerId=${deleteDealerId}`);
+          console.log(`customerId=${customerId}`);
+          console.log(`deleteCustomerId=${deleteCustomerId}`);
+          console.log(`testDriveId=${testDriveId}`);
+          console.log(`complaintId=${complaintId}`);
+          console.log(`quoteId=${quoteId}`);
+          console.log(`orderId=${orderId}`);
+          console.log(`contractId=${contractId}`);
+          console.log(`newContractOrderId=${newContractOrderId}`);
+          console.log(`managedUserId=${managedUserId}`);
+          console.log(`deleteUserId=${deleteUserId}`);
+          }
+
+          main().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+          source postman-ci-vars.env
+
           newman run "$POSTMAN_FILE" \
+            -e "$POSTMAN_ENV" \
             --env-var "baseUrl=http://127.0.0.1:5036" \
             --env-var "base_url=http://127.0.0.1:5036" \
+            --env-var "gatewayUrl=http://127.0.0.1:5036" \
+            --env-var "userServiceUrl=http://127.0.0.1:7001" \
+            --env-var "vehicleServiceUrl=http://127.0.0.1:5068" \
+            --env-var "customerServiceUrl=http://127.0.0.1:5039" \
+            --env-var "salesServiceUrl=http://127.0.0.1:5003" \
+            --env-var "notificationServiceUrl=http://127.0.0.1:5051" \
+            --env-var "reportingServiceUrl=http://127.0.0.1:5208" \
+            --env-var "authToken=${auth_token}" \
+            --env-var "userId=${auth_user_id}" \
+            --env-var "deleteUserId=${deleteUserId}" \
+            --env-var "vehicleId=${vehicleId}" \
+            --env-var "deleteVehicleId=${deleteVehicleId}" \
+            --env-var "deleteDealerId=${deleteDealerId}" \
+            --env-var "customerId=${customerId}" \
+            --env-var "deleteCustomerId=${deleteCustomerId}" \
+            --env-var "testDriveId=${testDriveId}" \
+            --env-var "complaintId=${complaintId}" \
+            --env-var "quoteId=${quoteId}" \
+            --env-var "orderId=${orderId}" \
+            --env-var "contractId=${contractId}" \
+            --env-var "newContractOrderId=${newContractOrderId}" \
+            --env-var "managedUserId=${managedUserId}" \
             --reporters cli 2>&1 | tee newman.log
 
       - name: Create or update Jira issue for CI failure
