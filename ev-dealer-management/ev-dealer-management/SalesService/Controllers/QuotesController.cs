@@ -103,7 +103,7 @@ namespace SalesService.Controllers
         /// Create a new quote.
         /// </summary>
         [HttpPost]
-        public async Task<ActionResult<Quote>> CreateQuote([FromQuery] CreateQuoteDto createQuoteDto)
+        public async Task<ActionResult<Quote>> CreateQuote([FromBody] CreateQuoteDto createQuoteDto)
         {
             if (!ModelState.IsValid)
             {

@@ -1,7 +1,7 @@
 # Ma Trận Truy Xuất — Module C: Sales Management
 
 > **Dự án**: EV Dealer Management System  
-> **Ngày tạo**: 2026-07-03 | **Phiên bản**: 1.0
+> **Ngày tạo**: 2026-07-03 | **Cập nhật**: 2026-07-05 | **Phiên bản**: 2.0
 
 ---
 
@@ -58,15 +58,17 @@
 
 ## 4. Test Case → Defect Mapping
 
-| TC ID | Defect ID | Severity | Description |
-|---|---|---|---|
-| All Sales TCs | DEF-000 | Blocker | Toàn bộ API trả về 500 Internal Server Error |
-| P-BVA-05 | DEF-001 | Medium | PaymentsController không validate Amount ≤ 0 |
-| P-BVA-06 | DEF-001 | Medium | PaymentsController không validate Amount overflow |
-| C-BVA-13 | DEF-003 | Medium | ContractsController không reject invalid status |
-| O-BVA-13 | DEF-002 | Low | OrdersController có thể accept body rỗng |
-| D-EP-02 | DEF-004 | Low | DeliveriesController DTO mapping incomplete |
-| PR-EP-02 | DEF-005 | Low | PromotionsController DTO mapping incomplete |
+| TC ID | Defect ID | Severity | Description | Status |
+|---|---|---|---|---|
+| All Sales TCs | DEF-000 | Blocker | Toàn bộ API trả về 500 Internal Server Error | ✅ Closed |
+| Q-BVA-03 | DEF-007 | **High** | `[FromQuery]` không kích hoạt `[Range]` validation cho Quantity | ✅ Fixed |
+| All Sales TCs (restart) | DEF-008 | **High** | `EnsureCreated()` xung đột `Migrate()` gây 500 khi restart | ✅ Fixed |
+| P-BVA-05 | DEF-001 | Medium | PaymentsController không validate Amount ≤ 0 | ✅ Not Reproduced |
+| P-BVA-06 | DEF-001 | Medium | PaymentsController không validate Amount overflow | ✅ Not Reproduced |
+| C-BVA-13 | DEF-003 | Medium | ContractsController không reject invalid status | ✅ Not Reproduced |
+| O-BVA-13 | DEF-002 | Low | OrdersController có thể accept body rỗng | ✅ Not Reproduced |
+| D-EP-02 | DEF-004 | Low | DeliveriesController DTO mapping incomplete | ✅ Not Reproduced |
+| PR-EP-02 | DEF-005 | Low | PromotionsController DTO mapping incomplete | ✅ Not Reproduced |
 
 ---
 
@@ -91,4 +93,17 @@
 - **Automation Status**: Executed
 - **Actual Result**: Pass (All test cases)
 - **Defect ID**: N/A for all passed cases
+- **Report chính thức**: `reports/module-c-newman-report_20260704_163137.json`
+- **JUnit XML**: `reports/module-c-newman-report_20260704_163137.xml`
 
+---
+
+## 7. Tài Liệu Liên Quan
+
+| Tài liệu | Đường dẫn |
+|---|---|
+| Test Cases | `docs/testing/TEST_CASES_MODULE_C.md` |
+| Test Result Report | `docs/testing/TEST_RESULT_REPORT_MODULE_C.md` |
+| Defect Report | `docs/testing/DEFECT_REPORT_MODULE_C.md` |
+| Postman Guide | `docs/testing/POSTMAN_GUIDE_MODULE_C.md` |
+| Test Procedures | `docs/testing/TEST_PROCEDURES_MODULE_C.md` |

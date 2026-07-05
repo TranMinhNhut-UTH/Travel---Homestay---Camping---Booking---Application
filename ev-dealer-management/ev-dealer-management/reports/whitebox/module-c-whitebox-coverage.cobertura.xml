@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<coverage line-rate="0.2483" branch-rate="0.3196" version="1.9" timestamp="1783082730" lines-covered="486" lines-valid="1957" branches-covered="39" branches-valid="122">
+<coverage line-rate="0.248" branch-rate="0.3095" version="1.9" timestamp="1783157592" lines-covered="486" lines-valid="1959" branches-covered="39" branches-valid="126">
   <sources>
     <source>E:/KCPM/Travel---Homestay---Camping---Booking---Application/ev-dealer-management/ev-dealer-management/SalesService/</source>
   </sources>
   <packages>
-    <package name="SalesService" line-rate="0.2483" branch-rate="0.3196" complexity="504">
+    <package name="SalesService" line-rate="0.248" branch-rate="0.3095" complexity="507">
       <classes>
         <class name="Quote" filename="Models/Quote.cs" line-rate="1" branch-rate="1" complexity="14">
           <methods>
@@ -135,18 +135,18 @@
                 <line number="60" hits="0" branch="False" />
                 <line number="61" hits="0" branch="False" />
                 <line number="63" hits="0" branch="False" />
-                <line number="64" hits="0" branch="False" />
-                <line number="65" hits="0" branch="True" condition-coverage="0% (0/2)">
+                <line number="64" hits="0" branch="True" condition-coverage="0% (0/2)">
                   <conditions>
-                    <condition number="327" type="jump" coverage="0%" />
+                    <condition number="314" type="jump" coverage="0%" />
                   </conditions>
                 </line>
+                <line number="65" hits="0" branch="False" />
                 <line number="66" hits="0" branch="False" />
                 <line number="67" hits="0" branch="False" />
-                <line number="68" hits="0" branch="False" />
+                <line number="69" hits="0" branch="False" />
                 <line number="70" hits="0" branch="False" />
                 <line number="71" hits="0" branch="False" />
-                <line number="72" hits="0" branch="False" />
+                <line number="74" hits="0" branch="False" />
                 <line number="75" hits="0" branch="False" />
                 <line number="76" hits="0" branch="False" />
                 <line number="77" hits="0" branch="False" />
@@ -161,20 +161,19 @@
                 <line number="86" hits="0" branch="False" />
                 <line number="87" hits="0" branch="False" />
                 <line number="88" hits="0" branch="False" />
-                <line number="89" hits="0" branch="False" />
-                <line number="92" hits="0" branch="True" condition-coverage="0% (0/2)">
+                <line number="91" hits="0" branch="True" condition-coverage="0% (0/2)">
                   <conditions>
-                    <condition number="521" type="jump" coverage="0%" />
+                    <condition number="508" type="jump" coverage="0%" />
                   </conditions>
                 </line>
+                <line number="92" hits="0" branch="False" />
                 <line number="93" hits="0" branch="False" />
                 <line number="94" hits="0" branch="False" />
                 <line number="95" hits="0" branch="False" />
-                <line number="96" hits="0" branch="False" />
-                <line number="98" hits="0" branch="False" />
-                <line number="101" hits="0" branch="False" />
-                <line number="103" hits="0" branch="False" />
-                <line number="105" hits="0" branch="False" />
+                <line number="97" hits="0" branch="False" />
+                <line number="100" hits="0" branch="False" />
+                <line number="102" hits="0" branch="False" />
+                <line number="104" hits="0" branch="False" />
               </lines>
             </method>
           </methods>
@@ -214,18 +213,18 @@
             <line number="60" hits="0" branch="False" />
             <line number="61" hits="0" branch="False" />
             <line number="63" hits="0" branch="False" />
-            <line number="64" hits="0" branch="False" />
-            <line number="65" hits="0" branch="True" condition-coverage="0% (0/2)">
+            <line number="64" hits="0" branch="True" condition-coverage="0% (0/2)">
               <conditions>
-                <condition number="327" type="jump" coverage="0%" />
+                <condition number="314" type="jump" coverage="0%" />
               </conditions>
             </line>
+            <line number="65" hits="0" branch="False" />
             <line number="66" hits="0" branch="False" />
             <line number="67" hits="0" branch="False" />
-            <line number="68" hits="0" branch="False" />
+            <line number="69" hits="0" branch="False" />
             <line number="70" hits="0" branch="False" />
             <line number="71" hits="0" branch="False" />
-            <line number="72" hits="0" branch="False" />
+            <line number="74" hits="0" branch="False" />
             <line number="75" hits="0" branch="False" />
             <line number="76" hits="0" branch="False" />
             <line number="77" hits="0" branch="False" />
@@ -240,20 +239,19 @@
             <line number="86" hits="0" branch="False" />
             <line number="87" hits="0" branch="False" />
             <line number="88" hits="0" branch="False" />
-            <line number="89" hits="0" branch="False" />
-            <line number="92" hits="0" branch="True" condition-coverage="0% (0/2)">
+            <line number="91" hits="0" branch="True" condition-coverage="0% (0/2)">
               <conditions>
-                <condition number="521" type="jump" coverage="0%" />
+                <condition number="508" type="jump" coverage="0%" />
               </conditions>
             </line>
+            <line number="92" hits="0" branch="False" />
             <line number="93" hits="0" branch="False" />
             <line number="94" hits="0" branch="False" />
             <line number="95" hits="0" branch="False" />
-            <line number="96" hits="0" branch="False" />
-            <line number="98" hits="0" branch="False" />
-            <line number="101" hits="0" branch="False" />
-            <line number="103" hits="0" branch="False" />
-            <line number="105" hits="0" branch="False" />
+            <line number="97" hits="0" branch="False" />
+            <line number="100" hits="0" branch="False" />
+            <line number="102" hits="0" branch="False" />
+            <line number="104" hits="0" branch="False" />
           </lines>
         </class>
         <class name="SalesService.Services.DealerApiService" filename="Services/DealerApiService.cs" line-rate="0" branch-rate="0" complexity="2">
@@ -1246,7 +1244,7 @@
                 <line number="142" hits="0" branch="False" />
                 <line number="143" hits="0" branch="False" />
                 <line number="144" hits="0" branch="False" />
-                <line number="145" hits="0" branch="False" />
+                <line number="146" hits="0" branch="False" />
                 <line number="147" hits="0" branch="False" />
                 <line number="148" hits="0" branch="False" />
                 <line number="149" hits="0" branch="False" />
@@ -1270,45 +1268,43 @@
                 <line number="167" hits="0" branch="False" />
                 <line number="168" hits="0" branch="False" />
                 <line number="169" hits="0" branch="False" />
-                <line number="170" hits="0" branch="False" />
                 <line number="171" hits="0" branch="False" />
+                <line number="172" hits="0" branch="False" />
                 <line number="173" hits="0" branch="False" />
                 <line number="174" hits="0" branch="False" />
                 <line number="175" hits="0" branch="False" />
-                <line number="176" hits="0" branch="False" />
                 <line number="177" hits="0" branch="False" />
+                <line number="178" hits="0" branch="False" />
                 <line number="179" hits="0" branch="False" />
                 <line number="180" hits="0" branch="False" />
-                <line number="181" hits="0" branch="False" />
                 <line number="182" hits="0" branch="False" />
+                <line number="183" hits="0" branch="False" />
                 <line number="184" hits="0" branch="False" />
                 <line number="185" hits="0" branch="False" />
                 <line number="186" hits="0" branch="False" />
-                <line number="187" hits="0" branch="False" />
                 <line number="188" hits="0" branch="False" />
+                <line number="189" hits="0" branch="False" />
                 <line number="190" hits="0" branch="False" />
                 <line number="191" hits="0" branch="False" />
                 <line number="192" hits="0" branch="False" />
-                <line number="193" hits="0" branch="False" />
-                <line number="194" hits="0" branch="False" />
               </lines>
             </method>
             <method name="Down" signature="(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)" line-rate="0" branch-rate="1" complexity="1">
               <lines>
+                <line number="196" hits="0" branch="False" />
+                <line number="197" hits="0" branch="False" />
                 <line number="198" hits="0" branch="False" />
-                <line number="199" hits="0" branch="False" />
                 <line number="200" hits="0" branch="False" />
-                <line number="202" hits="0" branch="False" />
+                <line number="201" hits="0" branch="False" />
                 <line number="203" hits="0" branch="False" />
-                <line number="205" hits="0" branch="False" />
+                <line number="204" hits="0" branch="False" />
                 <line number="206" hits="0" branch="False" />
-                <line number="208" hits="0" branch="False" />
+                <line number="207" hits="0" branch="False" />
                 <line number="209" hits="0" branch="False" />
-                <line number="211" hits="0" branch="False" />
+                <line number="210" hits="0" branch="False" />
                 <line number="212" hits="0" branch="False" />
+                <line number="213" hits="0" branch="False" />
                 <line number="214" hits="0" branch="False" />
-                <line number="215" hits="0" branch="False" />
-                <line number="216" hits="0" branch="False" />
               </lines>
             </method>
           </methods>
@@ -1441,7 +1437,7 @@
             <line number="142" hits="0" branch="False" />
             <line number="143" hits="0" branch="False" />
             <line number="144" hits="0" branch="False" />
-            <line number="145" hits="0" branch="False" />
+            <line number="146" hits="0" branch="False" />
             <line number="147" hits="0" branch="False" />
             <line number="148" hits="0" branch="False" />
             <line number="149" hits="0" branch="False" />
@@ -1465,41 +1461,39 @@
             <line number="167" hits="0" branch="False" />
             <line number="168" hits="0" branch="False" />
             <line number="169" hits="0" branch="False" />
-            <line number="170" hits="0" branch="False" />
             <line number="171" hits="0" branch="False" />
+            <line number="172" hits="0" branch="False" />
             <line number="173" hits="0" branch="False" />
             <line number="174" hits="0" branch="False" />
             <line number="175" hits="0" branch="False" />
-            <line number="176" hits="0" branch="False" />
             <line number="177" hits="0" branch="False" />
+            <line number="178" hits="0" branch="False" />
             <line number="179" hits="0" branch="False" />
             <line number="180" hits="0" branch="False" />
-            <line number="181" hits="0" branch="False" />
             <line number="182" hits="0" branch="False" />
+            <line number="183" hits="0" branch="False" />
             <line number="184" hits="0" branch="False" />
             <line number="185" hits="0" branch="False" />
             <line number="186" hits="0" branch="False" />
-            <line number="187" hits="0" branch="False" />
             <line number="188" hits="0" branch="False" />
+            <line number="189" hits="0" branch="False" />
             <line number="190" hits="0" branch="False" />
             <line number="191" hits="0" branch="False" />
             <line number="192" hits="0" branch="False" />
-            <line number="193" hits="0" branch="False" />
-            <line number="194" hits="0" branch="False" />
+            <line number="196" hits="0" branch="False" />
+            <line number="197" hits="0" branch="False" />
             <line number="198" hits="0" branch="False" />
-            <line number="199" hits="0" branch="False" />
             <line number="200" hits="0" branch="False" />
-            <line number="202" hits="0" branch="False" />
+            <line number="201" hits="0" branch="False" />
             <line number="203" hits="0" branch="False" />
-            <line number="205" hits="0" branch="False" />
+            <line number="204" hits="0" branch="False" />
             <line number="206" hits="0" branch="False" />
-            <line number="208" hits="0" branch="False" />
+            <line number="207" hits="0" branch="False" />
             <line number="209" hits="0" branch="False" />
-            <line number="211" hits="0" branch="False" />
+            <line number="210" hits="0" branch="False" />
             <line number="212" hits="0" branch="False" />
+            <line number="213" hits="0" branch="False" />
             <line number="214" hits="0" branch="False" />
-            <line number="215" hits="0" branch="False" />
-            <line number="216" hits="0" branch="False" />
           </lines>
         </class>
         <class name="SalesService.Migrations.UpdateValueToDecimal" filename="Migrations/20251126040343_UpdateValueToDecimal.Designer.cs" line-rate="0" branch-rate="1" complexity="1">
@@ -1656,9 +1650,9 @@
                 <line number="170" hits="0" branch="False" />
                 <line number="171" hits="0" branch="False" />
                 <line number="172" hits="0" branch="False" />
-                <line number="173" hits="0" branch="False" />
                 <line number="174" hits="0" branch="False" />
                 <line number="175" hits="0" branch="False" />
+                <line number="176" hits="0" branch="False" />
                 <line number="177" hits="0" branch="False" />
                 <line number="178" hits="0" branch="False" />
                 <line number="179" hits="0" branch="False" />
@@ -1755,9 +1749,9 @@
                 <line number="270" hits="0" branch="False" />
                 <line number="271" hits="0" branch="False" />
                 <line number="272" hits="0" branch="False" />
-                <line number="273" hits="0" branch="False" />
                 <line number="274" hits="0" branch="False" />
                 <line number="275" hits="0" branch="False" />
+                <line number="276" hits="0" branch="False" />
                 <line number="277" hits="0" branch="False" />
                 <line number="278" hits="0" branch="False" />
                 <line number="279" hits="0" branch="False" />
@@ -1796,12 +1790,12 @@
                 <line number="312" hits="0" branch="False" />
                 <line number="313" hits="0" branch="False" />
                 <line number="314" hits="0" branch="False" />
-                <line number="315" hits="0" branch="False" />
                 <line number="316" hits="0" branch="False" />
                 <line number="317" hits="0" branch="False" />
                 <line number="318" hits="0" branch="False" />
                 <line number="319" hits="0" branch="False" />
                 <line number="320" hits="0" branch="False" />
+                <line number="321" hits="0" branch="False" />
                 <line number="322" hits="0" branch="False" />
                 <line number="323" hits="0" branch="False" />
                 <line number="324" hits="0" branch="False" />
@@ -1835,29 +1829,23 @@
                 <line number="352" hits="0" branch="False" />
                 <line number="353" hits="0" branch="False" />
                 <line number="354" hits="0" branch="False" />
-                <line number="355" hits="0" branch="False" />
                 <line number="356" hits="0" branch="False" />
                 <line number="357" hits="0" branch="False" />
                 <line number="358" hits="0" branch="False" />
                 <line number="359" hits="0" branch="False" />
                 <line number="360" hits="0" branch="False" />
+                <line number="361" hits="0" branch="False" />
                 <line number="362" hits="0" branch="False" />
                 <line number="363" hits="0" branch="False" />
-                <line number="364" hits="0" branch="False" />
                 <line number="365" hits="0" branch="False" />
                 <line number="366" hits="0" branch="False" />
                 <line number="367" hits="0" branch="False" />
                 <line number="368" hits="0" branch="False" />
                 <line number="369" hits="0" branch="False" />
+                <line number="370" hits="0" branch="False" />
                 <line number="371" hits="0" branch="False" />
                 <line number="372" hits="0" branch="False" />
-                <line number="373" hits="0" branch="False" />
                 <line number="374" hits="0" branch="False" />
-                <line number="375" hits="0" branch="False" />
-                <line number="376" hits="0" branch="False" />
-                <line number="377" hits="0" branch="False" />
-                <line number="378" hits="0" branch="False" />
-                <line number="380" hits="0" branch="False" />
               </lines>
             </method>
           </methods>
@@ -2012,9 +2000,9 @@
             <line number="170" hits="0" branch="False" />
             <line number="171" hits="0" branch="False" />
             <line number="172" hits="0" branch="False" />
-            <line number="173" hits="0" branch="False" />
             <line number="174" hits="0" branch="False" />
             <line number="175" hits="0" branch="False" />
+            <line number="176" hits="0" branch="False" />
             <line number="177" hits="0" branch="False" />
             <line number="178" hits="0" branch="False" />
             <line number="179" hits="0" branch="False" />
@@ -2111,9 +2099,9 @@
             <line number="270" hits="0" branch="False" />
             <line number="271" hits="0" branch="False" />
             <line number="272" hits="0" branch="False" />
-            <line number="273" hits="0" branch="False" />
             <line number="274" hits="0" branch="False" />
             <line number="275" hits="0" branch="False" />
+            <line number="276" hits="0" branch="False" />
             <line number="277" hits="0" branch="False" />
             <line number="278" hits="0" branch="False" />
             <line number="279" hits="0" branch="False" />
@@ -2152,12 +2140,12 @@
             <line number="312" hits="0" branch="False" />
             <line number="313" hits="0" branch="False" />
             <line number="314" hits="0" branch="False" />
-            <line number="315" hits="0" branch="False" />
             <line number="316" hits="0" branch="False" />
             <line number="317" hits="0" branch="False" />
             <line number="318" hits="0" branch="False" />
             <line number="319" hits="0" branch="False" />
             <line number="320" hits="0" branch="False" />
+            <line number="321" hits="0" branch="False" />
             <line number="322" hits="0" branch="False" />
             <line number="323" hits="0" branch="False" />
             <line number="324" hits="0" branch="False" />
@@ -2191,29 +2179,23 @@
             <line number="352" hits="0" branch="False" />
             <line number="353" hits="0" branch="False" />
             <line number="354" hits="0" branch="False" />
-            <line number="355" hits="0" branch="False" />
             <line number="356" hits="0" branch="False" />
             <line number="357" hits="0" branch="False" />
             <line number="358" hits="0" branch="False" />
             <line number="359" hits="0" branch="False" />
             <line number="360" hits="0" branch="False" />
+            <line number="361" hits="0" branch="False" />
             <line number="362" hits="0" branch="False" />
             <line number="363" hits="0" branch="False" />
-            <line number="364" hits="0" branch="False" />
             <line number="365" hits="0" branch="False" />
             <line number="366" hits="0" branch="False" />
             <line number="367" hits="0" branch="False" />
             <line number="368" hits="0" branch="False" />
             <line number="369" hits="0" branch="False" />
+            <line number="370" hits="0" branch="False" />
             <line number="371" hits="0" branch="False" />
             <line number="372" hits="0" branch="False" />
-            <line number="373" hits="0" branch="False" />
             <line number="374" hits="0" branch="False" />
-            <line number="375" hits="0" branch="False" />
-            <line number="376" hits="0" branch="False" />
-            <line number="377" hits="0" branch="False" />
-            <line number="378" hits="0" branch="False" />
-            <line number="380" hits="0" branch="False" />
           </lines>
         </class>
         <class name="SalesService.DTOs.ContractCreatedEvent" filename="DTOs/ContractCreatedEvent.cs" line-rate="0" branch-rate="1" complexity="10">
@@ -4430,9 +4412,9 @@
             <line number="22" hits="0" branch="False" />
           </lines>
         </class>
-        <class name="SalesService.Controllers.DeliveriesController/&lt;CreateDelivery&gt;d__3" filename="Controllers/DeliveriesController.cs" line-rate="0" branch-rate="1" complexity="1">
+        <class name="SalesService.Controllers.DeliveriesController/&lt;CreateDelivery&gt;d__3" filename="Controllers/DeliveriesController.cs" line-rate="0" branch-rate="0" complexity="4">
           <methods>
-            <method name="MoveNext" signature="()" line-rate="0" branch-rate="1" complexity="1">
+            <method name="MoveNext" signature="()" line-rate="0" branch-rate="0" complexity="4">
               <lines>
                 <line number="46" hits="0" branch="False" />
                 <line number="47" hits="0" branch="False" />
@@ -4447,9 +4429,25 @@
                 <line number="56" hits="0" branch="False" />
                 <line number="58" hits="0" branch="False" />
                 <line number="59" hits="0" branch="False" />
-                <line number="61" hits="0" branch="False" />
+                <line number="61" hits="0" branch="True" condition-coverage="0% (0/4)">
+                  <conditions>
+                    <condition number="341" type="jump" coverage="0%" />
+                    <condition number="376" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
                 <line number="62" hits="0" branch="False" />
                 <line number="63" hits="0" branch="False" />
+                <line number="64" hits="0" branch="False" />
+                <line number="65" hits="0" branch="False" />
+                <line number="66" hits="0" branch="False" />
+                <line number="67" hits="0" branch="False" />
+                <line number="68" hits="0" branch="False" />
+                <line number="69" hits="0" branch="False" />
+                <line number="70" hits="0" branch="False" />
+                <line number="71" hits="0" branch="False" />
+                <line number="72" hits="0" branch="False" />
+                <line number="73" hits="0" branch="False" />
+                <line number="74" hits="0" branch="False" />
               </lines>
             </method>
           </methods>
@@ -4467,9 +4465,25 @@
             <line number="56" hits="0" branch="False" />
             <line number="58" hits="0" branch="False" />
             <line number="59" hits="0" branch="False" />
-            <line number="61" hits="0" branch="False" />
+            <line number="61" hits="0" branch="True" condition-coverage="0% (0/4)">
+              <conditions>
+                <condition number="341" type="jump" coverage="0%" />
+                <condition number="376" type="jump" coverage="0%" />
+              </conditions>
+            </line>
             <line number="62" hits="0" branch="False" />
             <line number="63" hits="0" branch="False" />
+            <line number="64" hits="0" branch="False" />
+            <line number="65" hits="0" branch="False" />
+            <line number="66" hits="0" branch="False" />
+            <line number="67" hits="0" branch="False" />
+            <line number="68" hits="0" branch="False" />
+            <line number="69" hits="0" branch="False" />
+            <line number="70" hits="0" branch="False" />
+            <line number="71" hits="0" branch="False" />
+            <line number="72" hits="0" branch="False" />
+            <line number="73" hits="0" branch="False" />
+            <line number="74" hits="0" branch="False" />
           </lines>
         </class>
         <class name="SalesService.Controllers.DeliveriesController/&lt;GetDeliveries&gt;d__2" filename="Controllers/DeliveriesController.cs" line-rate="0" branch-rate="1" complexity="1">
@@ -5299,7 +5313,7 @@
                 <line number="78" hits="0" branch="False" />
                 <line number="79" hits="0" branch="True" condition-coverage="0% (0/2)">
                   <conditions>
-                    <condition number="488" type="jump" coverage="0%" />
+                    <condition number="482" type="jump" coverage="0%" />
                   </conditions>
                 </line>
                 <line number="80" hits="0" branch="False" />
@@ -5320,7 +5334,7 @@
                 <line number="98" hits="0" branch="False" />
                 <line number="100" hits="0" branch="True" condition-coverage="0% (0/2)">
                   <conditions>
-                    <condition number="763" type="jump" coverage="0%" />
+                    <condition number="757" type="jump" coverage="0%" />
                   </conditions>
                 </line>
                 <line number="101" hits="0" branch="False" />
@@ -5360,7 +5374,7 @@
             <line number="78" hits="0" branch="False" />
             <line number="79" hits="0" branch="True" condition-coverage="0% (0/2)">
               <conditions>
-                <condition number="488" type="jump" coverage="0%" />
+                <condition number="482" type="jump" coverage="0%" />
               </conditions>
             </line>
             <line number="80" hits="0" branch="False" />
@@ -5381,7 +5395,7 @@
             <line number="98" hits="0" branch="False" />
             <line number="100" hits="0" branch="True" condition-coverage="0% (0/2)">
               <conditions>
-                <condition number="763" type="jump" coverage="0%" />
+                <condition number="757" type="jump" coverage="0%" />
               </conditions>
             </line>
             <line number="101" hits="0" branch="False" />
