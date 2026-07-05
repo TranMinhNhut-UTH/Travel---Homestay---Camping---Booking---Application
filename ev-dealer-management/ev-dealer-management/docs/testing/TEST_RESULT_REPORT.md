@@ -1,8 +1,10 @@
 # Báo Cáo Kết Quả Kiểm Thử — Module C: Sales Management
 
 > **Dự án**: EV Dealer Management System  
-> **Ngày tạo**: 2026-07-03 | **Phiên bản**: 2.0  
+> **Ngày tạo**: 2026-07-03 | **Cập nhật**: 2026-07-05 | **Phiên bản**: 2.1  
 > **Trạng thái**: 🟢 PASSED (100%)
+
+> 📌 **Báo cáo chi tiết**: Xem `docs/testing/TEST_RESULT_REPORT_MODULE_C.md` để biết kết quả từng request, kỹ thuật kiểm thử áp dụng, và lịch sử các lần chạy.
 
 ---
 

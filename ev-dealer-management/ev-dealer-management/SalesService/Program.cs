@@ -60,7 +60,6 @@ using (var scope = app.Services.CreateScope())
     {
         var dbContext = services.GetRequiredService<SalesDbContext>();
         // Ensure database schema is created (SQLite auto-creates tables from DbContext)
-        dbContext.Database.EnsureCreated();
         var connection = dbContext.Database.GetDbConnection();
         if (connection is SqliteConnection sqliteConnection)
         {

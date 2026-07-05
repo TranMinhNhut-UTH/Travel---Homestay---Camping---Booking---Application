@@ -6,3 +6,11 @@ node_modules/
 Logs/
 .env
 *.db
+*.db-shm
+*.db-wal
+**/TestResults/
+blackbox_output.txt
+req.json
+sales_error.txt
+sales_log.txt
+

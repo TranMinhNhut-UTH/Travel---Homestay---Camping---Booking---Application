@@ -1,7 +1,7 @@
 # Quy Trình Kiểm Thử — Module C: Sales Management
 
 > **Dự án**: EV Dealer Management System  
-> **Ngày tạo**: 2026-07-03 | **Phiên bản**: 1.0
+> **Ngày tạo**: 2026-07-03 | **Cập nhật**: 2026-07-05 | **Phiên bản**: 2.0
 
 ---
 
@@ -13,7 +13,7 @@
 |---|---|---|
 | Node.js | 18+ | Chạy Newman CLI |
 | Newman | 6+ | Chạy Postman collection từ CLI |
-| newman-reporter-htmlextra | latest | HTML report |
+| newman-reporter-htmlextra | latest | HTML report (tùy chọn, không bắt buộc) |
 | PowerShell | 7+ | Runner script |
 
 ### 1.2 Cài Đặt Newman
@@ -148,9 +148,21 @@ Test-NetConnection -ComputerName localhost -Port 5051
 
 ## 5. Tiêu Chí Hoàn Thành
 
-- [ ] Tất cả 8 Module C folders đã chạy
-- [ ] 170 pm.test assertions đều PASS
-- [ ] JSON report đã xuất
-- [ ] JUnit XML report đã xuất
-- [ ] Defect report đã cập nhật (nếu có fail)
-- [ ] TEST_RESULT_REPORT.md đã cập nhật với kết quả thực tế
+- [x] Tất cả 8 Module C folders đã chạy (124 requests)
+- [x] 170 pm.test assertions đều PASS
+- [x] JSON report đã xuất → `reports/module-c-newman-report_20260704_163137.json`
+- [x] JUnit XML report đã xuất → `reports/module-c-newman-report_20260704_163137.xml`
+- [x] Defect report đã cập nhật → `docs/testing/DEFECT_REPORT_MODULE_C.md` (DEF-000 → DEF-008)
+- [x] TEST_RESULT_REPORT_MODULE_C.md đã tạo → `docs/testing/TEST_RESULT_REPORT_MODULE_C.md`
+
+---
+
+## 6. Tài Liệu Liên Quan
+
+| Tài liệu | Đường dẫn |
+|---|---|
+| Test Cases | `docs/testing/TEST_CASES_MODULE_C.md` |
+| Test Result Report (chi tiết) | `docs/testing/TEST_RESULT_REPORT_MODULE_C.md` |
+| Defect Report | `docs/testing/DEFECT_REPORT_MODULE_C.md` |
+| Traceability Matrix | `docs/testing/TRACEABILITY_MATRIX_MODULE_C.md` |
+| Postman Guide | `docs/testing/POSTMAN_GUIDE_MODULE_C.md` |
