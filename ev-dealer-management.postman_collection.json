@@ -1,15 +1,3273 @@
 {
   "info": {
-    "_postman_id": "ev-dealer-management-postman-2026-05-23",
+    "_postman_id": "0981ba4a-394f-4029-8ab4-570802a338b5",
     "name": "EV Dealer Management API",
     "description": "Importable Postman v2.1 collection for the current EV Dealer Management project.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "43693041",
+    "_collection_link": "https://go.postman.co/collection/43693041-0981ba4a-394f-4029-8ab4-570802a338b5?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth & Users",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let responseBody = {};\r",
+                  "\r",
+                  "try {\r",
+                  "  responseBody = pm.response.json();\r",
+                  "} catch (error) {\r",
+                  "  console.error('Login response is not valid JSON:', error);\r",
+                  "}\r",
+                  "\r",
+                  "if (\r",
+                  "  pm.response.code === 200 &&\r",
+                  "  responseBody &&\r",
+                  "  responseBody.token\r",
+                  ") {\r",
+                  "  pm.environment.set('authToken', responseBody.token);\r",
+                  "  pm.environment.set('userId', responseBody.userId || responseBody.user?.id || '');\r",
+                  "\r",
+                  "  console.log('authToken saved successfully');\r",
+                  "} else {\r",
+                  "  console.warn('Login failed or token was not found in response');\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"nhutnu20041@gmail.com\",\n  \"password\": \"nhutnu20041@gmail.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"sales{{$timestamp}}\",\n  \"email\": \"sales{{$timestamp}}@example.com\",\n  \"fullName\": \"Sales User\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"DealerStaff\",\n  \"dealerId\": {{dealerId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"nobody@example.invalid\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/forgot-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password - Invalid Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"reset-token\",\n  \"newPassword\": \"NewP@ssw0rd!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/reset-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "reset-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Invalid Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"wrong-password\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Empty Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register - Invalid Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"sales02\",\n  \"email\": \"abc\",\n  \"fullName\": \"Sales 02\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"Sales\",\n  \"dealerId\": {{dealerId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register - Empty Email",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"sales03\",\n  \"email\": \"\",\n  \"fullName\": \"Sales 03\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"Sales\",\n  \"dealerId\": {{dealerId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Admin User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"staff{{$timestamp}}\",\n  \"email\": \"staff{{$timestamp}}@example.com\",\n  \"fullName\": \"Staff 01\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"DealerStaff\",\n  \"dealerId\": {{dealerId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User By Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{managedUserId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "{{managedUserId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"updated@example.com\",\n  \"fullName\": \"Updated Name\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{deleteUserId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "{{deleteUserId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{deleteUserId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "{{deleteUserId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Role",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"DealerManager\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{managedUserId}}/role",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "{{managedUserId}}",
+                "role"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approve User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{managedUserId}}/approve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "{{managedUserId}}",
+                "approve"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Dealers (UserService)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dealers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dealers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Internal Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{userServiceUrl}}/api/internal/users",
+              "host": [
+                "{{userServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "internal",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Vehicles & Dealers",
+      "item": [
+        {
+          "name": "Get Vehicles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles?page=1&pageSize=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Vehicle By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles",
+                "{{vehicleId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Vehicle",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": 1200000000,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": 5,\n  \"Description\": \"Demo vehicle\",\n  \"DealerId\": {{dealerId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Vehicle - Price -1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": -1,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": 5,\n  \"Description\": \"Demo vehicle\",\n  \"DealerId\": {{dealerId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Vehicle - Price 0",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": 0,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": 5,\n  \"Description\": \"Demo vehicle\",\n  \"DealerId\": {{dealerId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Vehicle - Stock -1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": 1200000000,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": -1,\n  \"Description\": \"Demo vehicle\",\n  \"DealerId\": {{dealerId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Vehicle - Missing DealerId",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": 1200000000,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": 5,\n  \"Description\": \"Demo vehicle\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Vehicle",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Model\": \"VinFast VF 8 Plus\",\n  \"Type\": \"SUV\",\n  \"Price\": 1300000000,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 450,\n  \"StockQuantity\": 4,\n  \"Description\": \"Updated vehicle\",\n  \"DealerId\": {{dealerId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles",
+                "{{vehicleId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Vehicle",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{deleteVehicleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles",
+                "{{deleteVehicleId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reserve Vehicle",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Nguyen Van A\",\n  \"customerEmail\": \"customer@example.com\",\n  \"customerPhone\": \"+84912345678\",\n  \"colorVariantId\": 1,\n  \"notes\": \"Reserve for demo\",\n  \"quantity\": 1,\n  \"deviceToken\": \"{{deviceToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}/reserve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles",
+                "{{vehicleId}}",
+                "reserve"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reserve Vehicle - Quantity 0",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Nguyen Van A\",\n  \"customerEmail\": \"customer@example.com\",\n  \"customerPhone\": \"+84912345678\",\n  \"colorVariantId\": 1,\n  \"notes\": \"Reserve for demo\",\n  \"quantity\": 0,\n  \"deviceToken\": \"{{deviceToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}/reserve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles",
+                "{{vehicleId}}",
+                "reserve"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reserve Vehicle - Quantity 101",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Nguyen Van A\",\n  \"customerEmail\": \"customer@example.com\",\n  \"customerPhone\": \"+84912345678\",\n  \"colorVariantId\": 1,\n  \"notes\": \"Reserve for demo\",\n  \"quantity\": 101,\n  \"deviceToken\": \"{{deviceToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}/reserve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles",
+                "{{vehicleId}}",
+                "reserve"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reserve Vehicle - Invalid Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Nguyen Van A\",\n  \"customerEmail\": \"customer@example\",\n  \"customerPhone\": \"abc\",\n  \"colorVariantId\": 1,\n  \"notes\": \"Reserve for demo\",\n  \"quantity\": 1,\n  \"deviceToken\": \"{{deviceToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}/reserve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles",
+                "{{vehicleId}}",
+                "reserve"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Dealers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dealers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dealers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Dealer By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dealers/{{dealerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dealers",
+                "{{dealerId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Dealer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"VinFast Ha Noi\",\n  \"region\": \"Ha Noi\",\n  \"contact\": \"0900000000\",\n  \"email\": \"dealer@example.com\",\n  \"address\": \"123 Demo Street\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/dealers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dealers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Dealer",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"VinFast Ha Noi Updated\",\n  \"region\": \"Ha Noi\",\n  \"contact\": \"0900000001\",\n  \"email\": \"dealer.updated@example.com\",\n  \"address\": \"456 Demo Street\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/dealers/{{dealerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dealers",
+                "{{dealerId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Dealer",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dealers/{{deleteDealerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dealers",
+                "{{deleteDealerId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Vehicle Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicletypes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicletypes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Vehicle Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{vehicleServiceUrl}}/api/Health",
+              "host": [
+                "{{vehicleServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "Health"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Vehicles CSV",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{vehicleServiceUrl}}/api/Export/vehicles/csv",
+              "host": [
+                "{{vehicleServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "Export",
+                "vehicles",
+                "csv"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Vehicles JSON",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{vehicleServiceUrl}}/api/Export/vehicles/json",
+              "host": [
+                "{{vehicleServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "Export",
+                "vehicles",
+                "json"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Static Image - Not Found",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/images/sample.jpg",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "images",
+                "sample.jpg"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Customers & Test Drives",
+      "item": [
+        {
+          "name": "Get Customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/customers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Customer By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/{{customerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers",
+                "{{customerId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nguyen Van B\",\n  \"email\": \"manual.customer+{{$timestamp}}@example.com\",\n  \"phone\": \"+84923456789\",\n  \"address\": \"Ha Noi\",\n  \"dealerId\": {{dealerId}},\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/customers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Customer - Invalid Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nguyen Van B\",\n  \"email\": \"abc\",\n  \"phone\": \"+84923456789\",\n  \"address\": \"Ha Noi\",\n  \"dealerId\": {{dealerId}},\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/customers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Customer - Missing DealerId",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nguyen Van B\",\n  \"email\": \"customer@example.com\",\n  \"phone\": \"+84923456789\",\n  \"address\": \"Ha Noi\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/customers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Customer",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nguyen Van B Updated\",\n  \"email\": \"customer.updated+{{$timestamp}}@example.com\",\n  \"phone\": \"+84923456780\",\n  \"address\": \"Hai Phong\",\n  \"dealerId\": {{dealerId}},\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/{{customerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers",
+                "{{customerId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Customer",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/{{deleteCustomerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers",
+                "{{deleteCustomerId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Test Drives",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/TestDrives",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "TestDrives"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Test Drives By Customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/TestDrives/customer/{{customerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "TestDrives",
+                "customer",
+                "{{customerId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Test Drive By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{customerServiceUrl}}/api/TestDrives/{{testDriveId}}",
+              "host": [
+                "{{customerServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "TestDrives",
+                "{{testDriveId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Test Drive",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": {{customerId}},\n  \"vehicleId\": {{vehicleId}},\n  \"dealerId\": {{dealerId}},\n  \"appointmentDate\": \"{{futureAppointmentDate}}\",\n  \"notes\": \"Morning slot\",\n  \"status\": \"Scheduled\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/TestDrives",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "TestDrives"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Test Drive - Past Date",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": {{customerId}},\n  \"vehicleId\": {{vehicleId}},\n  \"dealerId\": {{dealerId}},\n  \"appointmentDate\": \"2020-01-01T09:00:00Z\",\n  \"notes\": \"Past slot\",\n  \"status\": \"Scheduled\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/TestDrives",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "TestDrives"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Test Drive - Empty Appointment Date",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": {{customerId}},\n  \"vehicleId\": {{vehicleId}},\n  \"dealerId\": {{dealerId}},\n  \"appointmentDate\": \"\",\n  \"notes\": \"Empty date\",\n  \"status\": \"Scheduled\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/TestDrives",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "TestDrives"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Test Drive",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointmentDate\": \"2026-06-02T10:00:00Z\",\n  \"status\": \"Completed\",\n  \"notes\": \"Completed demo\"\n}"
+            },
+            "url": {
+              "raw": "{{customerServiceUrl}}/api/TestDrives/{{testDriveId}}",
+              "host": [
+                "{{customerServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "TestDrives",
+                "{{testDriveId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Test Drive",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{customerServiceUrl}}/api/TestDrives/{{testDriveId}}",
+              "host": [
+                "{{customerServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "TestDrives",
+                "{{testDriveId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Complaints",
+      "item": [
+        {
+          "name": "Get Complaints",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{customerServiceUrl}}/api/Complaints",
+              "host": [
+                "{{customerServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "Complaints"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Complaint By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{customerServiceUrl}}/api/Complaints/{{complaintId}}",
+              "host": [
+                "{{customerServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "Complaints",
+                "{{complaintId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Complaint",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": {{customerId}},\n  \"type\": \"Bao hanh\",\n  \"title\": \"Remote not working\",\n  \"description\": \"Customer reports a broken remote\",\n  \"assignedToStaffID\": 10,\n  \"priority\": \"High\",\n  \"relatedOrderID\": {{orderId}},\n  \"relatedVehicleID\": {{vehicleId}}\n}"
+            },
+            "url": {
+              "raw": "{{customerServiceUrl}}/api/Complaints",
+              "host": [
+                "{{customerServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "Complaints"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Complaint - Missing Description",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": {{customerId}},\n  \"type\": \"Bao hanh\",\n  \"title\": \"Remote not working\",\n  \"assignedToStaffID\": 10,\n  \"priority\": \"High\",\n  \"relatedOrderID\": {{orderId}},\n  \"relatedVehicleID\": {{vehicleId}}\n}"
+            },
+            "url": {
+              "raw": "{{customerServiceUrl}}/api/Complaints",
+              "host": [
+                "{{customerServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "Complaints"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Complaint - Invalid CustomerId",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": 0,\n  \"type\": \"Bao hanh\",\n  \"title\": \"Remote not working\",\n  \"description\": \"Customer reports a broken remote\",\n  \"assignedToStaffID\": 10,\n  \"priority\": \"High\",\n  \"relatedOrderID\": {{orderId}},\n  \"relatedVehicleID\": {{vehicleId}}\n}"
+            },
+            "url": {
+              "raw": "{{customerServiceUrl}}/api/Complaints",
+              "host": [
+                "{{customerServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "Complaints"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Complaint",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"Bao hanh\",\n  \"title\": \"Remote not working - updated\",\n  \"description\": \"Updated description\",\n  \"status\": \"In Progress\",\n  \"resolution\": \"Under investigation\",\n  \"assignedToStaffID\": 10,\n  \"priority\": \"High\",\n  \"relatedOrderID\": {{orderId}},\n  \"relatedVehicleID\": {{vehicleId}}\n}"
+            },
+            "url": {
+              "raw": "{{customerServiceUrl}}/api/Complaints/{{complaintId}}",
+              "host": [
+                "{{customerServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "Complaints",
+                "{{complaintId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Complaint",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{customerServiceUrl}}/api/Complaints/{{complaintId}}",
+              "host": [
+                "{{customerServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "Complaints",
+                "{{complaintId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sales Core",
+      "item": [
+        {
+          "name": "Quotes",
+          "item": [
+            {
+              "name": "Get Quotes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Quotes",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Quotes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Quote By Id",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Quotes/{{quoteId}}",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Quotes",
+                    "{{quoteId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Quote",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customerId\": {{customerId}},\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"vehicleId\": {{vehicleId}},\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"totalPrice\": 1200000000,\n  \"status\": \"Active\",\n  \"notes\": \"Demo quote\"\n}"
+                },
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Quotes",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Quotes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Quote - Quantity 0",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customerId\": {{customerId}},\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"vehicleId\": {{vehicleId}},\n  \"colorId\": 1,\n  \"quantity\": 0,\n  \"unitPrice\": 1200000000,\n  \"totalPrice\": 0,\n  \"status\": \"Active\",\n  \"notes\": \"Demo quote\"\n}"
+                },
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Quotes",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Quotes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Quote - Quantity 101",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customerId\": {{customerId}},\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"vehicleId\": {{vehicleId}},\n  \"colorId\": 1,\n  \"quantity\": 101,\n  \"unitPrice\": 1200000000,\n  \"totalPrice\": 1200000000,\n  \"status\": \"Active\",\n  \"notes\": \"Demo quote\"\n}"
+                },
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Quotes",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Quotes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Quote Status",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"ConvertedToOrder\"\n}"
+                },
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Quotes/{{quoteId}}/status",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Quotes",
+                    "{{quoteId}}",
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Orders",
+          "item": [
+            {
+              "name": "Complete Order",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": {{customerId}},\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Nguyen Van B\",\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"paymentMethod\": \"Cash\",\n  \"deliveryDate\": \"2026-06-10T09:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"notes\": \"Complete order demo\",\n  \"paymentType\": \"Full\",\n  \"depositAmount\": 0,\n  \"interestRateYearly\": 0,\n  \"loanTermMonths\": 0,\n  \"vehicleId\": {{vehicleId}},\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"totalAmount\": 1200000000,\n  \"promotionId\": null,\n  \"discountAmount\": 0,\n  \"discountPercent\": 0,\n  \"discountNote\": \"\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Orders/complete",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Orders",
+                    "complete"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Orders",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Orders",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Orders"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Order By Id",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Orders/{{orderId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Orders",
+                    "{{orderId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Complete Order - Missing CustomerName",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": {{customerId}},\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"\",\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"paymentMethod\": \"Cash\",\n  \"deliveryDate\": \"2026-06-10T09:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"notes\": \"Complete order demo\",\n  \"paymentType\": \"Full\",\n  \"depositAmount\": 0,\n  \"interestRateYearly\": 0,\n  \"loanTermMonths\": 0,\n  \"vehicleId\": {{vehicleId}},\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"totalAmount\": 1200000000,\n  \"promotionId\": null,\n  \"discountAmount\": 0,\n  \"discountPercent\": 0,\n  \"discountNote\": \"\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Orders/complete",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Orders",
+                    "complete"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Complete Order - Invalid Email",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": {{customerId}},\n  \"customerEmail\": \"not-an-email\",\n  \"customerName\": \"Nguyen Van B\",\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"paymentMethod\": \"Cash\",\n  \"deliveryDate\": \"2026-06-10T09:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"notes\": \"Complete order demo\",\n  \"paymentType\": \"Full\",\n  \"depositAmount\": 0,\n  \"interestRateYearly\": 0,\n  \"loanTermMonths\": 0,\n  \"vehicleId\": {{vehicleId}},\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"totalAmount\": 1200000000,\n  \"promotionId\": null,\n  \"discountAmount\": 0,\n  \"discountPercent\": 0,\n  \"discountNote\": \"\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Orders/complete",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Orders",
+                    "complete"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Complete Order - TotalAmount 0",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": {{customerId}},\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Nguyen Van B\",\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"paymentMethod\": \"Cash\",\n  \"deliveryDate\": \"2026-06-10T09:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"notes\": \"Complete order demo\",\n  \"paymentType\": \"Full\",\n  \"depositAmount\": 0,\n  \"interestRateYearly\": 0,\n  \"loanTermMonths\": 0,\n  \"vehicleId\": {{vehicleId}},\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"totalAmount\": 0,\n  \"promotionId\": null,\n  \"discountAmount\": 0,\n  \"discountPercent\": 0,\n  \"discountNote\": \"\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Orders/complete",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Orders",
+                    "complete"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Order Status",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"ReadyForDelivery\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Orders/{{orderId}}/status",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Orders",
+                    "{{orderId}}",
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Contracts",
+          "item": [
+            {
+              "name": "Get Contracts",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Contracts",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Contracts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Contract By Id",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Contracts/{{contractId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Contracts",
+                    "{{contractId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Contract",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orderId\": {{newContractOrderId}},\n  \"customerId\": {{customerId}},\n  \"salespersonId\": \"1\",\n  \"contractDate\": \"2026-06-10T09:00:00Z\",\n  \"depositAmountReceived\": true,\n  \"termsAndConditions\": \"Demo contract\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Contracts",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Contracts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Contract Status",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"Approved\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Contracts/{{contractId}}/status",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Contracts",
+                    "{{contractId}}",
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Payments",
+          "item": [
+            {
+              "name": "Get Payments",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Payments",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Payments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Payment",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orderId\": {{createdOrderId}},\n  \"amount\": 1200000000,\n  \"paymentDate\": \"2026-06-10T09:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-001\",\n  \"notes\": \"Demo payment\"\n}"
+                },
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Payments",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Payments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Payment - Amount 0",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orderId\": {{createdOrderId}},\n  \"amount\": 0,\n  \"paymentDate\": \"2026-06-10T09:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-001\",\n  \"notes\": \"Demo payment\"\n}"
+                },
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Payments",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Payments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Payment - Amount -1",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orderId\": {{createdOrderId}},\n  \"amount\": -1,\n  \"paymentDate\": \"2026-06-10T09:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-001\",\n  \"notes\": \"Demo payment\"\n}"
+                },
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Payments",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Payments"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Deliveries",
+          "item": [
+            {
+              "name": "Get Deliveries",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Deliveries",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Deliveries"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Delivery",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orderId\": {{createdOrderId}},\n  \"trackingNumber\": \"TRK-001\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"status\": \"Scheduled\",\n  \"notes\": \"Demo delivery\"\n}"
+                },
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Deliveries",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Deliveries"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Delivery - Missing Estimated Date",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orderId\": {{createdOrderId}},\n  \"trackingNumber\": \"TRK-002\",\n  \"status\": \"Scheduled\",\n  \"notes\": \"Demo delivery\"\n}"
+                },
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Deliveries",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Deliveries"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Delivery - Empty Status",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orderId\": {{createdOrderId}},\n  \"trackingNumber\": \"TRK-003\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"status\": \"\",\n  \"notes\": \"Demo delivery\"\n}"
+                },
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Deliveries",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Deliveries"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Promotions",
+          "item": [
+            {
+              "name": "Get Promotions",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Promotions",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Promotions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Promotion",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"SUMMER2026\",\n  \"description\": \"Summer promotion\",\n  \"discountType\": \"Percent\",\n  \"discountValue\": 10,\n  \"startDate\": \"2026-06-01T00:00:00Z\",\n  \"endDate\": \"2026-08-31T23:59:59Z\"\n}"
+                },
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Promotions",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Promotions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Promotion - Discount 0",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"SUMMER2026\",\n  \"description\": \"Summer promotion\",\n  \"discountType\": \"Percent\",\n  \"discountValue\": 0,\n  \"startDate\": \"2026-06-01T00:00:00Z\",\n  \"endDate\": \"2026-08-31T23:59:59Z\"\n}"
+                },
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Promotions",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Promotions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Promotion - Discount -1",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"SUMMER2026\",\n  \"description\": \"Summer promotion\",\n  \"discountType\": \"Percent\",\n  \"discountValue\": -1,\n  \"startDate\": \"2026-06-01T00:00:00Z\",\n  \"endDate\": \"2026-08-31T23:59:59Z\"\n}"
+                },
+                "url": {
+                  "raw": "{{salesServiceUrl}}/api/Promotions",
+                  "host": [
+                    "{{salesServiceUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Promotions"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Demand Forecast",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/demand-forecast?from={{reportFrom}}&to={{reportTo}}",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "demand-forecast"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "{{reportFrom}}"
+                },
+                {
+                  "key": "to",
+                  "value": "{{reportTo}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Demand Forecast - Invalid From",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/demand-forecast?from=abc&to={{reportTo}}",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "demand-forecast"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "abc"
+                },
+                {
+                  "key": "to",
+                  "value": "{{reportTo}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Synchronize Data",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/synchronize-data",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "synchronize-data"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Debt Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/debt-summary?dealerId={{dealerId}}&customerId={{customerId}}&from={{reportFrom}}&to={{reportTo}}",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "debt-summary"
+              ],
+              "query": [
+                {
+                  "key": "dealerId",
+                  "value": "{{dealerId}}"
+                },
+                {
+                  "key": "customerId",
+                  "value": "{{customerId}}"
+                },
+                {
+                  "key": "from",
+                  "value": "{{reportFrom}}"
+                },
+                {
+                  "key": "to",
+                  "value": "{{reportTo}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Debt Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/debt-report?dealerId={{dealerId}}&from={{reportFrom}}&to={{reportTo}}",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "debt-report"
+              ],
+              "query": [
+                {
+                  "key": "dealerId",
+                  "value": "{{dealerId}}"
+                },
+                {
+                  "key": "from",
+                  "value": "{{reportFrom}}"
+                },
+                {
+                  "key": "to",
+                  "value": "{{reportTo}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sales By Dealer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/sales-by-dealer?dealerId={{dealerId}}&period=month",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "sales-by-dealer"
+              ],
+              "query": [
+                {
+                  "key": "dealerId",
+                  "value": "{{dealerId}}"
+                },
+                {
+                  "key": "period",
+                  "value": "month"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Inventory Trends",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/inventory-trends",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "inventory-trends"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sales By Staff",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/sales-by-staff?from={{reportFrom}}&to={{reportTo}}",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "sales-by-staff"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "{{reportFrom}}"
+                },
+                {
+                  "key": "to",
+                  "value": "{{reportTo}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/summary?type=sales&from={{reportFrom}}&to={{reportTo}}",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "summary"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "sales"
+                },
+                {
+                  "key": "from",
+                  "value": "{{reportFrom}}"
+                },
+                {
+                  "key": "to",
+                  "value": "{{reportTo}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sales By Region",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/sales-by-region?from={{reportFrom}}&to={{reportTo}}",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "sales-by-region"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "{{reportFrom}}"
+                },
+                {
+                  "key": "to",
+                  "value": "{{reportTo}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sales Proportion",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/sales-proportion?from={{reportFrom}}&to={{reportTo}}",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "sales-proportion"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "{{reportFrom}}"
+                },
+                {
+                  "key": "to",
+                  "value": "{{reportTo}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Top Vehicles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/top-vehicles?limit=10",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "top-vehicles"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Top Vehicles - Limit 0",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/top-vehicles?limit=0",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "top-vehicles"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Top Vehicles - Limit -1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/top-vehicles?limit=-1",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "top-vehicles"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "-1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"sales\",\n  \"from\": \"{{reportFrom}}\",\n  \"to\": \"{{reportTo}}\"\n}"
+            },
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/export",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "export"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Report - Invalid Type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"\",\n  \"from\": \"{{reportFrom}}\",\n  \"to\": \"{{reportTo}}\"\n}"
+            },
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/export",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "export"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sales Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/sales-summary?dealerId={{dealerId}}&fromDate={{reportFrom}}&toDate={{reportTo}}",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "sales-summary"
+              ],
+              "query": [
+                {
+                  "key": "dealerId",
+                  "value": "{{dealerId}}"
+                },
+                {
+                  "key": "fromDate",
+                  "value": "{{reportFrom}}"
+                },
+                {
+                  "key": "toDate",
+                  "value": "{{reportTo}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sales Summary - Invalid Dates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/sales-summary?dealerId={{dealerId}}&fromDate=abc&toDate=abc",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "sales-summary"
+              ],
+              "query": [
+                {
+                  "key": "dealerId",
+                  "value": "{{dealerId}}"
+                },
+                {
+                  "key": "fromDate",
+                  "value": "abc"
+                },
+                {
+                  "key": "toDate",
+                  "value": "abc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Inventory Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reportingServiceUrl}}/api/reports/inventory-summary?dealerId={{dealerId}}&vehicleId={{vehicleId}}",
+              "host": [
+                "{{reportingServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "inventory-summary"
+              ],
+              "query": [
+                {
+                  "key": "dealerId",
+                  "value": "{{dealerId}}"
+                },
+                {
+                  "key": "vehicleId",
+                  "value": "{{vehicleId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Test FCM",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceToken\": \"{{deviceToken}}\",\n  \"title\": \"Test notification\",\n  \"body\": \"Hello from Postman\",\n  \"data\": { \"source\": \"postman\" }\n}"
+            },
+            "url": {
+              "raw": "{{notificationServiceUrl}}/api/notification/test-fcm",
+              "host": [
+                "{{notificationServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "notification",
+                "test-fcm"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Subscribe Topic",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceToken\": \"{{deviceToken}}\",\n  \"topic\": \"{{topic}}\"\n}"
+            },
+            "url": {
+              "raw": "{{notificationServiceUrl}}/api/notification/subscribe-topic",
+              "host": [
+                "{{notificationServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "notification",
+                "subscribe-topic"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unsubscribe Topic",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceToken\": \"{{deviceToken}}\",\n  \"topic\": \"{{topic}}\"\n}"
+            },
+            "url": {
+              "raw": "{{notificationServiceUrl}}/api/notification/unsubscribe-topic",
+              "host": [
+                "{{notificationServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "notification",
+                "unsubscribe-topic"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send To Topic",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"topic\": \"{{topic}}\",\n  \"title\": \"Broadcast\",\n  \"body\": \"Hello topic\",\n  \"data\": { \"source\": \"postman\" }\n}"
+            },
+            "url": {
+              "raw": "{{notificationServiceUrl}}/api/notification/send-to-topic",
+              "host": [
+                "{{notificationServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "notification",
+                "send-to-topic"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send Multicast",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceTokens\": [\"{{deviceToken}}\"],\n  \"title\": \"Multicast\",\n  \"body\": \"Hello multiple devices\",\n  \"data\": { \"source\": \"postman\" }\n}"
+            },
+            "url": {
+              "raw": "{{notificationServiceUrl}}/api/notification/send-multicast",
+              "host": [
+                "{{notificationServiceUrl}}"
+              ],
+              "path": [
+                "api",
+                "notification",
+                "send-multicast"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
   },
   "event": [
     {
       "listen": "prerequest",
       "script": {
         "type": "text/javascript",
+        "requests": {},
         "exec": [
           "if (!pm.collectionVariables.get('baseUrl')) {",
           "  pm.collectionVariables.set('baseUrl', 'http://localhost:5036');",
@@ -22,57 +3280,251 @@
       "listen": "test",
       "script": {
         "type": "text/javascript",
+        "requests": {},
         "exec": [
           "const requestName = pm.info.requestName || '';",
           "const normalizedName = requestName.toLowerCase();",
           "const method = pm.request.method.toUpperCase();",
-          "const negative400 = /invalid password|empty password|invalid email|empty email|invalid token|price -1|stock -1|missing dealerid|quantity 0|quantity 101|past date|empty appointment date|missing description|invalid customerid|amount 0|amount -1|discount 0|discount -1|missing customername|totalamount 0|missing estimated date|empty status|invalid from|invalid dates|invalid type|limit 0|limit -1/.test(normalizedName);",
+          "",
+          "/**",
+          " * Xác định nhóm negative test mong đợi 400/422.",
+          " */",
+          "const negative400 =",
+          "  /invalid password|empty password|invalid email|empty email|invalid token|price -1|stock -1|missing dealerid|quantity 0|quantity 101|past date|empty appointment date|missing description|invalid customerid|amount 0|amount -1|discount 0|discount -1|missing customername|totalamount 0|missing estimated date|empty status|invalid from|invalid dates|invalid type|limit 0|limit -1/.test(",
+          "    normalizedName",
+          "  );",
+          "",
+          "/**",
+          " * Xác định nhóm negative test mong đợi 404.",
+          " */",
           "const negative404 = /not found|static image/.test(normalizedName);",
-          "const noContentUpdates = ['Update Customer', 'Update Test Drive', 'Update Complaint', 'Update Quote Status'];",
-          "const expectedStatusCodes = negative400 ? [400, 422] : negative404 ? [404] : noContentUpdates.includes(requestName) ? [204] : method === 'POST' && /^(register|create)/i.test(requestName) ? [200, 201] : method === 'DELETE' ? [200, 204] : [200];",
+          "",
+          "/**",
+          " * Các endpoint update chủ đích trả 204 No Content.",
+          " */",
+          "const noContentUpdates = [",
+          "  'Update Customer',",
+          "  'Update Test Drive',",
+          "  'Update Complaint',",
+          "  'Update Quote Status'",
+          "];",
+          "",
+          "/**",
+          " * Xác định status code mong đợi theo từng loại request.",
+          " */",
+          "const expectedStatusCodes = negative400",
+          "  ? [400, 422]",
+          "  : negative404",
+          "    ? [404]",
+          "    : noContentUpdates.includes(requestName)",
+          "      ? [204]",
+          "      : method === 'POST' && /^(register|create)/i.test(requestName)",
+          "        ? [200, 201]",
+          "        : method === 'DELETE'",
+          "          ? [200, 204]",
+          "          : [200];",
+          "",
+          "/**",
+          " * Assertion 1: kiểm tra status code.",
+          " */",
           "pm.test('Status code matches this test case and is never 500', function () {",
-          "  pm.expect(pm.response.code, requestName + ' returned an unexpected status').to.not.equal(500);",
-          "  pm.expect(expectedStatusCodes, requestName + ' expected ' + expectedStatusCodes.join('/')).to.include(pm.response.code);",
+          "  pm.expect(",
+          "    pm.response.code,",
+          "    requestName + ' returned an unexpected status'",
+          "  ).to.not.equal(500);",
+          "",
+          "  pm.expect(",
+          "    expectedStatusCodes,",
+          "    requestName + ' expected ' + expectedStatusCodes.join('/')",
+          "  ).to.include(pm.response.code);",
           "});",
+          "",
+          "/**",
+          " * Assertion 2: kiểm tra response time.",
+          " */",
           "pm.test('Response time is under configured limit', function () {",
-          "  const responseTimeLimitMs = /complete order|synchronize data/.test(normalizedName) ? 8000 : 5000;",
+          "  const responseTimeLimitMs =",
+          "    /complete order|synchronize data/.test(normalizedName) ? 8000 : 5000;",
+          "",
           "  pm.expect(pm.response.responseTime).to.be.below(responseTimeLimitMs);",
           "});",
-          "pm.test('Content-Type describes JSON when a JSON body is returned', function () {",
-          "  const responseBody = pm.response.text();",
-          "  if (responseBody && responseBody.trim().length > 0) {",
-          "    const contentType = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
-          "    const mediaType = contentType.split(';')[0].trim();",
-          "    if (/^[\\[{]/.test(responseBody.trim())) {",
-          "      pm.expect(mediaType === 'application/json' || mediaType.endsWith('+json')).to.equal(true);",
+          "",
+          "/**",
+          " * Assertion 3: kiểm tra Content-Type nếu response có JSON body.",
+          " */",
+          "pm.test(",
+          "  'Content-Type describes JSON when a JSON body is returned',",
+          "  function () {",
+          "    const responseBody = pm.response.text();",
+          "",
+          "    if (responseBody && responseBody.trim().length > 0) {",
+          "      const contentType = (",
+          "        pm.response.headers.get('Content-Type') || ''",
+          "      ).toLowerCase();",
+          "",
+          "      const mediaType = contentType.split(';')[0].trim();",
+          "",
+          "      if (/^[\\[{]/.test(responseBody.trim())) {",
+          "        pm.expect(",
+          "          mediaType === 'application/json' || mediaType.endsWith('+json')",
+          "        ).to.equal(true);",
+          "      }",
           "    }",
           "  }",
-          "});",
-          "const contentType = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+          ");",
+          "",
+          "const contentType = (",
+          "  pm.response.headers.get('Content-Type') || ''",
+          ").toLowerCase();",
+          "",
           "const mediaType = contentType.split(';')[0].trim();",
-          "const isJsonMediaType = mediaType === 'application/json' || mediaType.endsWith('+json');",
-          "if (pm.response.code !== 204 && pm.response.text().trim().length > 0 && isJsonMediaType) {",
+          "",
+          "const isJsonMediaType =",
+          "  mediaType === 'application/json' || mediaType.endsWith('+json');",
+          "",
+          "/**",
+          " * Chỉ parse JSON khi:",
+          " * - Không phải 204",
+          " * - Body không rỗng",
+          " * - Content-Type là JSON",
+          " */",
+          "if (",
+          "  pm.response.code !== 204 &&",
+          "  pm.response.text().trim().length > 0 &&",
+          "  isJsonMediaType",
+          ") {",
+          "  /**",
+          "   * Assertion 4: JSON hợp lệ.",
+          "   */",
           "  pm.test('Response is valid JSON', function () {",
-          "    pm.expect(function () { pm.response.json(); }).to.not.throw();",
+          "    pm.expect(function () {",
+          "      pm.response.json();",
+          "    }).to.not.throw();",
           "  });",
+          "",
           "  try {",
           "    const body = pm.response.json();",
+          "",
+          "    /**",
+          "     * Lưu JWT token sau Login thành công.",
+          "     */",
+          "    if (",
+          "      requestName === 'Login' &&",
+          "      pm.response.code === 200 &&",
+          "      body &&",
+          "      body.token",
+          "    ) {",
+          "      pm.collectionVariables.set('accessToken', body.token);",
+          "    }",
+          "",
+          "    /**",
+          "     * Assertion 5: schema JSON cơ bản.",
+          "     */",
           "    pm.test('Basic JSON schema', function () {",
-          "      pm.expect(body === null || Array.isArray(body) || typeof body === 'object').to.be.true;",
+          "      pm.expect(",
+          "        body === null || Array.isArray(body) || typeof body === 'object'",
+          "      ).to.be.true;",
           "    });",
+          "",
+          "    /**",
+          "     * Assertion 6: response lỗi phải chứa thông tin chẩn đoán.",
+          "     */",
           "    if (pm.response.code >= 400) {",
           "      pm.test('Error response contains diagnostic information', function () {",
-          "        pm.expect(body).to.satisfy(function (value) { return typeof value === 'object' && value !== null; });",
+          "        pm.expect(body).to.satisfy(function (value) {",
+          "          return typeof value === 'object' && value !== null;",
+          "        });",
           "      });",
           "    }",
-          "    const idVariables = { 'Create Vehicle': 'createdVehicleId', 'Create Dealer': 'createdDealerId', 'Create Customer': 'createdCustomerId', 'Create Test Drive': 'createdTestDriveId', 'Create Complaint': 'createdComplaintId', 'Create Quote': 'createdQuoteId', 'Complete Order': 'createdOrderId', 'Create Contract': 'createdContractId', 'Create Payment': 'createdPaymentId', 'Create Delivery': 'createdDeliveryId', 'Create Promotion': 'createdPromotionId' };",
+          "",
+          "    /**",
+          "     * Mapping request create -> collection variable.",
+          "     */",
+          "    const idVariables = {",
+          "      'Create Vehicle': 'createdVehicleId',",
+          "      'Create Dealer': 'createdDealerId',",
+          "      'Create Customer': 'createdCustomerId',",
+          "      'Create Test Drive': 'createdTestDriveId',",
+          "      'Create Complaint': 'createdComplaintId',",
+          "      'Create Quote': 'createdQuoteId',",
+          "      'Complete Order': 'createdOrderId',",
+          "      'Create Contract': 'createdContractId',",
+          "      'Create Payment': 'createdPaymentId',",
+          "      'Create Delivery': 'createdDeliveryId',",
+          "      'Create Promotion': 'createdPromotionId',",
+          "      'Create Admin User': 'managedUserId'",
+          "    };",
+          "",
           "    const variableName = idVariables[requestName];",
-          "    if (variableName && pm.response.code < 300 && body && typeof body === 'object') {",
-          "      const id = body.id || body.userId || body.vehicleId || body.dealerId || body.customerId || body.testDriveId || body.complaintId || body.quoteId || body.orderId || body.contractId || body.paymentId || body.deliveryId || body.promotionId;",
-          "      if (id !== undefined && id !== null) pm.collectionVariables.set(variableName, id);",
+          "",
+          "    /**",
+          "     * Lưu ID tài nguyên vừa tạo.",
+          "     */",
+          "    if (",
+          "      variableName &&",
+          "      pm.response.code < 300 &&",
+          "      body &&",
+          "      typeof body === 'object'",
+          "    ) {",
+          "      const id =",
+          "        body.id ??",
+          "        body.userId ??",
+          "        body.vehicleId ??",
+          "        body.dealerId ??",
+          "        body.customerId ??",
+          "        body.testDriveId ??",
+          "        body.complaintId ??",
+          "        body.quoteId ??",
+          "        body.orderId ??",
+          "        body.contractId ??",
+          "        body.paymentId ??",
+          "        body.deliveryId ??",
+          "        body.promotionId ??",
+          "        body.data?.id ??",
+          "        body.data?.userId ??",
+          "        body.data?.vehicleId ??",
+          "        body.data?.dealerId ??",
+          "        body.data?.customerId ??",
+          "        body.data?.testDriveId ??",
+          "        body.data?.complaintId ??",
+          "        body.data?.quoteId ??",
+          "        body.data?.orderId ??",
+          "        body.data?.contractId ??",
+          "        body.data?.paymentId ??",
+          "        body.data?.deliveryId ??",
+          "        body.data?.promotionId;",
+          "",
+          "      if (id !== undefined && id !== null) {",
+          "        pm.collectionVariables.set(variableName, id);",
+          "      }",
+          "    }",
+          "",
+          "    /**",
+          "     * Nếu Create Admin User thành công, lưu thêm ID để Delete User dùng.",
+          "     */",
+          "    if (",
+          "      requestName === 'Create Admin User' &&",
+          "      pm.response.code < 300 &&",
+          "      body &&",
+          "      typeof body === 'object'",
+          "    ) {",
+          "      const createdUserId =",
+          "        body.id ??",
+          "        body.userId ??",
+          "        body.data?.id ??",
+          "        body.data?.userId;",
+          "",
+          "      if (createdUserId !== undefined && createdUserId !== null) {",
+          "        pm.collectionVariables.set('managedUserId', createdUserId);",
+          "        pm.collectionVariables.set('deleteUserId', createdUserId);",
+          "      }",
           "    }",
           "  } catch (error) {",
-          "    // JSON parse already covered above.",
+          "    console.warn(",
+          "      'Unable to parse or process JSON for request:',",
+          "      requestName,",
+          "      error",
+          "    );",
           "  }",
           "}"
         ]
@@ -80,910 +3532,17 @@
     }
   ],
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:5036" },
-    { "key": "gatewayUrl", "value": "http://localhost:5036" },
-    { "key": "userServiceUrl", "value": "http://localhost:7001" },
-    { "key": "vehicleServiceUrl", "value": "http://localhost:5068" },
-    { "key": "customerServiceUrl", "value": "http://localhost:5039" },
-    { "key": "salesServiceUrl", "value": "http://localhost:5003" },
-    { "key": "notificationServiceUrl", "value": "http://localhost:5051" },
-    { "key": "reportingServiceUrl", "value": "http://localhost:5208" },
-    { "key": "authToken", "value": "" },
-    { "key": "userId", "value": "1" },
-    { "key": "dealerId", "value": "1" },
-    { "key": "vehicleId", "value": "1" },
-    { "key": "customerId", "value": "1" },
-    { "key": "testDriveId", "value": "1" },
-    { "key": "complaintId", "value": "1" },
-    { "key": "quoteId", "value": "1" },
-    { "key": "orderId", "value": "1" },
-    { "key": "contractId", "value": "1" },
-    { "key": "reportFrom", "value": "2026-01-01" },
-    { "key": "reportTo", "value": "2026-12-31" },
-    { "key": "topic", "value": "ev-dealer-updates" },
-    { "key": "deviceToken", "value": "sample-device-token" }
-  ],
-  "item": [
     {
-      "name": "Auth & Users",
-      "item": [
-        {
-          "name": "Login",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"P@ssw0rd!\"\n}" },
-            "url": "{{baseUrl}}/api/auth/login",
-            "event": [
-              {
-                "listen": "test",
-                "script": {
-                  "type": "text/javascript",
-                  "exec": [
-                    "pm.test('Login succeeds', function () {",
-                    "  pm.response.to.have.status(200);",
-                    "});",
-                    "let response = {};",
-                    "try { response = pm.response.json(); } catch (error) { response = {}; }",
-                    "const token = response.accessToken || response.token || response.access_token || response.result?.accessToken || response.data?.accessToken || response.data?.token;",
-                    "if (token) {",
-                    "  pm.collectionVariables.set('authToken', token);",
-                    "  pm.environment.set('authToken', token);",
-                    "}"
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "name": "Register",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"sales{{$timestamp}}\",\n  \"email\": \"sales{{$timestamp}}@example.com\",\n  \"fullName\": \"Sales User\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"DealerStaff\",\n  \"dealerId\": {{dealerId}}\n}" },
-            "url": "{{baseUrl}}/api/auth/register"
-          }
-        },
-        {
-          "name": "Forgot Password",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"email\": \"nobody@example.invalid\"\n}" },
-            "url": "{{baseUrl}}/api/auth/forgot-password"
-          }
-        },
-        {
-          "name": "Reset Password - Invalid Token",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"token\": \"reset-token\",\n  \"newPassword\": \"NewP@ssw0rd!\"\n}" },
-            "url": "{{baseUrl}}/api/auth/reset-password"
-          }
-        },
-        {
-          "name": "Login - Invalid Password",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"wrong-password\"\n}" },
-            "url": "{{baseUrl}}/api/auth/login"
-          }
-        },
-        {
-          "name": "Login - Empty Password",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"\"\n}" },
-            "url": "{{baseUrl}}/api/auth/login"
-          }
-        },
-        {
-          "name": "Register - Invalid Email",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"sales02\",\n  \"email\": \"abc\",\n  \"fullName\": \"Sales 02\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"Sales\",\n  \"dealerId\": {{dealerId}}\n}" },
-            "url": "{{baseUrl}}/api/auth/register"
-          }
-        },
-        {
-          "name": "Register - Empty Email",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"sales03\",\n  \"email\": \"\",\n  \"fullName\": \"Sales 03\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"Sales\",\n  \"dealerId\": {{dealerId}}\n}" },
-            "url": "{{baseUrl}}/api/auth/register"
-          }
-        },
-        {
-          "name": "Get Me",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
-            "url": "{{baseUrl}}/api/users/me"
-          }
-        },
-        {
-          "name": "List Users",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
-            "url": "{{baseUrl}}/api/users"
-          }
-        },
-        {
-          "name": "Create Admin User",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"staff{{$timestamp}}\",\n  \"email\": \"staff{{$timestamp}}@example.com\",\n  \"fullName\": \"Staff 01\",\n  \"password\": \"P@ssw0rd!\",\n  \"role\": \"DealerStaff\",\n  \"dealerId\": {{dealerId}}\n}" },
-            "url": "{{baseUrl}}/api/admin/users"
-          }
-        },
-        {
-          "name": "Get User By Id",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
-            "url": "{{baseUrl}}/api/users/{{managedUserId}}"
-          }
-        },
-        {
-          "name": "Update User",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"email\": \"updated@example.com\",\n  \"fullName\": \"Updated Name\"\n}" },
-            "url": "{{baseUrl}}/api/users/{{deleteUserId}}"
-          }
-        },
-        {
-          "name": "Delete User",
-          "request": {
-            "method": "DELETE",
-            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
-            "url": "{{baseUrl}}/api/users/{{deleteUserId}}"
-          }
-        },
-        {
-          "name": "Change Role",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"role\": \"DealerManager\"\n}" },
-            "url": "{{baseUrl}}/api/users/{{managedUserId}}/role"
-          }
-        },
-        {
-          "name": "Approve User",
-          "request": {
-            "method": "PUT",
-            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
-            "url": "{{baseUrl}}/api/users/{{managedUserId}}/approve"
-          }
-        },
-        {
-          "name": "List Dealers (UserService)",
-          "request": { "method": "GET", "url": "{{baseUrl}}/api/dealers" }
-        },
-        {
-          "name": "Internal Users",
-          "request": { "method": "GET", "url": "{{userServiceUrl}}/api/internal/users" }
-        }
-      ]
+      "key": "baseUrl",
+      "value": ""
     },
     {
-      "name": "Vehicles & Dealers",
-      "item": [
-        { "name": "Get Vehicles", "request": { "method": "GET", "url": "{{baseUrl}}/api/vehicles?page=1&pageSize=10" } },
-        { "name": "Get Vehicle By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}" } },
-        {
-          "name": "Create Vehicle",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": 1200000000,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": 5,\n  \"Description\": \"Demo vehicle\",\n  \"DealerId\": {{dealerId}}\n}" },
-            "url": "{{baseUrl}}/api/vehicles"
-          }
-        },
-        {
-          "name": "Create Vehicle - Price -1",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": -1,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": 5,\n  \"Description\": \"Demo vehicle\",\n  \"DealerId\": {{dealerId}}\n}" },
-            "url": "{{baseUrl}}/api/vehicles"
-          }
-        },
-        {
-          "name": "Create Vehicle - Price 0",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": 0,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": 5,\n  \"Description\": \"Demo vehicle\",\n  \"DealerId\": {{dealerId}}\n}" },
-            "url": "{{baseUrl}}/api/vehicles"
-          }
-        },
-        {
-          "name": "Create Vehicle - Stock -1",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": 1200000000,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": -1,\n  \"Description\": \"Demo vehicle\",\n  \"DealerId\": {{dealerId}}\n}" },
-            "url": "{{baseUrl}}/api/vehicles"
-          }
-        },
-        {
-          "name": "Create Vehicle - Missing DealerId",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"Model\": \"VinFast VF 8\",\n  \"Type\": \"SUV\",\n  \"Price\": 1200000000,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 420,\n  \"StockQuantity\": 5,\n  \"Description\": \"Demo vehicle\"\n}" },
-            "url": "{{baseUrl}}/api/vehicles"
-          }
-        },
-        {
-          "name": "Update Vehicle",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"Model\": \"VinFast VF 8 Plus\",\n  \"Type\": \"SUV\",\n  \"Price\": 1300000000,\n  \"BatteryCapacity\": 87.7,\n  \"Range\": 450,\n  \"StockQuantity\": 4,\n  \"Description\": \"Updated vehicle\",\n  \"DealerId\": {{dealerId}}\n}" },
-            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}"
-          }
-        },
-        { "name": "Delete Vehicle", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }], "url": "{{baseUrl}}/api/vehicles/{{deleteVehicleId}}" } },
-        {
-          "name": "Reserve Vehicle",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"customerName\": \"Nguyen Van A\",\n  \"customerEmail\": \"customer@example.com\",\n  \"customerPhone\": \"+84912345678\",\n  \"colorVariantId\": 1,\n  \"notes\": \"Reserve for demo\",\n  \"quantity\": 1,\n  \"deviceToken\": \"{{deviceToken}}\"\n}" },
-            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}/reserve"
-          }
-        },
-        {
-          "name": "Reserve Vehicle - Quantity 0",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"customerName\": \"Nguyen Van A\",\n  \"customerEmail\": \"customer@example.com\",\n  \"customerPhone\": \"+84912345678\",\n  \"colorVariantId\": 1,\n  \"notes\": \"Reserve for demo\",\n  \"quantity\": 0,\n  \"deviceToken\": \"{{deviceToken}}\"\n}" },
-            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}/reserve"
-          }
-        },
-        {
-          "name": "Reserve Vehicle - Quantity 101",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"customerName\": \"Nguyen Van A\",\n  \"customerEmail\": \"customer@example.com\",\n  \"customerPhone\": \"+84912345678\",\n  \"colorVariantId\": 1,\n  \"notes\": \"Reserve for demo\",\n  \"quantity\": 101,\n  \"deviceToken\": \"{{deviceToken}}\"\n}" },
-            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}/reserve"
-          }
-        },
-        {
-          "name": "Reserve Vehicle - Invalid Email",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"customerName\": \"Nguyen Van A\",\n  \"customerEmail\": \"customer@example\",\n  \"customerPhone\": \"abc\",\n  \"colorVariantId\": 1,\n  \"notes\": \"Reserve for demo\",\n  \"quantity\": 1,\n  \"deviceToken\": \"{{deviceToken}}\"\n}" },
-            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}/reserve"
-          }
-        },
-        { "name": "List Dealers", "request": { "method": "GET", "url": "{{baseUrl}}/api/dealers" } },
-        { "name": "Get Dealer By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/dealers/{{dealerId}}" } },
-        {
-          "name": "Create Dealer",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"name\": \"VinFast Ha Noi\",\n  \"region\": \"Ha Noi\",\n  \"contact\": \"0900000000\",\n  \"email\": \"dealer@example.com\",\n  \"address\": \"123 Demo Street\"\n}" },
-            "url": "{{baseUrl}}/api/dealers"
-          }
-        },
-        {
-          "name": "Update Dealer",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"name\": \"VinFast Ha Noi Updated\",\n  \"region\": \"Ha Noi\",\n  \"contact\": \"0900000001\",\n  \"email\": \"dealer.updated@example.com\",\n  \"address\": \"456 Demo Street\"\n}" },
-            "url": "{{baseUrl}}/api/dealers/{{dealerId}}"
-          }
-        },
-        { "name": "Delete Dealer", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }], "url": "{{baseUrl}}/api/dealers/{{deleteDealerId}}" } },
-        { "name": "Vehicle Types", "request": { "method": "GET", "url": "{{baseUrl}}/api/vehicletypes" } },
-        { "name": "Vehicle Health", "request": { "method": "GET", "url": "{{vehicleServiceUrl}}/api/Health" } },
-        { "name": "Export Vehicles CSV", "request": { "method": "GET", "url": "{{vehicleServiceUrl}}/api/Export/vehicles/csv" } },
-        { "name": "Export Vehicles JSON", "request": { "method": "GET", "url": "{{vehicleServiceUrl}}/api/Export/vehicles/json" } },
-        { "name": "Static Image - Not Found", "request": { "method": "GET", "url": "{{baseUrl}}/images/sample.jpg" } }
-      ]
+      "key": "futureAppointmentDate",
+      "value": ""
     },
     {
-      "name": "Customers & Test Drives",
-      "item": [
-        { "name": "Get Customers", "request": { "method": "GET", "url": "{{baseUrl}}/api/customers" } },
-        { "name": "Get Customer By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/customers/{{customerId}}" } },
-        {
-          "name": "Create Customer",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Nguyen Van B\",\n  \"email\": \"manual.customer+{{$timestamp}}@example.com\",\n  \"phone\": \"+84923456789\",\n  \"address\": \"Ha Noi\",\n  \"dealerId\": {{dealerId}},\n  \"status\": \"active\"\n}" },
-            "url": "{{baseUrl}}/api/customers"
-          }
-        },
-        {
-          "name": "Create Customer - Invalid Email",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Nguyen Van B\",\n  \"email\": \"abc\",\n  \"phone\": \"+84923456789\",\n  \"address\": \"Ha Noi\",\n  \"dealerId\": {{dealerId}},\n  \"status\": \"active\"\n}" },
-            "url": "{{baseUrl}}/api/customers"
-          }
-        },
-        {
-          "name": "Create Customer - Missing DealerId",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Nguyen Van B\",\n  \"email\": \"customer@example.com\",\n  \"phone\": \"+84923456789\",\n  \"address\": \"Ha Noi\",\n  \"status\": \"active\"\n}" },
-            "url": "{{baseUrl}}/api/customers"
-          }
-        },
-        {
-          "name": "Update Customer",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Nguyen Van B Updated\",\n  \"email\": \"customer.updated+{{$timestamp}}@example.com\",\n  \"phone\": \"+84923456780\",\n  \"address\": \"Hai Phong\",\n  \"dealerId\": {{dealerId}},\n  \"status\": \"active\"\n}" },
-            "url": "{{baseUrl}}/api/customers/{{customerId}}"
-          }
-        },
-        { "name": "Delete Customer", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }], "url": "{{baseUrl}}/api/customers/{{deleteCustomerId}}" } },
-        { "name": "Get Test Drives", "request": { "method": "GET", "url": "{{baseUrl}}/api/TestDrives" } },
-        { "name": "Get Test Drives By Customer", "request": { "method": "GET", "url": "{{baseUrl}}/api/TestDrives/customer/{{customerId}}" } },
-        { "name": "Get Test Drive By Id", "request": { "method": "GET", "url": "{{customerServiceUrl}}/api/TestDrives/{{testDriveId}}" } },
-        {
-          "name": "Create Test Drive",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"customerId\": {{customerId}},\n  \"vehicleId\": {{vehicleId}},\n  \"dealerId\": {{dealerId}},\n  \"appointmentDate\": \"{{futureAppointmentDate}}\",\n  \"notes\": \"Morning slot\",\n  \"status\": \"Scheduled\"\n}" },
-            "url": "{{baseUrl}}/api/TestDrives"
-          }
-        },
-        {
-          "name": "Create Test Drive - Past Date",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"customerId\": {{customerId}},\n  \"vehicleId\": {{vehicleId}},\n  \"dealerId\": {{dealerId}},\n  \"appointmentDate\": \"2020-01-01T09:00:00Z\",\n  \"notes\": \"Past slot\",\n  \"status\": \"Scheduled\"\n}" },
-            "url": "{{baseUrl}}/api/TestDrives"
-          }
-        },
-        {
-          "name": "Create Test Drive - Empty Appointment Date",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"customerId\": {{customerId}},\n  \"vehicleId\": {{vehicleId}},\n  \"dealerId\": {{dealerId}},\n  \"appointmentDate\": \"\",\n  \"notes\": \"Empty date\",\n  \"status\": \"Scheduled\"\n}" },
-            "url": "{{baseUrl}}/api/TestDrives"
-          }
-        },
-        {
-          "name": "Update Test Drive",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"appointmentDate\": \"2026-06-02T10:00:00Z\",\n  \"status\": \"Completed\",\n  \"notes\": \"Completed demo\"\n}" },
-            "url": "{{customerServiceUrl}}/api/TestDrives/{{testDriveId}}"
-          }
-        },
-        { "name": "Delete Test Drive", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }], "url": "{{customerServiceUrl}}/api/TestDrives/{{testDriveId}}" } }
-      ]
-    },
-    {
-      "name": "Complaints",
-      "item": [
-        { "name": "Get Complaints", "request": { "method": "GET", "url": "{{customerServiceUrl}}/api/Complaints" } },
-        { "name": "Get Complaint By Id", "request": { "method": "GET", "url": "{{customerServiceUrl}}/api/Complaints/{{complaintId}}" } },
-        {
-          "name": "Create Complaint",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"customerId\": {{customerId}},\n  \"type\": \"Bao hanh\",\n  \"title\": \"Remote not working\",\n  \"description\": \"Customer reports a broken remote\",\n  \"assignedToStaffID\": 10,\n  \"priority\": \"High\",\n  \"relatedOrderID\": {{orderId}},\n  \"relatedVehicleID\": {{vehicleId}}\n}" },
-            "url": "{{customerServiceUrl}}/api/Complaints"
-          }
-        },
-        {
-          "name": "Create Complaint - Missing Description",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"customerId\": {{customerId}},\n  \"type\": \"Bao hanh\",\n  \"title\": \"Remote not working\",\n  \"assignedToStaffID\": 10,\n  \"priority\": \"High\",\n  \"relatedOrderID\": {{orderId}},\n  \"relatedVehicleID\": {{vehicleId}}\n}" },
-            "url": "{{customerServiceUrl}}/api/Complaints"
-          }
-        },
-        {
-          "name": "Create Complaint - Invalid CustomerId",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"customerId\": 0,\n  \"type\": \"Bao hanh\",\n  \"title\": \"Remote not working\",\n  \"description\": \"Customer reports a broken remote\",\n  \"assignedToStaffID\": 10,\n  \"priority\": \"High\",\n  \"relatedOrderID\": {{orderId}},\n  \"relatedVehicleID\": {{vehicleId}}\n}" },
-            "url": "{{customerServiceUrl}}/api/Complaints"
-          }
-        },
-        {
-          "name": "Update Complaint",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": { "mode": "raw", "raw": "{\n  \"type\": \"Bao hanh\",\n  \"title\": \"Remote not working - updated\",\n  \"description\": \"Updated description\",\n  \"status\": \"In Progress\",\n  \"resolution\": \"Under investigation\",\n  \"assignedToStaffID\": 10,\n  \"priority\": \"High\",\n  \"relatedOrderID\": {{orderId}},\n  \"relatedVehicleID\": {{vehicleId}}\n}" },
-            "url": "{{customerServiceUrl}}/api/Complaints/{{complaintId}}"
-          }
-        },
-        { "name": "Delete Complaint", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }], "url": "{{customerServiceUrl}}/api/Complaints/{{complaintId}}" } }
-      ]
-    },
-    {
-      "name": "Sales Core",
-      "item": [
-        {
-          "name": "Quotes",
-          "item": [
-            { "name": "Get Quotes", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Quotes" } },
-            { "name": "Get Quote By Id", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Quotes/{{quoteId}}" } },
-            {
-              "name": "Create Quote",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"customerId\": {{customerId}},\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"vehicleId\": {{vehicleId}},\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"totalPrice\": 1200000000,\n  \"status\": \"Active\",\n  \"notes\": \"Demo quote\"\n}" },
-                "url": "{{salesServiceUrl}}/api/Quotes"
-              }
-            },
-            {
-              "name": "Create Quote - Quantity 0",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"customerId\": {{customerId}},\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"vehicleId\": {{vehicleId}},\n  \"colorId\": 1,\n  \"quantity\": 0,\n  \"unitPrice\": 1200000000,\n  \"totalPrice\": 0,\n  \"status\": \"Active\",\n  \"notes\": \"Demo quote\"\n}" },
-                "url": "{{salesServiceUrl}}/api/Quotes"
-              }
-            },
-            {
-              "name": "Create Quote - Quantity 101",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"customerId\": {{customerId}},\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"vehicleId\": {{vehicleId}},\n  \"colorId\": 1,\n  \"quantity\": 101,\n  \"unitPrice\": 1200000000,\n  \"totalPrice\": 1200000000,\n  \"status\": \"Active\",\n  \"notes\": \"Demo quote\"\n}" },
-                "url": "{{salesServiceUrl}}/api/Quotes"
-              }
-            },
-            {
-              "name": "Update Quote Status",
-              "request": {
-                "method": "PUT",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"status\": \"ConvertedToOrder\"\n}" },
-                "url": "{{salesServiceUrl}}/api/Quotes/{{quoteId}}/status"
-              }
-            }
-          ]
-        },
-        {
-          "name": "Orders",
-          "item": [
-            {
-              "name": "Complete Order",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": {{customerId}},\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Nguyen Van B\",\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"paymentMethod\": \"Cash\",\n  \"deliveryDate\": \"2026-06-10T09:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"notes\": \"Complete order demo\",\n  \"paymentType\": \"Full\",\n  \"depositAmount\": 0,\n  \"interestRateYearly\": 0,\n  \"loanTermMonths\": 0,\n  \"vehicleId\": {{vehicleId}},\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"totalAmount\": 1200000000,\n  \"promotionId\": null,\n  \"discountAmount\": 0,\n  \"discountPercent\": 0,\n  \"discountNote\": \"\"\n}" },
-                "url": "{{baseUrl}}/api/Orders/complete"
-              }
-            },
-            { "name": "Get Orders", "request": { "method": "GET", "url": "{{baseUrl}}/api/Orders" } },
-            { "name": "Get Order By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/Orders/{{orderId}}" } },
-            {
-              "name": "Complete Order - Missing CustomerName",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": {{customerId}},\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"\",\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"paymentMethod\": \"Cash\",\n  \"deliveryDate\": \"2026-06-10T09:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"notes\": \"Complete order demo\",\n  \"paymentType\": \"Full\",\n  \"depositAmount\": 0,\n  \"interestRateYearly\": 0,\n  \"loanTermMonths\": 0,\n  \"vehicleId\": {{vehicleId}},\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"totalAmount\": 1200000000,\n  \"promotionId\": null,\n  \"discountAmount\": 0,\n  \"discountPercent\": 0,\n  \"discountNote\": \"\"\n}" },
-                "url": "{{baseUrl}}/api/Orders/complete"
-              }
-            },
-            {
-              "name": "Complete Order - Invalid Email",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": {{customerId}},\n  \"customerEmail\": \"not-an-email\",\n  \"customerName\": \"Nguyen Van B\",\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"paymentMethod\": \"Cash\",\n  \"deliveryDate\": \"2026-06-10T09:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"notes\": \"Complete order demo\",\n  \"paymentType\": \"Full\",\n  \"depositAmount\": 0,\n  \"interestRateYearly\": 0,\n  \"loanTermMonths\": 0,\n  \"vehicleId\": {{vehicleId}},\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"totalAmount\": 1200000000,\n  \"promotionId\": null,\n  \"discountAmount\": 0,\n  \"discountPercent\": 0,\n  \"discountNote\": \"\"\n}" },
-                "url": "{{baseUrl}}/api/Orders/complete"
-              }
-            },
-            {
-              "name": "Complete Order - TotalAmount 0",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"quoteId\": {{quoteId}},\n  \"customerId\": {{customerId}},\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Nguyen Van B\",\n  \"dealerId\": {{dealerId}},\n  \"salespersonId\": 1,\n  \"paymentMethod\": \"Cash\",\n  \"deliveryDate\": \"2026-06-10T09:00:00Z\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"notes\": \"Complete order demo\",\n  \"paymentType\": \"Full\",\n  \"depositAmount\": 0,\n  \"interestRateYearly\": 0,\n  \"loanTermMonths\": 0,\n  \"vehicleId\": {{vehicleId}},\n  \"vehicleVariantId\": 1,\n  \"colorId\": 1,\n  \"quantity\": 1,\n  \"unitPrice\": 1200000000,\n  \"totalAmount\": 0,\n  \"promotionId\": null,\n  \"discountAmount\": 0,\n  \"discountPercent\": 0,\n  \"discountNote\": \"\"\n}" },
-                "url": "{{baseUrl}}/api/Orders/complete"
-              }
-            },
-            {
-              "name": "Update Order Status",
-              "request": {
-                "method": "PUT",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"status\": \"ReadyForDelivery\"\n}" },
-                "url": "{{baseUrl}}/api/Orders/{{orderId}}/status"
-              }
-            }
-          ]
-        },
-        {
-          "name": "Contracts",
-          "item": [
-            { "name": "Get Contracts", "request": { "method": "GET", "url": "{{baseUrl}}/api/Contracts" } },
-            { "name": "Get Contract By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/Contracts/{{contractId}}" } },
-            {
-              "name": "Create Contract",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-            "body": { "mode": "raw", "raw": "{\n  \"orderId\": {{newContractOrderId}},\n  \"customerId\": {{customerId}},\n  \"salespersonId\": \"1\",\n  \"contractDate\": \"2026-06-10T09:00:00Z\",\n  \"depositAmountReceived\": true,\n  \"termsAndConditions\": \"Demo contract\"\n}" },
-                "url": "{{baseUrl}}/api/Contracts"
-              }
-            },
-            {
-              "name": "Update Contract Status",
-              "request": {
-                "method": "PUT",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"status\": \"Approved\"\n}" },
-                "url": "{{baseUrl}}/api/Contracts/{{contractId}}/status"
-              }
-            }
-          ]
-        },
-        {
-          "name": "Payments",
-          "item": [
-            { "name": "Get Payments", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Payments" } },
-            {
-              "name": "Create Payment",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 1200000000,\n  \"paymentDate\": \"2026-06-10T09:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-001\",\n  \"notes\": \"Demo payment\"\n}" },
-                "url": "{{salesServiceUrl}}/api/Payments"
-              }
-            },
-            {
-              "name": "Create Payment - Amount 0",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 0,\n  \"paymentDate\": \"2026-06-10T09:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-001\",\n  \"notes\": \"Demo payment\"\n}" },
-                "url": "{{salesServiceUrl}}/api/Payments"
-              }
-            },
-            {
-              "name": "Create Payment - Amount -1",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": -1,\n  \"paymentDate\": \"2026-06-10T09:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-001\",\n  \"notes\": \"Demo payment\"\n}" },
-                "url": "{{salesServiceUrl}}/api/Payments"
-              }
-            }
-          ]
-        },
-        {
-          "name": "Deliveries",
-          "item": [
-            { "name": "Get Deliveries", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Deliveries" } },
-            {
-              "name": "Create Delivery",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"trackingNumber\": \"TRK-001\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"status\": \"Scheduled\",\n  \"notes\": \"Demo delivery\"\n}" },
-                "url": "{{salesServiceUrl}}/api/Deliveries"
-              }
-            },
-            {
-              "name": "Create Delivery - Missing Estimated Date",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"trackingNumber\": \"TRK-002\",\n  \"status\": \"Scheduled\",\n  \"notes\": \"Demo delivery\"\n}" },
-                "url": "{{salesServiceUrl}}/api/Deliveries"
-              }
-            },
-            {
-              "name": "Create Delivery - Empty Status",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"trackingNumber\": \"TRK-003\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"status\": \"\",\n  \"notes\": \"Demo delivery\"\n}" },
-                "url": "{{salesServiceUrl}}/api/Deliveries"
-              }
-            }
-          ]
-        },
-        {
-          "name": "Promotions",
-          "item": [
-            { "name": "Get Promotions", "request": { "method": "GET", "url": "{{salesServiceUrl}}/api/Promotions" } },
-            {
-              "name": "Create Promotion",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"name\": \"SUMMER2026\",\n  \"description\": \"Summer promotion\",\n  \"discountType\": \"Percent\",\n  \"discountValue\": 10,\n  \"startDate\": \"2026-06-01T00:00:00Z\",\n  \"endDate\": \"2026-08-31T23:59:59Z\"\n}" },
-                "url": "{{salesServiceUrl}}/api/Promotions"
-              }
-            },
-            {
-              "name": "Create Promotion - Discount 0",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"name\": \"SUMMER2026\",\n  \"description\": \"Summer promotion\",\n  \"discountType\": \"Percent\",\n  \"discountValue\": 0,\n  \"startDate\": \"2026-06-01T00:00:00Z\",\n  \"endDate\": \"2026-08-31T23:59:59Z\"\n}" },
-                "url": "{{salesServiceUrl}}/api/Promotions"
-              }
-            },
-            {
-              "name": "Create Promotion - Discount -1",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
-                ],
-                "body": { "mode": "raw", "raw": "{\n  \"name\": \"SUMMER2026\",\n  \"description\": \"Summer promotion\",\n  \"discountType\": \"Percent\",\n  \"discountValue\": -1,\n  \"startDate\": \"2026-06-01T00:00:00Z\",\n  \"endDate\": \"2026-08-31T23:59:59Z\"\n}" },
-                "url": "{{salesServiceUrl}}/api/Promotions"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Reports",
-      "item": [
-        { "name": "Demand Forecast", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/demand-forecast?from={{reportFrom}}&to={{reportTo}}" } },
-        { "name": "Demand Forecast - Invalid From", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/demand-forecast?from=abc&to={{reportTo}}" } },
-        { "name": "Synchronize Data", "request": { "method": "POST", "url": "{{reportingServiceUrl}}/api/reports/synchronize-data" } },
-        { "name": "Debt Summary", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/debt-summary?dealerId={{dealerId}}&customerId={{customerId}}&from={{reportFrom}}&to={{reportTo}}" } },
-        { "name": "Debt Report", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/debt-report?dealerId={{dealerId}}&from={{reportFrom}}&to={{reportTo}}" } },
-        { "name": "Sales By Dealer", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/sales-by-dealer?dealerId={{dealerId}}&period=month" } },
-        { "name": "Inventory Trends", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/inventory-trends" } },
-        { "name": "Sales By Staff", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/sales-by-staff?from={{reportFrom}}&to={{reportTo}}" } },
-        { "name": "Summary", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/summary?type=sales&from={{reportFrom}}&to={{reportTo}}" } },
-        { "name": "Sales By Region", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/sales-by-region?from={{reportFrom}}&to={{reportTo}}" } },
-        { "name": "Sales Proportion", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/sales-proportion?from={{reportFrom}}&to={{reportTo}}" } },
-        { "name": "Top Vehicles", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/top-vehicles?limit=10" } },
-        { "name": "Top Vehicles - Limit 0", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/top-vehicles?limit=0" } },
-        { "name": "Top Vehicles - Limit -1", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/top-vehicles?limit=-1" } },
-        {
-          "name": "Export Report",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"type\": \"sales\",\n  \"from\": \"{{reportFrom}}\",\n  \"to\": \"{{reportTo}}\"\n}" },
-            "url": "{{reportingServiceUrl}}/api/reports/export"
-          }
-        },
-        {
-          "name": "Export Report - Invalid Type",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"type\": \"\",\n  \"from\": \"{{reportFrom}}\",\n  \"to\": \"{{reportTo}}\"\n}" },
-            "url": "{{reportingServiceUrl}}/api/reports/export"
-          }
-        },
-        { "name": "Sales Summary", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/sales-summary?dealerId={{dealerId}}&fromDate={{reportFrom}}&toDate={{reportTo}}" } },
-        { "name": "Sales Summary - Invalid Dates", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/sales-summary?dealerId={{dealerId}}&fromDate=abc&toDate=abc" } },
-        { "name": "Inventory Summary", "request": { "method": "GET", "url": "{{reportingServiceUrl}}/api/reports/inventory-summary?dealerId={{dealerId}}&vehicleId={{vehicleId}}" } }
-      ]
-    },
-    {
-      "name": "Notifications",
-      "item": [
-        {
-          "name": "Test FCM",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"deviceToken\": \"{{deviceToken}}\",\n  \"title\": \"Test notification\",\n  \"body\": \"Hello from Postman\",\n  \"data\": { \"source\": \"postman\" }\n}" },
-            "url": "{{notificationServiceUrl}}/api/notification/test-fcm"
-          }
-        },
-        {
-          "name": "Subscribe Topic",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"deviceToken\": \"{{deviceToken}}\",\n  \"topic\": \"{{topic}}\"\n}" },
-            "url": "{{notificationServiceUrl}}/api/notification/subscribe-topic"
-          }
-        },
-        {
-          "name": "Unsubscribe Topic",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"deviceToken\": \"{{deviceToken}}\",\n  \"topic\": \"{{topic}}\"\n}" },
-            "url": "{{notificationServiceUrl}}/api/notification/unsubscribe-topic"
-          }
-        },
-        {
-          "name": "Send To Topic",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"topic\": \"{{topic}}\",\n  \"title\": \"Broadcast\",\n  \"body\": \"Hello topic\",\n  \"data\": { \"source\": \"postman\" }\n}" },
-            "url": "{{notificationServiceUrl}}/api/notification/send-to-topic"
-          }
-        },
-        {
-          "name": "Send Multicast",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"deviceTokens\": [\"{{deviceToken}}\"],\n  \"title\": \"Multicast\",\n  \"body\": \"Hello multiple devices\",\n  \"data\": { \"source\": \"postman\" }\n}" },
-            "url": "{{notificationServiceUrl}}/api/notification/send-multicast"
-          }
-        }
-      ]
+      "key": "accessToken",
+      "value": ""
     }
   ]
 }
-
-

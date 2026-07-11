@@ -8,6 +8,7 @@ Logs/
 *.db
 *.db-shm
 *.db-wal
+*.db-journal
 **/TestResults/
 blackbox_output.txt
 req.json
