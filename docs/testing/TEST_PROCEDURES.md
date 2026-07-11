@@ -93,6 +93,8 @@ newman run ./ev-dealer-management.postman_collection.json \
 
 The collection-level test script is inherited by every request. It asserts the expected status for the named happy/negative case, rejects every HTTP 500 response, checks response time, validates JSON content type/body, and records created resource IDs when available. Any failed assertion makes Newman and CI exit non-zero. GitHub Actions uploads `newman.log`, JUnit XML, and the HTML report with `if: always()`.
 
+The CI collection contains only active endpoints. `ProcessedReservations` is excluded while its controller remains commented out. Successful update requests for customers, test drives, complaints, and quote status are expected to return `204` and must not run JSON-body assertions. Validation errors may use either `application/json` or an RFC 7807 media type ending in `+json`. CSV, binary, image, empty-body, and `204` responses are not parsed as JSON.
+
 Evidence levels must not be mixed:
 
 - Markdown/Excel: test-case design only.

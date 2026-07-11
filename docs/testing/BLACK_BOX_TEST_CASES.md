@@ -2,7 +2,20 @@
 
 ## Executable test evidence
 
-This file and `TEST_CASE_SPECIFICATION.xlsx` describe test-case design; they do not prove execution by themselves. The CI source of truth is the root `ev-dealer-management.postman_collection.json`. Its collection-level `pm.test()` script runs after every one of the 121 requests and asserts expected status, rejects HTTP 500, checks response time, validates JSON responses, and captures created IDs where available.
+This file and `TEST_CASE_SPECIFICATION.xlsx` describe test-case design; they do not prove execution by themselves. The CI source of truth is the root `ev-dealer-management.postman_collection.json`. Its collection-level `pm.test()` script runs after every one of the 116 active requests and asserts expected status, rejects HTTP 500, checks response time, validates JSON responses, and captures created IDs where available.
+
+The five `ProcessedReservations` requests were removed from the CI collection because `ProcessedReservationsController.cs` is commented out and exposes no active route. They are classified as inactive endpoints, not passing happy-path tests.
+
+Contract corrections applied during assertion-failure review:
+
+- Customer, test-drive, complaint, and quote-status updates return `204 No Content`.
+- RFC 7807 `application/problem+json` is a valid JSON media type for validation errors.
+- Dealer IDs must be positive; test-drive appointments must be in the future.
+- Quote quantity must be between 1 and 100 and is bound from the JSON request body.
+- Order email must be valid and total amount must be positive.
+- Delivery estimated date is required; report dates, limits, and export types are validated.
+
+These are expected behaviors. Do not mark their cases PASS until a real Newman/CI run confirms the actual results.
 
 Execution evidence is produced by `.github/workflows/ci-jira.yml`:
 

@@ -51,6 +51,16 @@ namespace CustomerService.Controllers
         [HttpPost]
         public async Task<ActionResult<TestDriveDto>> PostTestDrive(CreateTestDriveRequest createTestDriveRequest)
         {
+            if (createTestDriveRequest.AppointmentDate <= DateTime.UtcNow)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Invalid appointment date",
+                    Detail = "AppointmentDate must be in the future.",
+                    Status = StatusCodes.Status400BadRequest
+                });
+            }
+
             var testDriveDto = await _testDriveService.CreateTestDriveAsync(createTestDriveRequest);
             if (testDriveDto == null)
             {

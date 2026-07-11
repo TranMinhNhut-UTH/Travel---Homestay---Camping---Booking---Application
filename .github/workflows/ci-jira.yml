@@ -423,7 +423,7 @@ jobs:
             customerId,
             vehicleId,
             dealerId: 1,
-            appointmentDate: '2026-06-01T09:00:00Z',
+            appointmentDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
             notes: 'CI seed test drive',
             status: 'Scheduled'
           });
