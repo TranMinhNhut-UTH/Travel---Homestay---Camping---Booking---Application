@@ -68,7 +68,18 @@ namespace SalesService.Controllers
             _context.Deliveries.Add(delivery);
             await _context.SaveChangesAsync();
 
-            var deliveryDto = new DeliveryDto { /* map properties */ };
+            var deliveryDto = new DeliveryDto
+            {
+                Id = delivery.DeliveryId,
+                OrderId = delivery.OrderId,
+                TrackingNumber = createDto.TrackingNumber ?? string.Empty,
+                EstimatedDeliveryDate = delivery.DeliveryDate ?? DateTime.MinValue,
+                ActualDeliveryDate = delivery.DeliveryDate,
+                Status = delivery.Status,
+                Notes = delivery.Notes,
+                CreatedAt = delivery.CreatedAt,
+                UpdatedAt = delivery.UpdatedAt
+            };
             return CreatedAtAction(nameof(GetDeliveries), new { id = delivery.DeliveryId }, deliveryDto);
         }
     }

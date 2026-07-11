@@ -123,8 +123,7 @@ namespace SalesService.Migrations
                 columns: table => new
                 {
                     DeliveryId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    OrderId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    OrderId1 = table.Column<int>(type: "INTEGER", nullable: true),
+                    OrderId = table.Column<int>(type: "INTEGER", nullable: false),
                     DeliveryDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Location = table.Column<string>(type: "TEXT", nullable: true),
                     Status = table.Column<string>(type: "TEXT", nullable: false),
@@ -138,8 +137,8 @@ namespace SalesService.Migrations
                 {
                     table.PrimaryKey("PK_Deliveries", x => x.DeliveryId);
                     table.ForeignKey(
-                        name: "FK_Deliveries_Orders_OrderId1",
-                        column: x => x.OrderId1,
+                        name: "FK_Deliveries_Orders_OrderId",
+                        column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "OrderId");
                 });
@@ -149,8 +148,7 @@ namespace SalesService.Migrations
                 columns: table => new
                 {
                     PaymentId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    OrderId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    OrderId1 = table.Column<int>(type: "INTEGER", nullable: true),
+                    OrderId = table.Column<int>(type: "INTEGER", nullable: false),
                     Amount = table.Column<decimal>(type: "TEXT", nullable: false),
                     Method = table.Column<string>(type: "TEXT", nullable: false),
                     Status = table.Column<string>(type: "TEXT", nullable: false),
@@ -164,8 +162,8 @@ namespace SalesService.Migrations
                 {
                     table.PrimaryKey("PK_Payments", x => x.PaymentId);
                     table.ForeignKey(
-                        name: "FK_Payments_Orders_OrderId1",
-                        column: x => x.OrderId1,
+                        name: "FK_Payments_Orders_OrderId",
+                        column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "OrderId");
                 });

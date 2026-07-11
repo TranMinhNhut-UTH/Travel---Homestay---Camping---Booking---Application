@@ -139,7 +139,7 @@ namespace SalesService.DTOs
 
     // --- DTOs for OTHER SERVICES (Restored & Corrected) ---
     public class CreateDeliveryDto {
-        [Required] public Guid OrderId { get; set; }
+        [Required] public int OrderId { get; set; }
         [Required, StringLength(100)] public string TrackingNumber { get; set; } = string.Empty;
         [Required] public DateTime EstimatedDeliveryDate { get; set; }
         public DateTime? ActualDeliveryDate { get; set; }
@@ -153,7 +153,7 @@ namespace SalesService.DTOs
     }
     public class DeliveryDto {
         public Guid Id { get; set; }
-        public Guid OrderId { get; set; }
+        public int OrderId { get; set; }
         public string TrackingNumber { get; set; } = string.Empty;
         public DateTime EstimatedDeliveryDate { get; set; }
         public DateTime? ActualDeliveryDate { get; set; }
@@ -163,7 +163,7 @@ namespace SalesService.DTOs
         public DateTime UpdatedAt { get; set; }
     }
     public class CreatePaymentDto {
-        [Required] public Guid OrderId { get; set; }
+        [Required] public int OrderId { get; set; }
         [Required, Range(0.01, 10000000000.00)] public decimal Amount { get; set; }
         [Required] public DateTime PaymentDate { get; set; } = DateTime.UtcNow;
         [Required, StringLength(50)] public string PaymentMethod { get; set; } = "Cash";
@@ -180,7 +180,7 @@ namespace SalesService.DTOs
     }
     public class PaymentDto {
         public Guid Id { get; set; }
-        public Guid OrderId { get; set; }
+        public int OrderId { get; set; }
         public decimal Amount { get; set; }
         public DateTime PaymentDate { get; set; }
         public string PaymentMethod { get; set; } = string.Empty;

@@ -1,4 +1,4 @@
-﻿{
+{
     "info":  {
                  "_postman_id":  "fb4d5057-9da4-425b-ad65-c20ca6970006",
                  "name":  "EV Dealer Management API",
@@ -4651,7 +4651,7 @@
                                                                  ],
                                                       "body":  {
                                                                    "mode":  "raw",
-                                                                   "raw":  "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 500000000,\n  \"paymentDate\": \"2026-09-01T00:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-P1-TEST\",\n  \"notes\": \"P1 happy path payment\"\n}"
+                                                                   "raw":  "{\n  \"orderId\": {{orderId}},\n  \"amount\": 500000000,\n  \"paymentDate\": \"2026-09-01T00:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-P1-TEST\",\n  \"notes\": \"P1 happy path payment\"\n}"
                                                                },
                                                       "url":  {
                                                                   "raw":  "{{salesUrl}}/api/Payments",
@@ -4737,7 +4737,7 @@
                                                                  ],
                                                       "body":  {
                                                                    "mode":  "raw",
-                                                                   "raw":  "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 0,\n  \"paymentDate\": \"2026-09-01T00:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\"\n}"
+                                                                   "raw":  "{\n  \"orderId\": {{orderId}},\n  \"amount\": 0,\n  \"paymentDate\": \"2026-09-01T00:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\"\n}"
                                                                },
                                                       "url":  {
                                                                   "raw":  "{{salesUrl}}/api/Payments",
@@ -4818,7 +4818,7 @@
                                                               },
                                                       "body":  {
                                                                    "mode":  "raw",
-                                                                   "raw":  "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": -1,\n  \"paymentDate\": \"2026-06-18T00:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\"\n}"
+                                                                   "raw":  "{\n  \"orderId\": {{orderId}},\n  \"amount\": -1,\n  \"paymentDate\": \"2026-06-18T00:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\"\n}"
                                                                }
                                                   },
                                       "event":  [
@@ -4857,7 +4857,7 @@
                                                               },
                                                       "body":  {
                                                                    "mode":  "raw",
-                                                                   "raw":  "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 9999999999999,\n  \"paymentDate\": \"2026-06-18T00:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\"\n}"
+                                                                   "raw":  "{\n  \"orderId\": {{orderId}},\n  \"amount\": 9999999999999,\n  \"paymentDate\": \"2026-06-18T00:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\"\n}"
                                                                }
                                                   },
                                       "event":  [
@@ -4918,7 +4918,7 @@
                                                               },
                                                       "body":  {
                                                                    "mode":  "raw",
-                                                                   "raw":  "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 500.0,\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-CASH-001\",\n  \"notes\": \"DT: Cash payment method\"\n}",
+                                                                   "raw":  "{\n  \"orderId\": {{orderId}},\n  \"amount\": 500.0,\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-CASH-001\",\n  \"notes\": \"DT: Cash payment method\"\n}",
                                                                    "options":  {
                                                                                    "raw":  {
                                                                                                "language":  "json"
@@ -4970,7 +4970,7 @@
                                                               },
                                                       "body":  {
                                                                    "mode":  "raw",
-                                                                   "raw":  "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 1000.0,\n  \"paymentMethod\": \"BankTransfer\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-BANK-001\",\n  \"notes\": \"DT: BankTransfer payment method\"\n}",
+                                                                   "raw":  "{\n  \"orderId\": {{orderId}},\n  \"amount\": 1000.0,\n  \"paymentMethod\": \"BankTransfer\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-BANK-001\",\n  \"notes\": \"DT: BankTransfer payment method\"\n}",
                                                                    "options":  {
                                                                                    "raw":  {
                                                                                                "language":  "json"
@@ -5021,7 +5021,7 @@
                                                               },
                                                       "body":  {
                                                                    "mode":  "raw",
-                                                                   "raw":  "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 500.0,\n  \"status\": \"Completed\"\n}",
+                                                                   "raw":  "{\n  \"orderId\": {{orderId}},\n  \"amount\": 500.0,\n  \"status\": \"Completed\"\n}",
                                                                    "options":  {
                                                                                    "raw":  {
                                                                                                "language":  "json"
@@ -5067,7 +5067,7 @@
                                                                  ],
                                                       "body":  {
                                                                    "mode":  "raw",
-                                                                   "raw":  "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"trackingNumber\": \"TRK-D1-TEST\",\n  \"estimatedDeliveryDate\": \"2026-10-01T00:00:00Z\",\n  \"status\": \"Pending\",\n  \"notes\": \"D1 happy path delivery\"\n}"
+                                                                   "raw":  "{\n  \"orderId\": {{orderId}},\n  \"trackingNumber\": \"TRK-D1-TEST\",\n  \"estimatedDeliveryDate\": \"2026-10-01T00:00:00Z\",\n  \"status\": \"Pending\",\n  \"notes\": \"D1 happy path delivery\"\n}"
                                                                },
                                                       "url":  {
                                                                   "raw":  "{{salesUrl}}/api/Deliveries",
@@ -5194,7 +5194,7 @@
                                                                  ],
                                                       "body":  {
                                                                    "mode":  "raw",
-                                                                   "raw":  "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"estimatedDeliveryDate\": \"2026-10-01T00:00:00Z\",\n  \"status\": \"Pending\"\n}"
+                                                                   "raw":  "{\n  \"orderId\": {{orderId}},\n  \"estimatedDeliveryDate\": \"2026-10-01T00:00:00Z\",\n  \"status\": \"Pending\"\n}"
                                                                },
                                                       "url":  {
                                                                   "raw":  "{{salesUrl}}/api/Deliveries",
@@ -5427,7 +5427,7 @@
                                                               },
                                                       "body":  {
                                                                    "mode":  "raw",
-                                                                   "raw":  "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"estimatedDeliveryDate\": \"2025-12-31T00:00:00Z\",\n  \"notes\": \"DT: Missing status field\"\n}",
+                                                                   "raw":  "{\n  \"orderId\": {{orderId}},\n  \"estimatedDeliveryDate\": \"2025-12-31T00:00:00Z\",\n  \"notes\": \"DT: Missing status field\"\n}",
                                                                    "options":  {
                                                                                    "raw":  {
                                                                                                "language":  "json"
@@ -5571,7 +5571,7 @@
                                                               },
                                                       "body":  {
                                                                    "mode":  "raw",
-                                                                   "raw":  "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"estimatedDeliveryDate\": \"2026-10-01T00:00:00Z\",\n  \"notes\": \"BVA: thiếu status field\"\n}",
+                                                                   "raw":  "{\n  \"orderId\": {{orderId}},\n  \"estimatedDeliveryDate\": \"2026-10-01T00:00:00Z\",\n  \"notes\": \"BVA: thiếu status field\"\n}",
                                                                    "options":  {
                                                                                    "raw":  {
                                                                                                "language":  "json"
@@ -7503,7 +7503,7 @@
                                                                  ],
                                                       "body":  {
                                                                    "mode":  "raw",
-                                                                   "raw":  "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 900000000,\n  \"paymentMethod\": \"BankTransfer\",\n  \"paymentDate\": \"2026-06-01\",\n  \"status\": \"Completed\",\n  \"notes\": \"E2E test payment\"\n}"
+                                                                   "raw":  "{\n  \"orderId\": {{orderId}},\n  \"amount\": 900000000,\n  \"paymentMethod\": \"BankTransfer\",\n  \"paymentDate\": \"2026-06-01\",\n  \"status\": \"Completed\",\n  \"notes\": \"E2E test payment\"\n}"
                                                                },
                                                       "url":  {
                                                                   "raw":  "{{salesUrl}}/api/Payments",
@@ -7553,7 +7553,7 @@
                                                                  ],
                                                       "body":  {
                                                                    "mode":  "raw",
-                                                                   "raw":  "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"trackingNumber\": \"EV-E2E-TRACK-001\",\n  \"estimatedDeliveryDate\": \"2026-12-01\",\n  \"status\": \"Pending\",\n  \"notes\": \"E2E test delivery\"\n}"
+                                                                   "raw":  "{\n  \"orderId\": {{orderId}},\n  \"trackingNumber\": \"EV-E2E-TRACK-001\",\n  \"estimatedDeliveryDate\": \"2026-12-01\",\n  \"status\": \"Pending\",\n  \"notes\": \"E2E test delivery\"\n}"
                                                                },
                                                       "url":  {
                                                                   "raw":  "{{salesUrl}}/api/Deliveries",
@@ -7871,3 +7871,5 @@
                      }
                  ]
 }
+
+

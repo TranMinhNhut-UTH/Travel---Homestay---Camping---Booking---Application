@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="EV Dealer Management API" tests="113" time="57.890">
+  <testsuite name="Module C - Quotes / Q1 - Create Quote (Happy Path)" id="d57ada97-cdb7-4de9-9e05-4aad29e04369" timestamp="2026-07-03T12:43:59.113Z" tests="3" failures="0" errors="0" time="0.060">
+    <testcase name="[EP][Happy] Status code is 201" time="0.060" classname="ModuleCQuotesQ1CreateQuoteHappyPath"/>
+    <testcase name="[EP][Happy] Response has id field" time="0.060" classname="ModuleCQuotesQ1CreateQuoteHappyPath"/>
+    <testcase name="[EP][Happy] Quote status is Active" time="0.060" classname="ModuleCQuotesQ1CreateQuoteHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Quotes / Q2 - Create Quote (Empty Body - Negative)" id="11b00558-dca9-4d84-b20f-84390548c8d1" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.008">
+    <testcase name="[EP][Negative] No server error on empty body (400 or 201)" time="0.008" classname="ModuleCQuotesQ2CreateQuoteEmptyBodyNegative"/>
+    <testcase name="[EP][Negative] Server does not crash (no 500)" time="0.008" classname="ModuleCQuotesQ2CreateQuoteEmptyBodyNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Quotes / Q3 - Create Quote (Quantity=0 - BVA Boundary)" id="bd839377-28ea-4244-ad72-30af011c6db3" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[BVA][Boundary] Quantity=0 returns 400" time="0.003" classname="ModuleCQuotesQ3CreateQuoteQuantity0BvaBoundary"/>
+  </testsuite>
+  <testsuite name="Module C - Quotes / Q4 - Get All Quotes (Happy Path)" id="1a7c7dcd-052a-481a-bcf4-619f8655698a" timestamp="2026-07-03T12:43:59.113Z" tests="3" failures="0" errors="0" time="0.005">
+    <testcase name="[EP][Happy] Status code is 200" time="0.005" classname="ModuleCQuotesQ4GetAllQuotesHappyPath"/>
+    <testcase name="[EP][Happy] Response contains quotes data" time="0.005" classname="ModuleCQuotesQ4GetAllQuotesHappyPath"/>
+    <testcase name="[EP][Happy] Has at least 1 quote after creation" time="0.005" classname="ModuleCQuotesQ4GetAllQuotesHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Quotes / Q5 - Get Quote By ID (Happy Path)" id="28035588-eec2-4188-88df-dee77e1b368d" timestamp="2026-07-03T12:43:59.113Z" tests="3" failures="0" errors="0" time="0.004">
+    <testcase name="[EP][Happy] Status code is 200" time="0.004" classname="ModuleCQuotesQ5GetQuoteByIdHappyPath"/>
+    <testcase name="[EP][Happy] Response has required fields" time="0.004" classname="ModuleCQuotesQ5GetQuoteByIdHappyPath"/>
+    <testcase name="[EP][Happy] Quote ID matches requested ID" time="0.004" classname="ModuleCQuotesQ5GetQuoteByIdHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Quotes / Q6 - Get Quote By ID (Not Found - Negative)" id="28ac846b-bd2e-4e63-bc55-89a534977463" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.004">
+    <testcase name="[EP][Negative] Status code is 404" time="0.004" classname="ModuleCQuotesQ6GetQuoteByIdNotFoundNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Quotes / Q7 - Get Quote By ID=0 (BVA Boundary)" id="67f370c4-5bfc-4ca6-abe4-7184dfbc0447" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[BVA][Boundary] ID=0 returns 404" time="0.003" classname="ModuleCQuotesQ7GetQuoteById0BvaBoundary"/>
+  </testsuite>
+  <testsuite name="Module C - Quotes / Q8 - Update Quote Status (Happy Path)" id="2fcb7e45-4c6d-4656-a30f-29019db33e30" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.014">
+    <testcase name="[EP][Happy] Status code is 204" time="0.014" classname="ModuleCQuotesQ8UpdateQuoteStatusHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Quotes / Q9 - Update Quote Status (Not Found - Negative)" id="4a52d330-66f8-4e10-92d9-049dafda7d27" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.004">
+    <testcase name="[EP][Negative] Status code is 404" time="0.004" classname="ModuleCQuotesQ9UpdateQuoteStatusNotFoundNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Quotes / Q10 - Update Quote Status (Empty Status - BVA Boundary)" id="09a4ea41-4ed6-4775-bf7b-7290523594cd" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[BVA][Boundary] Empty status returns 400" time="0.003" classname="ModuleCQuotesQ10UpdateQuoteStatusEmptyStatusBvaBoundary"/>
+  </testsuite>
+  <testsuite name="Module C - Quotes / Q11 - Update Quote Status (Valid Status=Expired DT)" id="322c55d0-a524-4773-9082-f2bf2ab0b5be" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.005">
+    <testcase name="[DT][Happy] Status code is 204 (status updated)" time="0.005" classname="ModuleCQuotesQ11UpdateQuoteStatusValidStatusExpiredDt"/>
+  </testsuite>
+  <testsuite name="Module C - Quotes / Q12 - Update Quote Status (Invalid Status=INVALID_XYZ DT)" id="d53398eb-7355-4577-be27-30acd8e50c84" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="[DT] No server crash on invalid status string (no 500)" time="0.004" classname="ModuleCQuotesQ12UpdateQuoteStatusInvalidStatusInvalidXyzDt"/>
+    <testcase name="[DT] Returns 204 or 400 (document server behavior)" time="0.004" classname="ModuleCQuotesQ12UpdateQuoteStatusInvalidStatusInvalidXyzDt"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O1 - Complete Order (Happy Path)" id="bf52f4e4-e6c2-4b40-97dd-0126256e3a70" timestamp="2026-07-03T12:43:59.113Z" tests="3" failures="0" errors="0" time="4.070">
+    <testcase name="[EP][Happy] Status code is 200" time="4.070" classname="ModuleCOrdersO1CompleteOrderHappyPath"/>
+    <testcase name="[EP][Happy] Response has orderId" time="4.070" classname="ModuleCOrdersO1CompleteOrderHappyPath"/>
+    <testcase name="[EP][Happy] success is true" time="4.070" classname="ModuleCOrdersO1CompleteOrderHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O2 - Complete Order (Missing Email - Negative)" id="94c14449-95bd-4233-b524-86ccb23cf7c0" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.003">
+    <testcase name="[EP][Negative] Status code is 400" time="0.003" classname="ModuleCOrdersO2CompleteOrderMissingEmailNegative"/>
+    <testcase name="[EP][Negative] Error message mentions email" time="0.003" classname="ModuleCOrdersO2CompleteOrderMissingEmailNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O3 - Complete Order (Missing Name - Negative)" id="9720767c-f1d9-473e-becc-1a8e5a06ea59" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="[EP][Negative] Status code is 400" time="0.002" classname="ModuleCOrdersO3CompleteOrderMissingNameNegative"/>
+    <testcase name="[EP][Negative] Error message mentions name" time="0.002" classname="ModuleCOrdersO3CompleteOrderMissingNameNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O4 - Complete Order (UnitPrice=0 BVA - Negative)" id="211994bc-26a4-4c83-9372-31c3f4190b22" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.003">
+    <testcase name="[BVA][Negative] UnitPrice=0 causes TotalPrice&lt;=0 -> 400" time="0.003" classname="ModuleCOrdersO4CompleteOrderUnitPrice0BvaNegative"/>
+    <testcase name="[BVA][Negative] Error mentions total price" time="0.003" classname="ModuleCOrdersO4CompleteOrderUnitPrice0BvaNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O5 - Get Quote Verify Status=ConvertedToOrder" id="6cc4d2bc-dd84-4119-b02a-85059ef7fcf2" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.003">
+    <testcase name="[EP][Happy] Status code is 200" time="0.003" classname="ModuleCOrdersO5GetQuoteVerifyStatusConvertedToOrder"/>
+    <testcase name="[EP][Happy] Quote status is ConvertedToOrder" time="0.003" classname="ModuleCOrdersO5GetQuoteVerifyStatusConvertedToOrder"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O6 - Get All Orders (Happy Path)" id="80eb48ae-19ef-4cfe-9aa5-47964f696e0d" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.007">
+    <testcase name="[EP][Happy] Status code is 200" time="0.007" classname="ModuleCOrdersO6GetAllOrdersHappyPath"/>
+    <testcase name="[EP][Happy] Response contains orders data" time="0.007" classname="ModuleCOrdersO6GetAllOrdersHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O7 - Get Order By ID (Happy Path)" id="26608627-3a06-4051-9586-d1dd57d970a3" timestamp="2026-07-03T12:43:59.113Z" tests="3" failures="0" errors="0" time="0.002">
+    <testcase name="[EP][Happy] Status code is 200" time="0.002" classname="ModuleCOrdersO7GetOrderByIdHappyPath"/>
+    <testcase name="[EP][Happy] Response has required order fields" time="0.002" classname="ModuleCOrdersO7GetOrderByIdHappyPath"/>
+    <testcase name="[EP][Happy] Order ID matches requested ID" time="0.002" classname="ModuleCOrdersO7GetOrderByIdHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O8 - Get Order By ID (Not Found - Negative)" id="a0600c54-283d-4d46-8c3b-0d9c18822ac7" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.002">
+    <testcase name="[EP][Negative] Status code is 404" time="0.002" classname="ModuleCOrdersO8GetOrderByIdNotFoundNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O9 - Update Order Status (Happy Path)" id="639faf92-5cad-48c8-a72f-06a5633dd12b" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.016">
+    <testcase name="[EP][Happy] Status code is 200" time="0.016" classname="ModuleCOrdersO9UpdateOrderStatusHappyPath"/>
+    <testcase name="[EP][Happy] Response has success message" time="0.016" classname="ModuleCOrdersO9UpdateOrderStatusHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O10 - Update Order Status (Not Found - Negative)" id="4344a32a-9241-436b-8491-6cf06b559cf6" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[EP][Negative] Status code is 404" time="0.003" classname="ModuleCOrdersO10UpdateOrderStatusNotFoundNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O11 - Health Check (Happy Path)" id="aa16a924-b1d8-42e6-9f60-b5465a9dc6d4" timestamp="2026-07-03T12:43:59.113Z" tests="3" failures="0" errors="0" time="0.002">
+    <testcase name="[EP][Happy] Status code is 200" time="0.002" classname="ModuleCOrdersO11HealthCheckHappyPath"/>
+    <testcase name="[EP][Happy] Status is healthy" time="0.002" classname="ModuleCOrdersO11HealthCheckHappyPath"/>
+    <testcase name="[EP][Happy] Service is SalesService" time="0.002" classname="ModuleCOrdersO11HealthCheckHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O12 - Get Order By ID=0 (BVA)" id="66936bb3-621b-44b2-b7cf-35db3e9cbb5f" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.005">
+    <testcase name="O12 - ID=0 lower boundary should return 404" time="0.005" classname="ModuleCOrdersO12GetOrderById0Bva"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O13 - Update Order Status (Empty Body BVA)" id="fdab524a-04cb-458e-bf0b-6767880f234e" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="O13 - Empty body missing required status field should return 400" time="0.003" classname="ModuleCOrdersO13UpdateOrderStatusEmptyBodyBva"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O14 - Update Order Status (Status=Delivered DT)" id="3da82cce-0aa6-4d59-bd41-370456fb0d46" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.006">
+    <testcase name="[DT][Happy] Status code is 200" time="0.006" classname="ModuleCOrdersO14UpdateOrderStatusStatusDeliveredDt"/>
+    <testcase name="[DT][Happy] Response has success message" time="0.006" classname="ModuleCOrdersO14UpdateOrderStatusStatusDeliveredDt"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O15 - Update Order Status (Status=Cancelled DT)" id="1bcf5de5-d22d-440e-942b-38d84b406231" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.005">
+    <testcase name="[DT][Happy] Status code is 200" time="0.005" classname="ModuleCOrdersO15UpdateOrderStatusStatusCancelledDt"/>
+    <testcase name="[DT][Happy] Response confirms update" time="0.005" classname="ModuleCOrdersO15UpdateOrderStatusStatusCancelledDt"/>
+  </testsuite>
+  <testsuite name="Module C - Orders / O16 - Update Order Status (Invalid Status=UNKNOWN DT)" id="9a2bb249-501b-45ca-a7a6-d44165877f60" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.005">
+    <testcase name="[DT] No server crash on invalid status (no 500)" time="0.005" classname="ModuleCOrdersO16UpdateOrderStatusInvalidStatusUnknownDt"/>
+    <testcase name="[DT] Returns 200 or 400 (document server behavior)" time="0.005" classname="ModuleCOrdersO16UpdateOrderStatusInvalidStatusUnknownDt"/>
+  </testsuite>
+  <testsuite name="Module C - Contracts / C1 - Create Contract (Happy Path)" id="c2519784-b8a4-4689-a06e-5bc88ff7674e" timestamp="2026-07-03T12:43:59.113Z" tests="3" failures="0" errors="0" time="0.009">
+    <testcase name="[EP][Happy] Status code is 201" time="0.009" classname="ModuleCContractsC1CreateContractHappyPath"/>
+    <testcase name="[EP][Happy] Response has contractId" time="0.009" classname="ModuleCContractsC1CreateContractHappyPath"/>
+    <testcase name="[EP][Happy] Contract status is PendingApproval" time="0.009" classname="ModuleCContractsC1CreateContractHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Contracts / C2 - Create Contract (Order Not Found - Negative)" id="013d8246-6dd1-4285-a61f-81e894eecca0" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="[EP][Negative] Status code is 404" time="0.004" classname="ModuleCContractsC2CreateContractOrderNotFoundNegative"/>
+    <testcase name="[EP][Negative] Error message mentions order not found" time="0.004" classname="ModuleCContractsC2CreateContractOrderNotFoundNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Contracts / C3 - Create Contract (Duplicate - Negative)" id="bec07491-f05f-4df6-b323-2eb5c1bdbc01" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="[EP][Negative] Status code is 400" time="0.004" classname="ModuleCContractsC3CreateContractDuplicateNegative"/>
+    <testcase name="[EP][Negative] Error mentions already exists" time="0.004" classname="ModuleCContractsC3CreateContractDuplicateNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Contracts / C4 - Create Contract (Invalid SalespersonId - Negative)" id="fe8e5716-8180-4aab-9b8c-282f1c1d09a4" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.003">
+    <testcase name="[BVA][Negative] Status code is 400" time="0.003" classname="ModuleCContractsC4CreateContractInvalidSalespersonIdNegative"/>
+    <testcase name="[BVA][Negative] Error mentions invalid SalespersonId" time="0.003" classname="ModuleCContractsC4CreateContractInvalidSalespersonIdNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Contracts / C5 - Get All Contracts (Happy Path)" id="a130be02-0fc8-450f-8a94-ae20586a9052" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="[EP][Happy] Status code is 200" time="0.002" classname="ModuleCContractsC5GetAllContractsHappyPath"/>
+    <testcase name="[EP][Happy] Response contains contracts array" time="0.002" classname="ModuleCContractsC5GetAllContractsHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Contracts / C6 - Get Contract By ID (Happy Path)" id="6374c987-66c4-4504-8065-a43fd5155e02" timestamp="2026-07-03T12:43:59.113Z" tests="3" failures="0" errors="0" time="0.003">
+    <testcase name="[EP][Happy] Status code is 200" time="0.003" classname="ModuleCContractsC6GetContractByIdHappyPath"/>
+    <testcase name="[EP][Happy] Response has contractId field" time="0.003" classname="ModuleCContractsC6GetContractByIdHappyPath"/>
+    <testcase name="[EP][Happy] Contract status is PendingApproval" time="0.003" classname="ModuleCContractsC6GetContractByIdHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Contracts / C7 - Get Contract By ID (Not Found - Negative)" id="07caf53f-3e9f-40f2-9528-855b663bd009" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.026">
+    <testcase name="[EP][Negative] Status code is 404" time="0.026" classname="ModuleCContractsC7GetContractByIdNotFoundNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Contracts / C8 - Approve Contract (Happy Path)" id="ace07b31-aabb-40b1-8791-7f1478999b92" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.011">
+    <testcase name="[EP][Happy] Status code is 200" time="0.011" classname="ModuleCContractsC8ApproveContractHappyPath"/>
+    <testcase name="[EP][Happy] Response has success message" time="0.011" classname="ModuleCContractsC8ApproveContractHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Contracts / C9 - Verify Order Status=ReadyForDelivery After Approve" id="03180142-da1e-4477-a01c-4784e1640176" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="[EP][Happy] Status code is 200" time="0.004" classname="ModuleCContractsC9VerifyOrderStatusReadyForDeliveryAfterApprove"/>
+    <testcase name="[EP][Happy] Order status is ReadyForDelivery" time="0.004" classname="ModuleCContractsC9VerifyOrderStatusReadyForDeliveryAfterApprove"/>
+  </testsuite>
+  <testsuite name="Module C - Contracts / C10 - Reject Contract (Full Reject Flow)" id="5d86e39e-1631-46e6-9391-90046ffb3f93" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="[DT][Happy] Status code is 200" time="0.004" classname="ModuleCContractsC10RejectContractFullRejectFlow"/>
+    <testcase name="[DT][Happy] Response confirms rejection" time="0.004" classname="ModuleCContractsC10RejectContractFullRejectFlow"/>
+  </testsuite>
+  <testsuite name="Module C - Contracts / C11 - Create Contract (Empty Body BVA)" id="026fc46c-e3f9-4f0b-b871-854caed99926" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.001">
+    <testcase name="C11 - Empty body missing required fields should return 400" time="0.001" classname="ModuleCContractsC11CreateContractEmptyBodyBva"/>
+  </testsuite>
+  <testsuite name="Module C - Contracts / C12 - Get Contract By ID=0 (BVA)" id="39614382-8aaa-4091-89ea-5b2a1311ea92" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="C12 - ID=0 lower boundary should return 404" time="0.003" classname="ModuleCContractsC12GetContractById0Bva"/>
+  </testsuite>
+  <testsuite name="Module C - Contracts / C13 - Update Contract Status (Invalid Status DT - No Server Enum Validation)" id="e948b626-415c-4972-a77d-2f86a0751404" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.006">
+    <testcase name="C13 - DT: Server accepts any status value (no enum validation on server)" time="0.006" classname="ModuleCContractsC13UpdateContractStatusInvalidStatusDtNoServerEnumValidation"/>
+  </testsuite>
+  <testsuite name="Module C - Payments / P1 - Create Payment (Happy Path)" id="af2b3a36-7f7a-45a3-a349-53407e3e2e3a" timestamp="2026-07-03T12:43:59.113Z" tests="4" failures="0" errors="0" time="0.003">
+    <testcase name="[EP][Happy] Status code is 201" time="0.003" classname="ModuleCPaymentsP1CreatePaymentHappyPath"/>
+    <testcase name="[EP][Happy] Response has id field" time="0.003" classname="ModuleCPaymentsP1CreatePaymentHappyPath"/>
+    <testcase name="[EP][Happy] Amount matches request" time="0.003" classname="ModuleCPaymentsP1CreatePaymentHappyPath"/>
+    <testcase name="[EP][Happy] Status is Completed" time="0.003" classname="ModuleCPaymentsP1CreatePaymentHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Payments / P2 - Create Payment (Empty Body - Negative)" id="e713945f-fe33-4cfe-9fcb-5fd8e6158a77" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.002">
+    <testcase name="[EP][Negative] Status code is 400" time="0.002" classname="ModuleCPaymentsP2CreatePaymentEmptyBodyNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Payments / P3 - Create Payment (Amount=0 BVA - Negative)" id="3f4c1d7f-0af1-435e-b81f-970dcd93e361" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[BVA][Negative] Status code is 400" time="0.003" classname="ModuleCPaymentsP3CreatePaymentAmount0BvaNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Payments / P4 - Get All Payments (Happy Path)" id="9556a8b6-2647-4d10-9177-79f556286b64" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="[EP][Happy] Status code is 200" time="0.004" classname="ModuleCPaymentsP4GetAllPaymentsHappyPath"/>
+    <testcase name="[EP][Happy] Response is array" time="0.004" classname="ModuleCPaymentsP4GetAllPaymentsHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Payments / P5 - Create Payment (Amount=-1 BVA)" id="061cc2e5-ce72-46b5-a55e-b3bf0868f14f" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.002">
+    <testcase name="P5 - Amount=-1 below min boundary should return 400" time="0.002" classname="ModuleCPaymentsP5CreatePaymentAmount1Bva"/>
+  </testsuite>
+  <testsuite name="Module C - Payments / P6 - Create Payment (Amount=9999999999999 BVA)" id="27faacaa-8c71-4581-9a73-87177109be68" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="P6 - Amount above max boundary should return 400" time="0.003" classname="ModuleCPaymentsP6CreatePaymentAmount9999999999999Bva"/>
+  </testsuite>
+  <testsuite name="Module C - Payments / P7 - Create Payment (PaymentMethod=Cash DT)" id="1075c62e-69d1-4536-8a07-f20621f88ee1" timestamp="2026-07-03T12:43:59.113Z" tests="3" failures="0" errors="0" time="0.014">
+    <testcase name="[DT][Happy] Status code is 201" time="0.014" classname="ModuleCPaymentsP7CreatePaymentPaymentMethodCashDt"/>
+    <testcase name="[DT][Happy] Response has id" time="0.014" classname="ModuleCPaymentsP7CreatePaymentPaymentMethodCashDt"/>
+    <testcase name="[DT][Happy] PaymentMethod is Cash" time="0.014" classname="ModuleCPaymentsP7CreatePaymentPaymentMethodCashDt"/>
+  </testsuite>
+  <testsuite name="Module C - Payments / P8 - Create Payment (PaymentMethod=BankTransfer DT)" id="25281c9e-da0f-4362-a41f-b83968a60ecf" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.006">
+    <testcase name="[DT][Happy] Status code is 201" time="0.006" classname="ModuleCPaymentsP8CreatePaymentPaymentMethodBankTransferDt"/>
+    <testcase name="[DT][Happy] PaymentMethod is BankTransfer" time="0.006" classname="ModuleCPaymentsP8CreatePaymentPaymentMethodBankTransferDt"/>
+  </testsuite>
+  <testsuite name="Module C - Payments / P9 - Create Payment (Missing PaymentMethod - Negative DT)" id="0508fba9-32df-426c-b294-f2a95700cd74" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.009">
+    <testcase name="[DT][Negative] No server crash (no 500)" time="0.009" classname="ModuleCPaymentsP9CreatePaymentMissingPaymentMethodNegativeDt"/>
+    <testcase name="[DT][Negative] Returns 400 or 201 (server behavior)" time="0.009" classname="ModuleCPaymentsP9CreatePaymentMissingPaymentMethodNegativeDt"/>
+  </testsuite>
+  <testsuite name="Module C - Deliveries &amp; Promotions / D1 - Create Delivery (Happy Path)" id="525c8f95-1b99-4585-8c32-1d791722578a" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.006">
+    <testcase name="[EP][Happy] Status code is 201" time="0.006" classname="ModuleCDeliveriesAmpPromotionsD1CreateDeliveryHappyPath"/>
+    <testcase name="[EP][Happy] Response has id field" time="0.006" classname="ModuleCDeliveriesAmpPromotionsD1CreateDeliveryHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Deliveries &amp; Promotions / D2 - Create Delivery (Empty Body - Negative)" id="cd65be4f-7a1a-4875-b6b3-6db7b8ceca07" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.002">
+    <testcase name="[EP][Negative] Status code is 400" time="0.002" classname="ModuleCDeliveriesAmpPromotionsD2CreateDeliveryEmptyBodyNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Deliveries &amp; Promotions / D3 - Get All Deliveries (Happy Path)" id="cc319972-7b7b-40da-a8da-eef526f9c156" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="[EP][Happy] Status code is 200" time="0.002" classname="ModuleCDeliveriesAmpPromotionsD3GetAllDeliveriesHappyPath"/>
+    <testcase name="[EP][Happy] Response is array" time="0.002" classname="ModuleCDeliveriesAmpPromotionsD3GetAllDeliveriesHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Deliveries &amp; Promotions / D4 - Create Delivery (Missing TrackingNumber - BVA Negative)" id="c5cb1840-8f0d-4fb7-9063-e72ffce3daa7" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.002">
+    <testcase name="[BVA][Negative] Status code is 400" time="0.002" classname="ModuleCDeliveriesAmpPromotionsD4CreateDeliveryMissingTrackingNumberBvaNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Deliveries &amp; Promotions / PR1 - Create Promotion (Happy Path)" id="d9bab547-d4e0-471f-aa44-163c1c2c1d35" timestamp="2026-07-03T12:43:59.113Z" tests="3" failures="0" errors="0" time="0.004">
+    <testcase name="[EP][Happy] Status code is 201" time="0.004" classname="ModuleCDeliveriesAmpPromotionsPr1CreatePromotionHappyPath"/>
+    <testcase name="[EP][Happy] Response has id field" time="0.004" classname="ModuleCDeliveriesAmpPromotionsPr1CreatePromotionHappyPath"/>
+    <testcase name="[EP][Happy] Response has name field" time="0.004" classname="ModuleCDeliveriesAmpPromotionsPr1CreatePromotionHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Deliveries &amp; Promotions / PR2 - Create Promotion (Empty Body - Negative)" id="758829cc-84e5-4ae5-acd7-90994ac9026f" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.002">
+    <testcase name="[EP][Negative] Status code is 400" time="0.002" classname="ModuleCDeliveriesAmpPromotionsPr2CreatePromotionEmptyBodyNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Deliveries &amp; Promotions / PR3 - Get All Promotions (Happy Path)" id="84bf9d3e-fb52-4162-9083-4a0aab47a592" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="[EP][Happy] Status code is 200" time="0.002" classname="ModuleCDeliveriesAmpPromotionsPr3GetAllPromotionsHappyPath"/>
+    <testcase name="[EP][Happy] Response is array" time="0.002" classname="ModuleCDeliveriesAmpPromotionsPr3GetAllPromotionsHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Deliveries &amp; Promotions / PR4 - Create Promotion (DiscountValue=-1 BVA - Negative)" id="11faa40b-cf73-4bed-9b50-a9e1ba5d026e" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[BVA][Negative] Status code is 400" time="0.003" classname="ModuleCDeliveriesAmpPromotionsPr4CreatePromotionDiscountValue1BvaNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Deliveries &amp; Promotions / D5 - Create Delivery (Missing Status - Negative DT)" id="784a36bb-c556-4da2-a223-c5a42c08e7cc" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="[DT][Negative] No server crash (no 500)" time="0.002" classname="ModuleCDeliveriesAmpPromotionsD5CreateDeliveryMissingStatusNegativeDt"/>
+    <testcase name="[DT][Negative] Returns 400 or 201 (document server behavior)" time="0.002" classname="ModuleCDeliveriesAmpPromotionsD5CreateDeliveryMissingStatusNegativeDt"/>
+  </testsuite>
+  <testsuite name="Module C - Deliveries &amp; Promotions / PR5 - Create Promotion (DiscountValue=0 BVA Boundary)" id="5912043f-0f20-411c-a7d8-b332442bf0da" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.002">
+    <testcase name="[BVA][Boundary] Status code is 400 (zero discount invalid)" time="0.002" classname="ModuleCDeliveriesAmpPromotionsPr5CreatePromotionDiscountValue0BvaBoundary"/>
+  </testsuite>
+  <testsuite name="Module C - Deliveries &amp; Promotions / PR6 - Create Promotion (Missing Name - Negative DT)" id="d4c98b8f-21ff-4f02-9c67-bb62f0ab8fad" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.002">
+    <testcase name="[DT][Negative] Status code is 400" time="0.002" classname="ModuleCDeliveriesAmpPromotionsPr6CreatePromotionMissingNameNegativeDt"/>
+  </testsuite>
+  <testsuite name="Module C - Deliveries &amp; Promotions / D6 - Create Delivery (Missing Status - BVA)" id="cf7c6ffc-e581-4f20-aef0-bc2f393bf7f3" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.002">
+    <testcase name="[BVA][Boundary] Status 400, 404 hoặc 201 (document server behavior)" time="0.002" classname="ModuleCDeliveriesAmpPromotionsD6CreateDeliveryMissingStatusBva"/>
+  </testsuite>
+  <testsuite name="Module C - Sales Composite API / S1 - GET Sales Quote by ID (Happy Path)" id="64e6c36c-1abf-4a02-956a-e75743c7fbcd" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="[EP][Happy] Status 200" time="0.002" classname="ModuleCSalesCompositeApiS1GetSalesQuoteByIdHappyPath"/>
+    <testcase name="[EP][Happy] Has id field" time="0.002" classname="ModuleCSalesCompositeApiS1GetSalesQuoteByIdHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Sales Composite API / S2 - GET Sales Quote by ID (Not Found - Negative)" id="c3a72d1d-4baf-4109-b58b-f6a4a7e9258f" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.004">
+    <testcase name="[EP][Negative] Status 404" time="0.004" classname="ModuleCSalesCompositeApiS2GetSalesQuoteByIdNotFoundNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Sales Composite API / S3 - POST Sales Order (Happy Path)" id="92fa7f01-4149-425a-a00e-9ccebd746fe5" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.012">
+    <testcase name="[EP][Happy] Status 201" time="0.012" classname="ModuleCSalesCompositeApiS3PostSalesOrderHappyPath"/>
+    <testcase name="[EP][Happy] Has orderId" time="0.012" classname="ModuleCSalesCompositeApiS3PostSalesOrderHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Sales Composite API / S4 - POST Sales Order (Quote Not Active - Negative)" id="61240249-34ff-45c1-b25f-8a4464016d78" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.005">
+    <testcase name="[EP][Negative] Status 400" time="0.005" classname="ModuleCSalesCompositeApiS4PostSalesOrderQuoteNotActiveNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Sales Composite API / S5 - GET Sales Order by ID (Happy Path)" id="1eb820bd-c433-415a-942d-5263dca25e57" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.003">
+    <testcase name="[EP][Happy] Status 200" time="0.003" classname="ModuleCSalesCompositeApiS5GetSalesOrderByIdHappyPath"/>
+    <testcase name="[EP][Happy] Response has orderId or id" time="0.003" classname="ModuleCSalesCompositeApiS5GetSalesOrderByIdHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Sales Composite API / S6 - POST Sales Contract (Happy Path)" id="8c243c3a-0a2b-4ff6-92ad-bebcb1f9bddf" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.016">
+    <testcase name="[EP][Happy] Status 201" time="0.016" classname="ModuleCSalesCompositeApiS6PostSalesContractHappyPath"/>
+    <testcase name="[EP][Happy] Response has contractId or id" time="0.016" classname="ModuleCSalesCompositeApiS6PostSalesContractHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Sales Composite API / S7 - POST Sales Contract (Order Not Found - Negative)" id="05a52a0b-7c77-46f1-8555-963249a4cebf" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.006">
+    <testcase name="[EP][Negative] Status 400" time="0.006" classname="ModuleCSalesCompositeApiS7PostSalesContractOrderNotFoundNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Sales Composite API / S8 - GET Sales Contract by ID (Happy Path)" id="b0ecd8ee-8e9e-48f0-b221-a2aec1776283" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.003">
+    <testcase name="[EP][Happy] Status 200" time="0.003" classname="ModuleCSalesCompositeApiS8GetSalesContractByIdHappyPath"/>
+    <testcase name="[EP][Happy] Response has contractId or id" time="0.003" classname="ModuleCSalesCompositeApiS8GetSalesContractByIdHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Sales Composite API / S9 - POST Sales Order (Empty Body BVA)" id="13e2af1e-aa84-4859-b193-177a45dedf7c" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.002">
+    <testcase name="S9 - Empty body missing required fields should return 400" time="0.002" classname="ModuleCSalesCompositeApiS9PostSalesOrderEmptyBodyBva"/>
+  </testsuite>
+  <testsuite name="Module C - Sales Composite API / S10 - GET Sales Quote by ID=0 (BVA Boundary)" id="cdddfcb8-fbe6-4167-87a0-f26d33148afb" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[BVA][Boundary] ID=0 returns 404" time="0.003" classname="ModuleCSalesCompositeApiS10GetSalesQuoteById0BvaBoundary"/>
+  </testsuite>
+  <testsuite name="Module C - Sales Composite API / S11 - GET Sales Order by ID=0 (BVA Boundary)" id="d24149e2-e3c1-4768-8a86-baa55612fb51" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.002">
+    <testcase name="[BVA][Boundary] ID=0 returns 404" time="0.002" classname="ModuleCSalesCompositeApiS11GetSalesOrderById0BvaBoundary"/>
+  </testsuite>
+  <testsuite name="Module C - Sales Composite API / S12 - GET Sales Contract by ID=0 (BVA Boundary)" id="5cd2d344-a0fb-45bb-8889-06a5051db8b0" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[BVA][Boundary] ID=0 returns 404" time="0.003" classname="ModuleCSalesCompositeApiS12GetSalesContractById0BvaBoundary"/>
+  </testsuite>
+  <testsuite name="Module C - Sales Composite API / S13 - GET Sales Contract Not Found (Negative EP)" id="1e034e66-ad66-4041-990c-ca4ae609a63d" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.002">
+    <testcase name="[EP][Negative] Status 404" time="0.002" classname="ModuleCSalesCompositeApiS13GetSalesContractNotFoundNegativeEp"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R1 - GET reports/summary (Happy Path)" id="b8a69181-e4e1-4a04-90ae-6535ef009fda" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.005">
+    <testcase name="[EP][Happy] Status 200" time="0.005" classname="ModuleCReportingApiR1GetReportsSummaryHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R2 - GET reports/summary?type=sales&amp;from=2024-01-01 (With Filters)" id="7ba33d5d-d2bd-4776-999c-c5fa5730e50e" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[EP][Happy] Status 200 with filters" time="0.003" classname="ModuleCReportingApiR2GetReportsSummaryTypeSalesAmpFrom20240101WithFilters"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R3 - GET reports/summary?from=invalid (Invalid Date - BVA)" id="2e111ff7-79d2-46e4-92a8-4295db132510" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[BVA] Status 200 (graceful fallback)" time="0.003" classname="ModuleCReportingApiR3GetReportsSummaryFromInvalidInvalidDateBva"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R4 - GET reports/sales-by-region (Happy Path)" id="30a0dce5-81f1-4f7b-bb13-c60d34a84568" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.002">
+    <testcase name="[EP][Happy] Status 200" time="0.002" classname="ModuleCReportingApiR4GetReportsSalesByRegionHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R5 - GET reports/sales-proportion (Happy Path)" id="b7cd441d-5b12-4689-99fd-ecc745b4168a" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[EP][Happy] Status 200" time="0.003" classname="ModuleCReportingApiR5GetReportsSalesProportionHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R6 - GET reports/top-vehicles (Happy Path)" id="5b3e77e8-7a89-4039-8e2c-3bbb200fc0df" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.004">
+    <testcase name="[EP][Happy] Status 200" time="0.004" classname="ModuleCReportingApiR6GetReportsTopVehiclesHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R7 - GET reports/top-vehicles?limit=5 (BVA Limit Param)" id="a24e3811-9ebe-4d2f-915d-9e949cbb1ad0" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.002">
+    <testcase name="[BVA][Happy] Status 200 with limit=5" time="0.002" classname="ModuleCReportingApiR7GetReportsTopVehiclesLimit5BvaLimitParam"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R8 - GET reports/demand-forecast (Happy Path)" id="2232b0b8-8649-48be-b0e5-61a371676f83" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[EP][Happy] Status 200" time="0.003" classname="ModuleCReportingApiR8GetReportsDemandForecastHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R9 - GET reports/sales-by-dealer (Happy Path)" id="89a3685f-de4f-4d7e-a7a0-5ce39835275a" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="4.092">
+    <testcase name="[EP][Happy] Status 200" time="4.092" classname="ModuleCReportingApiR9GetReportsSalesByDealerHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R10 - GET reports/sales-by-staff (Happy Path)" id="e2fc7421-4251-4f6f-ab7c-b325434c7e5d" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="8.195">
+    <testcase name="[EP][Happy] Status 200" time="8.195" classname="ModuleCReportingApiR10GetReportsSalesByStaffHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R11 - GET reports/debt-summary (Happy Path)" id="fc2ac4d3-804a-49e6-ada4-1ef99d1c060b" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.005">
+    <testcase name="[EP][Happy] Status 200" time="0.005" classname="ModuleCReportingApiR11GetReportsDebtSummaryHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R12 - GET reports/debt-report (Happy Path)" id="0d0e0343-08a0-48d5-a5ac-d6d8a1b536fe" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="8.180">
+    <testcase name="[EP][Happy] Status 200" time="8.180" classname="ModuleCReportingApiR12GetReportsDebtReportHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R13 - GET reports/inventory-trends (Happy Path)" id="c1cf2d4d-5d93-469c-b10f-7cf2e2265683" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="8.199">
+    <testcase name="[EP][Happy] Status 200" time="8.199" classname="ModuleCReportingApiR13GetReportsInventoryTrendsHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R14 - GET reports/sales-summary (Happy Path)" id="64add561-4898-4806-b055-66b483af5388" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[EP][Happy] Status 200" time="0.003" classname="ModuleCReportingApiR14GetReportsSalesSummaryHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R15 - GET reports/inventory-summary (Happy Path)" id="d84ee7ef-b808-46e5-ba40-d04b52dded7c" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.004">
+    <testcase name="[EP][Happy] Status 200" time="0.004" classname="ModuleCReportingApiR15GetReportsInventorySummaryHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R16 - POST reports/synchronize-data (Happy Path)" id="2ddcb29c-e82f-4e92-a927-5fca317c9128" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="20.477">
+    <testcase name="[EP][Happy] Status 200" time="20.477" classname="ModuleCReportingApiR16PostReportsSynchronizeDataHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R17 - POST reports/export (type=sales - Happy Path)" id="dd4b6a5f-761b-4bf7-a2ef-033a76084a82" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.008">
+    <testcase name="[EP][Happy] Status 200" time="0.008" classname="ModuleCReportingApiR17PostReportsExportTypeSalesHappyPath"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R18 - POST reports/export (type=invalid - BVA Negative)" id="0000c39c-550e-42a3-a4b4-7dce4569d6ba" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.009">
+    <testcase name="[BVA] Status 200 (graceful default)" time="0.009" classname="ModuleCReportingApiR18PostReportsExportTypeInvalidBvaNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R19 - GET top-vehicles limit=-1 (BVA Negative)" id="cad3190e-7f8e-4339-ac18-f4fd1ecba262" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.004">
+    <testcase name="[BVA][Negative] Status 200 hoặc 400 (document server behavior)" time="0.004" classname="ModuleCReportingApiR19GetTopVehiclesLimit1BvaNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Reporting API / R20 - GET top-vehicles limit=0 (BVA Boundary)" id="1856c11c-efc0-4117-a50b-8548678ab913" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.004">
+    <testcase name="[BVA][Boundary] Status 200 (empty result hoặc default)" time="0.004" classname="ModuleCReportingApiR20GetTopVehiclesLimit0BvaBoundary"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / N1 - POST Notification/test-fcm (Happy-or-400)" id="6bae2454-b3a0-4626-90fa-d6e1528c3306" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.006">
+    <testcase name="[EP] Status is 200, 400 or 500 (FCM/Firebase behavior)" time="0.006" classname="ModuleCNotificationAmpE2EFlowN1PostNotificationTestFcmHappyOr400"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / N2 - POST Notification/test-fcm (Empty Body - BVA Negative)" id="d73d661c-d735-4497-93ee-314c60aed45c" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.004">
+    <testcase name="[BVA][Negative] Status 400 or 500 (empty body / no Firebase credential)" time="0.004" classname="ModuleCNotificationAmpE2EFlowN2PostNotificationTestFcmEmptyBodyBvaNegative"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / N3 - POST Notification/subscribe-topic (Happy-or-400)" id="66d8e484-96b3-4df2-9cb3-552b3faadfc8" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.004">
+    <testcase name="[EP] Status is 200, 400 or 500 (FCM/Firebase behavior)" time="0.004" classname="ModuleCNotificationAmpE2EFlowN3PostNotificationSubscribeTopicHappyOr400"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / N4 - POST Notification/unsubscribe-topic (Happy-or-400)" id="b1773375-ade1-4e0f-b73f-e8adf53493b5" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.005">
+    <testcase name="[EP] Status is 200, 400 or 500 (FCM/Firebase behavior)" time="0.005" classname="ModuleCNotificationAmpE2EFlowN4PostNotificationUnsubscribeTopicHappyOr400"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / N5 - POST Notification/send-to-topic (Happy-or-400)" id="f3bb727e-f5b4-449c-b721-aac62d5f374c" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.005">
+    <testcase name="[EP] Status is 200, 400 or 500 (FCM/Firebase behavior)" time="0.005" classname="ModuleCNotificationAmpE2EFlowN5PostNotificationSendToTopicHappyOr400"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / N6 - POST Notification/send-multicast (Happy-or-400)" id="1cebad1a-5c1d-4b32-9273-5fabbabfaa9e" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.007">
+    <testcase name="[EP] Status is 200, 400 or 500 (FCM/Firebase behavior)" time="0.007" classname="ModuleCNotificationAmpE2EFlowN6PostNotificationSendMulticastHappyOr400"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / E2E-1 - POST Quote (Create Quote for E2E flow)" id="5d17c702-6d02-414c-ab80-79ff417f14a4" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.014">
+    <testcase name="[E2E-1][Happy] Status 201 Created" time="0.014" classname="ModuleCNotificationAmpE2EFlowE2E1PostQuoteCreateQuoteForE2EFlow"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / E2E-2 - GET Quote (Verify Active status)" id="ea6a5346-cbff-448a-84b4-b9c2e198702c" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="[E2E-2][Happy] Status 200" time="0.002" classname="ModuleCNotificationAmpE2EFlowE2E2GetQuoteVerifyActiveStatus"/>
+    <testcase name="[E2E-2] Quote status is Active" time="0.002" classname="ModuleCNotificationAmpE2EFlowE2E2GetQuoteVerifyActiveStatus"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / E2E-3 - POST Order (Convert Quote to Order)" id="7ac0d3af-bff2-4959-84b1-8246d272d553" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.007">
+    <testcase name="[E2E-3][Happy] Status 201 Created" time="0.007" classname="ModuleCNotificationAmpE2EFlowE2E3PostOrderConvertQuoteToOrder"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / E2E-4 - GET Order (Verify Pending status)" id="3a651ff4-f263-40a3-8b59-ad7abdf7142a" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="[E2E-4][Happy] Status 200" time="0.002" classname="ModuleCNotificationAmpE2EFlowE2E4GetOrderVerifyPendingStatus"/>
+    <testcase name="[E2E-4] Order exists with valid ID" time="0.002" classname="ModuleCNotificationAmpE2EFlowE2E4GetOrderVerifyPendingStatus"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / E2E-5 - POST Contract (Create Contract for Order)" id="e99d5d16-b6e2-4634-8b31-96f75af33666" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.005">
+    <testcase name="[E2E-5][Happy] Status 201 Created" time="0.005" classname="ModuleCNotificationAmpE2EFlowE2E5PostContractCreateContractForOrder"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / E2E-6 - GET Contract (Verify Contract created)" id="87074638-3db4-4fc2-a9d2-b1c90e44ab82" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[E2E-6][Happy] Status 200" time="0.003" classname="ModuleCNotificationAmpE2EFlowE2E6GetContractVerifyContractCreated"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / E2E-7 - POST Payment (Create Payment for Order)" id="71c43aa5-b5df-4c47-811c-809b1cae6f52" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.004">
+    <testcase name="[E2E-7] Status 201 or 400 (Payment/Order Guid-int mismatch)" time="0.004" classname="ModuleCNotificationAmpE2EFlowE2E7PostPaymentCreatePaymentForOrder"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / E2E-8 - POST Delivery (Create Delivery for Order)" id="133eb8d3-5c61-4928-9775-4c1936720ffe" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.004">
+    <testcase name="[E2E-8] Status 201 or 400 (Delivery/Order Guid-int mismatch)" time="0.004" classname="ModuleCNotificationAmpE2EFlowE2E8PostDeliveryCreateDeliveryForOrder"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / E2E-9 - GET Orders (Verify full list contains E2E order)" id="e2566780-a3df-41f1-bed3-71d6e8d16344" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.005">
+    <testcase name="[E2E-9][Happy] Status 200" time="0.005" classname="ModuleCNotificationAmpE2EFlowE2E9GetOrdersVerifyFullListContainsE2EOrder"/>
+    <testcase name="[E2E-9] Response is array" time="0.005" classname="ModuleCNotificationAmpE2EFlowE2E9GetOrdersVerifyFullListContainsE2EOrder"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / E2E-10 - GET Payments (Verify payment list)" id="9decc961-612a-4447-827e-32cc63f836c6" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[E2E-10][Happy] Status 200" time="0.003" classname="ModuleCNotificationAmpE2EFlowE2E10GetPaymentsVerifyPaymentList"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / E2E-11 - GET Deliveries (Verify delivery list)" id="5bcd7635-0df0-4ff5-8bda-d9cc05461f4f" timestamp="2026-07-03T12:43:59.113Z" tests="1" failures="0" errors="0" time="0.003">
+    <testcase name="[E2E-11][Happy] Status 200" time="0.003" classname="ModuleCNotificationAmpE2EFlowE2E11GetDeliveriesVerifyDeliveryList"/>
+  </testsuite>
+  <testsuite name="Module C - Notification &amp; E2E Flow / E2E-12 - GET Contracts (Verify contract list - E2E complete)" id="dd2010f0-d3c0-40d7-9dd0-dba1345236a8" timestamp="2026-07-03T12:43:59.113Z" tests="2" failures="0" errors="0" time="0.003">
+    <testcase name="[E2E-12][Happy] Status 200 - E2E Flow Complete" time="0.003" classname="ModuleCNotificationAmpE2EFlowE2E12GetContractsVerifyContractListE2EComplete"/>
+    <testcase name="[E2E-12] Contracts list not empty" time="0.003" classname="ModuleCNotificationAmpE2EFlowE2E12GetContractsVerifyContractListE2EComplete"/>
+  </testsuite>
+</testsuites>

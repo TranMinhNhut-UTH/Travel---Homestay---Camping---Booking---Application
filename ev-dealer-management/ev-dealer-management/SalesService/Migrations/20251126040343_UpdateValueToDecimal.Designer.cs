@@ -148,10 +148,7 @@ namespace SalesService.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("OrderId1")
+                    b.Property<int>("OrderId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ReceiverName")
@@ -169,7 +166,7 @@ namespace SalesService.Migrations
 
                     b.HasKey("DeliveryId");
 
-                    b.HasIndex("OrderId1");
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Deliveries");
                 });
@@ -293,10 +290,7 @@ namespace SalesService.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("OrderId1")
+                    b.Property<int>("OrderId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("PaidDate")
@@ -314,7 +308,7 @@ namespace SalesService.Migrations
 
                     b.HasKey("PaymentId");
 
-                    b.HasIndex("OrderId1");
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Payments");
                 });
@@ -363,7 +357,7 @@ namespace SalesService.Migrations
                 {
                     b.HasOne("SalesService.Models.Order", "Order")
                         .WithMany()
-                        .HasForeignKey("OrderId1");
+                        .HasForeignKey("OrderId");
 
                     b.Navigation("Order");
                 });
@@ -372,7 +366,7 @@ namespace SalesService.Migrations
                 {
                     b.HasOne("SalesService.Models.Order", "Order")
                         .WithMany()
-                        .HasForeignKey("OrderId1");
+                        .HasForeignKey("OrderId");
 
                     b.Navigation("Order");
                 });

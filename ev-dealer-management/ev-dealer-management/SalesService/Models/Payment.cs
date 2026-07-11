@@ -16,7 +16,7 @@ namespace SalesService.Models
         public Guid PaymentId { get; set; }
 
         // FK
-        public Guid OrderId { get; set; }
+        public int OrderId { get; set; }
         public Order? Order { get; set; }
 
         public decimal Amount { get; set; }
