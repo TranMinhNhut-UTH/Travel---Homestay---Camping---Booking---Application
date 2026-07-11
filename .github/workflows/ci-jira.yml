@@ -87,12 +87,23 @@ jobs:
         id: restore
         run: dotnet restore ev-dealer-management/ev-dealer-management/DealerSystem.sln
 
+      - name: Restore API Gateway
+        run: dotnet restore ev-dealer-management/ev-dealer-management/APIGatewayService/APIGatewayService.csproj
+
       - name: Build solution
         id: build
         shell: bash
         run: |
           set -o pipefail
           dotnet build ev-dealer-management/ev-dealer-management/DealerSystem.sln --configuration Release --no-restore 2>&1 | tee dotnet-build.log
+
+      - name: Build API Gateway
+        shell: bash
+        run: |
+          set -euo pipefail
+          dotnet build ev-dealer-management/ev-dealer-management/APIGatewayService/APIGatewayService.csproj \
+            --configuration Release \
+            --no-restore 2>&1 | tee gateway-build.log
 
       - name: Run Unit Tests
         id: unit_tests
@@ -130,7 +141,19 @@ jobs:
             echo "Timed out after 60 seconds waiting for ${name}: ${url}"
             echo "Last ${name} log lines:"
             if [ -f "ci-logs/${name}.log" ]; then
-              tail -n 100 "ci-logs/${name}.log"
+              if [ "$name" = "APIGatewayService" ]; then
+                tail -n 150 "ci-logs/${name}.log"
+              else
+                tail -n 100 "ci-logs/${name}.log"
+              fi
+            fi
+            if [ "$name" = "APIGatewayService" ]; then
+              echo "Running dotnet processes:"
+              ps -ef | awk 'NR == 1 || /[d]otnet/'
+              if command -v ss >/dev/null 2>&1; then
+                echo "Listening TCP ports:"
+                ss -ltnp
+              fi
             fi
             exit 1
           }
@@ -202,7 +225,29 @@ jobs:
           wait_for_http VehicleService http://127.0.0.1:5068/health
           wait_for_http SalesService http://127.0.0.1:5003/swagger/v1/swagger.json
 
-          start_service APIGatewayService 5036 ev-dealer-management/ev-dealer-management/APIGatewayService/APIGatewayService.csproj
+          GATEWAY_DIR="ev-dealer-management/ev-dealer-management/APIGatewayService"
+          GATEWAY_DLL="${GATEWAY_DIR}/bin/Release/net8.0/APIGatewayService.dll"
+
+          echo "Gateway build output:"
+          find "${GATEWAY_DIR}/bin/Release" -maxdepth 3 -type f -print
+
+          if [ ! -f "$GATEWAY_DLL" ]; then
+            echo "Gateway DLL not found: $GATEWAY_DLL"
+            echo "Available Gateway build files:"
+            if [ -d "${GATEWAY_DIR}/bin" ]; then
+              find "${GATEWAY_DIR}/bin" -type f -print
+            fi
+            exit 1
+          fi
+
+          echo "Starting APIGatewayService from $GATEWAY_DLL on 5036"
+          nohup env \
+            ASPNETCORE_ENVIRONMENT=Development \
+            ASPNETCORE_URLS=http://127.0.0.1:5036 \
+            dotnet "$GATEWAY_DLL" \
+            > ci-logs/APIGatewayService.log 2>&1 &
+          echo $! > ci-logs/APIGatewayService.pid
+
           wait_for_http APIGatewayService http://127.0.0.1:5036/swagger/v1/swagger.json
           wait_for_http GatewayVehicleRoute http://127.0.0.1:5036/api/health
 
@@ -559,6 +604,7 @@ jobs:
           name: newman-black-box-results-${{ github.run_id }}
           path: |
             newman.log
+            gateway-build.log
             test-results/newman-results.xml
             test-results/newman-report.html
             ci-logs/*.log
