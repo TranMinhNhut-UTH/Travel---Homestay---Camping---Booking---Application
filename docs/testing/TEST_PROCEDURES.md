@@ -75,10 +75,29 @@ For every request or test case:
 
 ### Newman example
 ```bash
-newman run "ev-dealer-management/ev-dealer-management/EV Dealer Management API.postman_collection.json" \
+newman run "ev-dealer-management.postman_collection.json" \
   --environment "postman/ev-dealer-management.postman_environment.json" \
-  --reporters cli,html
+  --reporters cli,junit
 ```
+
+The GitHub Actions workflow uses the canonical root collection instead:
+
+```bash
+mkdir -p test-results
+newman run ./ev-dealer-management.postman_collection.json \
+  -e ./postman/ev-dealer-management.postman_environment.json \
+  --reporters cli,junit,htmlextra \
+  --reporter-junit-export ./test-results/newman-results.xml \
+  --reporter-htmlextra-export ./test-results/newman-report.html
+```
+
+The collection-level test script is inherited by every request. It asserts the expected status for the named happy/negative case, rejects every HTTP 500 response, checks response time, validates JSON content type/body, and records created resource IDs when available. Any failed assertion makes Newman and CI exit non-zero. GitHub Actions uploads `newman.log`, JUnit XML, and the HTML report with `if: always()`.
+
+Evidence levels must not be mixed:
+
+- Markdown/Excel: test-case design only.
+- Postman `pm.test()` scripts: executable black-box tests.
+- Newman CLI/JUnit/HTML and GitHub Actions logs: execution evidence.
 
 ### Suggested evidence to keep
 - Console output from Newman

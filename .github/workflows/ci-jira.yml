@@ -28,7 +28,7 @@ jobs:
           node-version: '20'
 
       - name: Install Newman
-        run: npm install -g newman
+        run: npm install -g newman newman-reporter-htmlextra
 
       - name: Validate branch naming
         id: branch_validation
@@ -104,24 +104,49 @@ jobs:
             --no-build \
             --logger "console;verbosity=normal" 2>&1 | tee unit-test.log
 
+      - name: Prepare CI databases
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ci-data ci-logs test-results
+          echo "SQLite schemas are migrated or created by each service during startup."
+
       - name: Start backend services
         id: services
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p ci-logs
-
-          wait_for_port() {
-            local port="$1"
-            local name="$2"
-            for _ in $(seq 1 60); do
-              if timeout 1 bash -c "</dev/tcp/127.0.0.1/${port}" >/dev/null 2>&1; then
-                echo "${name} is ready on ${port}"
+          wait_for_http() {
+            local name="$1"
+            local url="$2"
+            for attempt in $(seq 1 12); do
+              if curl --fail --silent --show-error --max-time 3 "$url" >/dev/null; then
+                echo "${name} is HTTP-ready at ${url}"
                 return 0
               fi
+              echo "Waiting for ${name} (${attempt}/12): ${url}"
               sleep 5
             done
-            echo "Timed out waiting for ${name} on port ${port}"
+            echo "Timed out after 60 seconds waiting for ${name}: ${url}"
+            echo "Last ${name} log lines:"
+            if [ -f "ci-logs/${name}.log" ]; then
+              tail -n 100 "ci-logs/${name}.log"
+            fi
+            exit 1
+          }
+
+          wait_for_port() {
+            local name="$1"
+            local port="$2"
+            for attempt in $(seq 1 12); do
+              if timeout 1 bash -c "</dev/tcp/127.0.0.1/${port}" >/dev/null 2>&1; then
+                echo "${name} is ready on TCP port ${port}"
+                return 0
+              fi
+              echo "Waiting for ${name} (${attempt}/12): TCP ${port}"
+              sleep 5
+            done
+            echo "Timed out after 60 seconds waiting for ${name} on TCP port ${port}"
             exit 1
           }
 
@@ -130,11 +155,31 @@ jobs:
             local port="$2"
             local project="$3"
             echo "Starting ${name} on ${port}"
-            if [ "$name" = "NotificationService" ]; then
-              nohup env ASPNETCORE_URLS="http://127.0.0.1:${port}" USE_FAKE_FCM=true dotnet run --project "${project}" --no-launch-profile > "ci-logs/${name}.log" 2>&1 &
-            else
-              nohup env ASPNETCORE_URLS="http://127.0.0.1:${port}" dotnet run --project "${project}" --no-launch-profile > "ci-logs/${name}.log" 2>&1 &
-            fi
+            local extra_env=()
+            case "$name" in
+              UserService)
+                extra_env+=("ConnectionStrings__DefaultConnection=Data Source=${GITHUB_WORKSPACE}/ci-data/users.db")
+                ;;
+              VehicleService)
+                extra_env+=("ConnectionStrings__DefaultConnection=Data Source=${GITHUB_WORKSPACE}/ci-data/vehicles.db")
+                ;;
+              SalesService)
+                extra_env+=("ConnectionStrings__DefaultConnection=Data Source=${GITHUB_WORKSPACE}/ci-data/sales.db")
+                ;;
+              ReportingService)
+                extra_env+=("USE_SQLITE=true")
+                ;;
+              NotificationService)
+                extra_env+=("USE_FAKE_FCM=true")
+                ;;
+            esac
+            nohup env \
+              ASPNETCORE_ENVIRONMENT=Development \
+              ASPNETCORE_URLS="http://127.0.0.1:${port}" \
+              "${extra_env[@]}" \
+              dotnet run --project "${project}" --configuration Release --no-build --no-launch-profile \
+              > "ci-logs/${name}.log" 2>&1 &
+            echo $! > "ci-logs/${name}.pid"
           }
 
           docker compose -f ev-dealer-management/ev-dealer-management/docker-compose.yml up -d rabbitmq
@@ -144,21 +189,22 @@ jobs:
           start_service NotificationService 5051 ev-dealer-management/ev-dealer-management/NotificationService/NotificationService.csproj
           start_service ReportingService 5208 ev-dealer-management/ev-dealer-management/ReportingService/ReportingService.csproj
 
-          wait_for_port 7001 UserService
-          wait_for_port 5039 CustomerService
-          wait_for_port 5051 NotificationService
-          wait_for_port 5208 ReportingService
+          wait_for_http UserService http://127.0.0.1:7001/swagger/v1/swagger.json
+          wait_for_http CustomerService http://127.0.0.1:5039/swagger/v1/swagger.json
+          wait_for_http NotificationService http://127.0.0.1:5051/health
+          wait_for_http ReportingService http://127.0.0.1:5208/swagger/v1/swagger.json
 
-          wait_for_port 5672 RabbitMQ
+          wait_for_port RabbitMQ 5672
 
           start_service VehicleService 5068 ev-dealer-management/ev-dealer-management/VehicleService/VehicleService.csproj
           start_service SalesService 5003 ev-dealer-management/ev-dealer-management/SalesService/SalesService.csproj
 
-          wait_for_port 5068 VehicleService
-          wait_for_port 5003 SalesService
+          wait_for_http VehicleService http://127.0.0.1:5068/health
+          wait_for_http SalesService http://127.0.0.1:5003/swagger/v1/swagger.json
 
           start_service APIGatewayService 5036 ev-dealer-management/ev-dealer-management/APIGatewayService/APIGatewayService.csproj
-          wait_for_port 5036 APIGatewayService
+          wait_for_http APIGatewayService http://127.0.0.1:5036/swagger/v1/swagger.json
+          wait_for_http GatewayVehicleRoute http://127.0.0.1:5036/api/health
 
       - name: Run Postman API Tests
         id: api_tests
@@ -201,15 +247,23 @@ jobs:
           )"
 
           seed_payload='{"username":"admin","email":"admin@example.com","fullName":"CI Admin","password":"P@ssw0rd!","role":"Admin","dealerId":1}'
+          set +e
           seed_status="$(curl -sS -o seed-admin-response.json -w "%{http_code}" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ${bootstrap_token}" \
             -d "$seed_payload" \
-            http://127.0.0.1:5036/api/admin/users || true)"
+            http://127.0.0.1:5036/api/admin/users)"
+          seed_curl_exit=$?
+          set -e
+
+          if [[ "$seed_curl_exit" -ne 0 ]]; then
+            echo "Failed to contact the gateway while seeding the CI admin user."
+            exit "$seed_curl_exit"
+          fi
 
           if [[ "$seed_status" != "201" && "$seed_status" != "200" && "$seed_status" != "400" ]]; then
             echo "Failed to seed CI admin user. HTTP status: $seed_status"
-            cat seed-admin-response.json || true
+            if [ -f seed-admin-response.json ]; then cat seed-admin-response.json; fi
             exit 1
           fi
 
@@ -220,7 +274,7 @@ jobs:
 
           if [[ "$login_status" != "200" ]]; then
             echo "Failed to login CI admin user. HTTP status: $login_status"
-            cat login-response.json || true
+            if [ -f login-response.json ]; then cat login-response.json; fi
             exit 1
           fi
 
@@ -465,6 +519,8 @@ jobs:
 
           source postman-ci-vars.env
 
+          mkdir -p test-results
+
           newman run "$POSTMAN_FILE" \
             -e "$POSTMAN_ENV" \
             --env-var "baseUrl=http://127.0.0.1:5036" \
@@ -491,7 +547,22 @@ jobs:
             --env-var "contractId=${contractId}" \
             --env-var "newContractOrderId=${newContractOrderId}" \
             --env-var "managedUserId=${managedUserId}" \
-            --reporters cli 2>&1 | tee newman.log
+            --reporters cli,junit,htmlextra \
+            --reporter-junit-export ./test-results/newman-results.xml \
+            --reporter-htmlextra-export ./test-results/newman-report.html \
+            2>&1 | tee newman.log
+
+      - name: Upload Newman test evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-black-box-results-${{ github.run_id }}
+          path: |
+            newman.log
+            test-results/newman-results.xml
+            test-results/newman-report.html
+            ci-logs/*.log
+          if-no-files-found: warn
 
       - name: Create or update Jira issue for CI failure
         if: ${{ always() && failure() }}

@@ -1,7 +1,9 @@
 # Postman Endpoint Coverage Audit
 
 ## Scope
-Compared the active backend routes against [EV Dealer Management API.postman_collection.json](../../ev-dealer-management/ev-dealer-management/EV%20Dealer%20Management%20API.postman_collection.json).
+The CI source of truth is the root [ev-dealer-management.postman_collection.json](../../ev-dealer-management.postman_collection.json), as referenced by `.github/workflows/ci-jira.yml`. Other collections are retained as historical/module-specific suites and are not evidence for the CI run.
+
+The canonical collection currently contains 121 requests. Every request inherits executable collection-level `pm.test()` assertions for status, HTTP 500 rejection, response time, content type, valid JSON, and basic response structure. Execution evidence is generated as Newman CLI output, JUnit XML, and HTML Extra report.
 
 ## Summary
 - Total active backend endpoints: 87

@@ -1,5 +1,18 @@
 # Black-box Test Cases
 
+## Executable test evidence
+
+This file and `TEST_CASE_SPECIFICATION.xlsx` describe test-case design; they do not prove execution by themselves. The CI source of truth is the root `ev-dealer-management.postman_collection.json`. Its collection-level `pm.test()` script runs after every one of the 121 requests and asserts expected status, rejects HTTP 500, checks response time, validates JSON responses, and captures created IDs where available.
+
+Execution evidence is produced by `.github/workflows/ci-jira.yml`:
+
+- Newman CLI log: `newman.log`
+- JUnit report: `test-results/newman-results.xml`
+- HTML report: `test-results/newman-report.html`
+- GitHub Actions artifact: `newman-black-box-results-<run-id>`
+
+The artifact upload uses `if: always()`, while Newman's non-zero exit code is preserved by Bash `set -o pipefail`; therefore failed assertions fail CI without suppressing the reports. Do not change `Actual result` or `Status: TBD` below unless a real run has produced evidence for that case.
+
 ## Auth & Users
 
 ### BB-U-001
