@@ -134,11 +134,19 @@ app.MapGet("/api/reports/demand-forecast", async (IForecastingService forecastin
     {
         DateTime? fromDate = null;
         DateTime? toDate = null;
-        
-        if (!string.IsNullOrEmpty(from) && DateTime.TryParse(from, out var fd))
+
+        if (!string.IsNullOrEmpty(from))
+        {
+            if (!DateTime.TryParse(from, out var fd))
+                return Results.BadRequest(new { error = "The 'from' date is invalid." });
             fromDate = fd;
-        if (!string.IsNullOrEmpty(to) && DateTime.TryParse(to, out var td))
+        }
+        if (!string.IsNullOrEmpty(to))
+        {
+            if (!DateTime.TryParse(to, out var td))
+                return Results.BadRequest(new { error = "The 'to' date is invalid." });
             toDate = td;
+        }
             
         var forecast = await forecastingService.GenerateDemandForecastAsync(fromDate, toDate);
         return Results.Json(forecast);
@@ -539,6 +547,9 @@ app.MapGet("/api/reports/top-vehicles", async (ReportingDbContext db, int? limit
 {
     try
     {
+        if (limit.HasValue && limit.Value <= 0)
+            return Results.BadRequest(new { error = "Limit must be greater than 0." });
+
         // Tính average revenue per order từ SalesSummaries để ước tính revenue cho vehicles
         var totalOrders = await db.SalesSummaries.SumAsync(s => (long)s.TotalOrders);
         var totalRevenue = await db.SalesSummaries.SumAsync(s => (long)s.TotalRevenue);
@@ -554,7 +565,7 @@ app.MapGet("/api/reports/top-vehicles", async (ReportingDbContext db, int? limit
             })
             .OrderByDescending(x => x.stockCount);
 
-        var l = limit.HasValue && limit.Value > 0 ? limit.Value : 10;
+        var l = limit ?? 10;
         var topVehicles = await query
             .Take(l)
             .Select(x => new
@@ -611,9 +622,15 @@ app.MapPost("/api/reports/export", async (HttpRequest req, ReportingDbContext db
             // ignore parse errors and use defaults
         }
 
+        if (!string.Equals(type, "sales", StringComparison.OrdinalIgnoreCase) &&
+            !string.Equals(type, "inventory", StringComparison.OrdinalIgnoreCase))
+        {
+            return Results.BadRequest(new { error = "Unsupported report type. Use 'sales' or 'inventory'." });
+        }
+
         var csvBuilder = new StringBuilder();
         byte[] bytes;
-        string filename;
+        string filename = string.Empty;
 
         if (type.ToLower() == "sales")
         {
@@ -649,25 +666,6 @@ app.MapPost("/api/reports/export", async (HttpRequest req, ReportingDbContext db
 
             filename = $"inventory_report_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
         }
-        else
-        {
-            // Default: export both
-            var salesData = await db.SalesSummaries.OrderByDescending(s => s.Date).ToListAsync();
-            var inventoryData = await db.InventorySummaries.OrderByDescending(i => i.LastUpdatedAt).ToListAsync();
-
-            csvBuilder.AppendLine("Type,Date,DealerName,Details,Count,Revenue");
-            foreach (var s in salesData)
-            {
-                csvBuilder.AppendLine($"Sales,{s.Date:yyyy-MM-dd},\"{s.DealerName}\",\"{s.SalespersonName}\",{s.TotalOrders},{s.TotalRevenue}");
-            }
-            foreach (var i in inventoryData)
-            {
-                csvBuilder.AppendLine($"Inventory,{i.LastUpdatedAt:yyyy-MM-dd},\"{i.DealerName}\",\"{i.VehicleName}\",{i.StockCount},0");
-            }
-
-            filename = $"full_report_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
-        }
-
                     // --- SỬA: Thêm BOM vào đầu chuỗi byte để Excel nhận diện tiếng Việt ---
             var contentBytes = Encoding.UTF8.GetBytes(csvBuilder.ToString());
             var bom = Encoding.UTF8.GetPreamble(); // Lấy mã BOM (EF BB BF)

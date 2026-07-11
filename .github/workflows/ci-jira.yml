@@ -28,9 +28,10 @@ jobs:
           node-version: '20'
 
       - name: Install Newman
-        run: npm install -g newman
+        run: npm install -g newman newman-reporter-htmlextra
 
       - name: Validate branch naming
+        id: branch_validation
         shell: bash
         run: |
           branch="${{ github.event.pull_request.head.ref || github.ref_name }}"
@@ -42,6 +43,7 @@ jobs:
           fi
 
       - name: Extract Jira issue keys
+        if: always()
         id: jira_keys
         shell: bash
         run: |
@@ -82,7 +84,11 @@ jobs:
           fi
 
       - name: Restore solution
+        id: restore
         run: dotnet restore ev-dealer-management/ev-dealer-management/DealerSystem.sln
+
+      - name: Restore API Gateway
+        run: dotnet restore ev-dealer-management/ev-dealer-management/APIGatewayService/APIGatewayService.csproj
 
       - name: Build solution
         id: build
@@ -90,6 +96,14 @@ jobs:
         run: |
           set -o pipefail
           dotnet build ev-dealer-management/ev-dealer-management/DealerSystem.sln --configuration Release --no-restore 2>&1 | tee dotnet-build.log
+
+      - name: Build API Gateway
+        shell: bash
+        run: |
+          set -euo pipefail
+          dotnet build ev-dealer-management/ev-dealer-management/APIGatewayService/APIGatewayService.csproj \
+            --configuration Release \
+            --no-restore 2>&1 | tee gateway-build.log
 
       - name: Run Unit Tests
         id: unit_tests
@@ -101,24 +115,61 @@ jobs:
             --no-build \
             --logger "console;verbosity=normal" 2>&1 | tee unit-test.log
 
+      - name: Prepare CI databases
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ci-data ci-logs test-results
+          echo "SQLite schemas are migrated or created by each service during startup."
+
       - name: Start backend services
         id: services
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p ci-logs
-
-          wait_for_port() {
-            local port="$1"
-            local name="$2"
-            for _ in $(seq 1 60); do
-              if timeout 1 bash -c "</dev/tcp/127.0.0.1/${port}" >/dev/null 2>&1; then
-                echo "${name} is ready on ${port}"
+          wait_for_http() {
+            local name="$1"
+            local url="$2"
+            for attempt in $(seq 1 12); do
+              if curl --fail --silent --show-error --max-time 3 "$url" >/dev/null; then
+                echo "${name} is HTTP-ready at ${url}"
                 return 0
               fi
+              echo "Waiting for ${name} (${attempt}/12): ${url}"
               sleep 5
             done
-            echo "Timed out waiting for ${name} on port ${port}"
+            echo "Timed out after 60 seconds waiting for ${name}: ${url}"
+            echo "Last ${name} log lines:"
+            if [ -f "ci-logs/${name}.log" ]; then
+              if [ "$name" = "APIGatewayService" ]; then
+                tail -n 150 "ci-logs/${name}.log"
+              else
+                tail -n 100 "ci-logs/${name}.log"
+              fi
+            fi
+            if [ "$name" = "APIGatewayService" ]; then
+              echo "Running dotnet processes:"
+              ps -ef | awk 'NR == 1 || /[d]otnet/'
+              if command -v ss >/dev/null 2>&1; then
+                echo "Listening TCP ports:"
+                ss -ltnp
+              fi
+            fi
+            exit 1
+          }
+
+          wait_for_port() {
+            local name="$1"
+            local port="$2"
+            for attempt in $(seq 1 12); do
+              if timeout 1 bash -c "</dev/tcp/127.0.0.1/${port}" >/dev/null 2>&1; then
+                echo "${name} is ready on TCP port ${port}"
+                return 0
+              fi
+              echo "Waiting for ${name} (${attempt}/12): TCP ${port}"
+              sleep 5
+            done
+            echo "Timed out after 60 seconds waiting for ${name} on TCP port ${port}"
             exit 1
           }
 
@@ -127,7 +178,31 @@ jobs:
             local port="$2"
             local project="$3"
             echo "Starting ${name} on ${port}"
-            nohup env ASPNETCORE_URLS="http://127.0.0.1:${port}" dotnet run --project "${project}" --no-launch-profile > "ci-logs/${name}.log" 2>&1 &
+            local extra_env=()
+            case "$name" in
+              UserService)
+                extra_env+=("ConnectionStrings__DefaultConnection=Data Source=${GITHUB_WORKSPACE}/ci-data/users.db")
+                ;;
+              VehicleService)
+                extra_env+=("ConnectionStrings__DefaultConnection=Data Source=${GITHUB_WORKSPACE}/ci-data/vehicles.db")
+                ;;
+              SalesService)
+                extra_env+=("ConnectionStrings__DefaultConnection=Data Source=${GITHUB_WORKSPACE}/ci-data/sales.db")
+                ;;
+              ReportingService)
+                extra_env+=("USE_SQLITE=true")
+                ;;
+              NotificationService)
+                extra_env+=("USE_FAKE_FCM=true")
+                ;;
+            esac
+            nohup env \
+              ASPNETCORE_ENVIRONMENT=Development \
+              ASPNETCORE_URLS="http://127.0.0.1:${port}" \
+              "${extra_env[@]}" \
+              dotnet run --project "${project}" --configuration Release --no-build --no-launch-profile \
+              > "ci-logs/${name}.log" 2>&1 &
+            echo $! > "ci-logs/${name}.pid"
           }
 
           docker compose -f ev-dealer-management/ev-dealer-management/docker-compose.yml up -d rabbitmq
@@ -137,21 +212,44 @@ jobs:
           start_service NotificationService 5051 ev-dealer-management/ev-dealer-management/NotificationService/NotificationService.csproj
           start_service ReportingService 5208 ev-dealer-management/ev-dealer-management/ReportingService/ReportingService.csproj
 
-          wait_for_port 7001 UserService
-          wait_for_port 5039 CustomerService
-          wait_for_port 5051 NotificationService
-          wait_for_port 5208 ReportingService
+          wait_for_http UserService http://127.0.0.1:7001/swagger/v1/swagger.json
+          wait_for_http CustomerService http://127.0.0.1:5039/swagger/v1/swagger.json
+          wait_for_http NotificationService http://127.0.0.1:5051/health
+          wait_for_http ReportingService http://127.0.0.1:5208/swagger/v1/swagger.json
 
-          wait_for_port 5672 RabbitMQ
+          wait_for_port RabbitMQ 5672
 
           start_service VehicleService 5068 ev-dealer-management/ev-dealer-management/VehicleService/VehicleService.csproj
           start_service SalesService 5003 ev-dealer-management/ev-dealer-management/SalesService/SalesService.csproj
 
-          wait_for_port 5068 VehicleService
-          wait_for_port 5003 SalesService
+          wait_for_http VehicleService http://127.0.0.1:5068/health
+          wait_for_http SalesService http://127.0.0.1:5003/swagger/v1/swagger.json
 
-          start_service APIGatewayService 5036 ev-dealer-management/ev-dealer-management/APIGatewayService/APIGatewayService.csproj
-          wait_for_port 5036 APIGatewayService
+          GATEWAY_DIR="ev-dealer-management/ev-dealer-management/APIGatewayService"
+          GATEWAY_DLL="${GATEWAY_DIR}/bin/Release/net8.0/APIGatewayService.dll"
+
+          echo "Gateway build output:"
+          find "${GATEWAY_DIR}/bin/Release" -maxdepth 3 -type f -print
+
+          if [ ! -f "$GATEWAY_DLL" ]; then
+            echo "Gateway DLL not found: $GATEWAY_DLL"
+            echo "Available Gateway build files:"
+            if [ -d "${GATEWAY_DIR}/bin" ]; then
+              find "${GATEWAY_DIR}/bin" -type f -print
+            fi
+            exit 1
+          fi
+
+          echo "Starting APIGatewayService from $GATEWAY_DLL on 5036"
+          nohup env \
+            ASPNETCORE_ENVIRONMENT=Development \
+            ASPNETCORE_URLS=http://127.0.0.1:5036 \
+            dotnet "$GATEWAY_DLL" \
+            > ci-logs/APIGatewayService.log 2>&1 &
+          echo $! > ci-logs/APIGatewayService.pid
+
+          wait_for_http APIGatewayService http://127.0.0.1:5036/swagger/v1/swagger.json
+          wait_for_http GatewayVehicleRoute http://127.0.0.1:5036/api/health
 
       - name: Run Postman API Tests
         id: api_tests
@@ -159,27 +257,390 @@ jobs:
         run: |
           set -euo pipefail
           POSTMAN_FILE="./ev-dealer-management.postman_collection.json"
+          POSTMAN_ENV="./postman/ev-dealer-management.postman_environment.json"
           echo "Executing Newman with target collection: $POSTMAN_FILE"
+
+          bootstrap_token="$(node <<'NODE'
+          const crypto = require('node:crypto');
+          const base64url = (value) => Buffer.from(JSON.stringify(value))
+            .toString('base64')
+            .replace(/=/g, '')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_');
+          const now = Math.floor(Date.now() / 1000);
+          const header = { alg: 'HS256', typ: 'JWT' };
+          const payload = {
+            id: '1',
+            unique_name: 'ci-bootstrap-admin',
+            role: 'Admin',
+            'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': 'Admin',
+            nbf: now - 60,
+            exp: now + 3600,
+            iss: 'evm.local',
+            aud: 'evm.local'
+          };
+          const signingInput = `${base64url(header)}.${base64url(payload)}`;
+          const signature = crypto
+            .createHmac('sha256', 'ReplaceThisWithASecretKeyForDevelopment')
+            .update(signingInput)
+            .digest('base64')
+            .replace(/=/g, '')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_');
+          console.log(`${signingInput}.${signature}`);
+          NODE
+          )"
+
+          seed_payload='{"username":"admin","email":"admin@example.com","fullName":"CI Admin","password":"P@ssw0rd!","role":"Admin","dealerId":1}'
+          set +e
+          seed_status="$(curl -sS -o seed-admin-response.json -w "%{http_code}" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${bootstrap_token}" \
+            -d "$seed_payload" \
+            http://127.0.0.1:5036/api/admin/users)"
+          seed_curl_exit=$?
+          set -e
+
+          if [[ "$seed_curl_exit" -ne 0 ]]; then
+            echo "Failed to contact the gateway while seeding the CI admin user."
+            exit "$seed_curl_exit"
+          fi
+
+          if [[ "$seed_status" != "201" && "$seed_status" != "200" && "$seed_status" != "400" ]]; then
+            echo "Failed to seed CI admin user. HTTP status: $seed_status"
+            if [ -f seed-admin-response.json ]; then cat seed-admin-response.json; fi
+            exit 1
+          fi
+
+          login_status="$(curl -sS -o login-response.json -w "%{http_code}" \
+            -H "Content-Type: application/json" \
+            -d '{"username":"admin","password":"P@ssw0rd!"}' \
+            http://127.0.0.1:5036/api/auth/login)"
+
+          if [[ "$login_status" != "200" ]]; then
+            echo "Failed to login CI admin user. HTTP status: $login_status"
+            if [ -f login-response.json ]; then cat login-response.json; fi
+            exit 1
+          fi
+
+          auth_token="$(node -e "const fs=require('node:fs'); const body=JSON.parse(fs.readFileSync('login-response.json','utf8')); if(!body.token){ console.error('Login response did not include token'); process.exit(1); } process.stdout.write(body.token);")"
+          auth_user_id="$(node -e "const fs=require('node:fs'); const body=JSON.parse(fs.readFileSync('login-response.json','utf8')); process.stdout.write(String(body.userId || body.user?.id || 1));")"
+
+          AUTH_TOKEN="$auth_token" node <<'NODE' > postman-ci-vars.env
+          const token = process.env.AUTH_TOKEN;
+          const runId = process.env.GITHUB_RUN_ID || Date.now().toString();
+          const headers = {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          };
+
+          function findNumber(value, keys) {
+            if (!value || typeof value !== 'object') return undefined;
+            for (const key of keys) {
+              if (Number.isInteger(value[key])) return value[key];
+            }
+            for (const item of Object.values(value)) {
+              const found = findNumber(item, keys);
+              if (found !== undefined) return found;
+            }
+            return undefined;
+          }
+
+          async function requestJson(method, url, body, allowed = [200, 201, 204, 400, 409]) {
+            const response = await fetch(url, {
+              method,
+              headers,
+              body: body ? JSON.stringify(body) : undefined
+            });
+            const text = await response.text();
+            let json = {};
+            if (text) {
+              try { json = JSON.parse(text); } catch { json = { raw: text }; }
+            }
+            if (!allowed.includes(response.status)) {
+              console.error(`${method} ${url} failed with ${response.status}`);
+              console.error(text);
+              process.exit(1);
+            }
+            return json;
+          }
+
+          async function main() {
+          const dealer = await requestJson('POST', 'http://127.0.0.1:5036/api/dealers', {
+            name: `CI Delete Dealer ${runId}`,
+            region: 'CI',
+            contact: '0900000000',
+            email: `ci-delete-dealer-${runId}@example.com`,
+            address: 'CI temporary dealer'
+          });
+          const deleteDealerId = findNumber(dealer, ['id', 'dealerId']) || 1;
+
+          const vehicle = await requestJson('POST', 'http://127.0.0.1:5036/api/vehicles', {
+            model: `CI Seed Vehicle ${runId}`,
+            type: 'SUV',
+            price: 1200000000,
+            batteryCapacity: 87.7,
+            range: 420,
+            stockQuantity: 5,
+            description: 'CI seed vehicle',
+            dealerId: 1
+          });
+          const vehicleId = findNumber(vehicle, ['id', 'vehicleId']) || 1;
+
+          const deleteVehicle = await requestJson('POST', 'http://127.0.0.1:5036/api/vehicles', {
+            model: `CI Delete Vehicle ${runId}`,
+            type: 'SUV',
+            price: 1200000000,
+            batteryCapacity: 87.7,
+            range: 420,
+            stockQuantity: 1,
+            description: 'CI vehicle used only by delete request',
+            dealerId: 1
+          });
+          const deleteVehicleId = findNumber(deleteVehicle, ['id', 'vehicleId']) || vehicleId;
+
+          const customer = await requestJson('POST', 'http://127.0.0.1:5036/api/customers', {
+            name: 'CI Customer',
+            email: `ci-customer-${runId}@example.com`,
+            phone: '+84900000000',
+            address: 'CI address',
+            dealerId: 1,
+            status: 'active'
+          });
+          const customerId = findNumber(customer, ['id', 'customerId']) || 1;
+
+          const deleteCustomer = await requestJson('POST', 'http://127.0.0.1:5036/api/customers', {
+            name: 'CI Delete Customer',
+            email: `ci-delete-customer-${runId}@example.com`,
+            phone: '+84900000001',
+            address: 'CI delete address',
+            dealerId: 1,
+            status: 'active'
+          });
+          const deleteCustomerId = findNumber(deleteCustomer, ['id', 'customerId']) || customerId;
+
+          const testDrive = await requestJson('POST', 'http://127.0.0.1:5036/api/TestDrives', {
+            customerId,
+            vehicleId,
+            dealerId: 1,
+            appointmentDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+            notes: 'CI seed test drive',
+            status: 'Scheduled'
+          });
+          const testDriveId = findNumber(testDrive, ['testDriveId', 'id']) || 1;
+
+          const complaint = await requestJson('POST', 'http://127.0.0.1:5039/api/Complaints', {
+            customerId,
+            type: 'Bao hanh',
+            title: 'CI complaint',
+            description: 'CI seed complaint',
+            assignedToStaffID: 1,
+            priority: 'High',
+            relatedOrderID: null,
+            relatedVehicleID: vehicleId
+          });
+          const complaintId = findNumber(complaint, ['id', 'complaintId']) || 1;
+
+          const quote = await requestJson('POST', 'http://127.0.0.1:5003/api/Quotes', {
+            customerId,
+            dealerId: 1,
+            salespersonId: 1,
+            vehicleId,
+            colorId: 1,
+            quantity: 1,
+            unitPrice: 1200000000,
+            totalPrice: 1200000000,
+            status: 'Active',
+            notes: 'CI seed quote'
+          });
+          const quoteId = findNumber(quote, ['id', 'quoteId']) || 1;
+
+          const order = await requestJson('POST', 'http://127.0.0.1:5036/api/Orders/complete', {
+            quoteId,
+            customerId,
+            customerEmail: `ci-customer-${runId}@example.com`,
+            customerName: 'CI Customer',
+            dealerId: 1,
+            salespersonId: 1,
+            paymentMethod: 'Cash',
+            deliveryDate: '2026-06-10T09:00:00Z',
+            estimatedDeliveryDate: '2026-06-15T09:00:00Z',
+            notes: 'CI seed order',
+            paymentType: 'Full',
+            depositAmount: 0,
+            interestRateYearly: 0,
+            loanTermMonths: 0,
+            vehicleId,
+            vehicleVariantId: 1,
+            colorId: 1,
+            quantity: 1,
+            unitPrice: 1200000000,
+            totalAmount: 1200000000,
+            promotionId: null,
+            discountAmount: 0,
+            discountPercent: 0,
+            discountNote: ''
+          });
+          const orderId = findNumber(order, ['id', 'orderId']) || 1;
+
+          const contract = await requestJson('POST', 'http://127.0.0.1:5036/api/Contracts', {
+            orderId,
+            customerId,
+            salespersonId: '1',
+            contractDate: '2026-06-10T09:00:00Z',
+            depositAmountReceived: true,
+            termsAndConditions: 'CI seed contract'
+          });
+          const contractId = findNumber(contract, ['id', 'contractId']) || 1;
+
+          const newContractOrder = await requestJson('POST', 'http://127.0.0.1:5036/api/Orders/complete', {
+            quoteId,
+            customerId,
+            customerEmail: `ci-customer-${runId}@example.com`,
+            customerName: 'CI Customer',
+            dealerId: 1,
+            salespersonId: 1,
+            paymentMethod: 'Cash',
+            deliveryDate: '2026-06-10T09:00:00Z',
+            estimatedDeliveryDate: '2026-06-15T09:00:00Z',
+            notes: 'CI order for contract create request',
+            paymentType: 'Full',
+            depositAmount: 0,
+            interestRateYearly: 0,
+            loanTermMonths: 0,
+            vehicleId,
+            vehicleVariantId: 1,
+            colorId: 1,
+            quantity: 1,
+            unitPrice: 1200000000,
+            totalAmount: 1200000000,
+            promotionId: null,
+            discountAmount: 0,
+            discountPercent: 0,
+            discountNote: ''
+          });
+          const newContractOrderId = findNumber(newContractOrder, ['id', 'orderId']) || orderId;
+
+          const managedUser = await requestJson('POST', 'http://127.0.0.1:5036/api/admin/users', {
+            username: `manageduser${runId}`,
+            email: `managed-user-${runId}@example.com`,
+            fullName: 'CI Managed User',
+            password: 'P@ssw0rd!',
+            role: 'DealerStaff',
+            dealerId: 1
+          }, [200, 201]);
+          const managedUserId = findNumber(managedUser, ['userId', 'id']) || 1;
+
+          const deleteUser = await requestJson('POST', 'http://127.0.0.1:5036/api/admin/users', {
+            username: `deleteuser${runId}`,
+            email: `delete-user-${runId}@example.com`,
+            fullName: 'CI Delete User',
+            password: 'P@ssw0rd!',
+            role: 'DealerStaff',
+            dealerId: 1
+          }, [200, 201]);
+          const deleteUserId = findNumber(deleteUser, ['userId', 'id']) || 1;
+
+          console.log(`vehicleId=${vehicleId}`);
+          console.log(`deleteVehicleId=${deleteVehicleId}`);
+          console.log(`deleteDealerId=${deleteDealerId}`);
+          console.log(`customerId=${customerId}`);
+          console.log(`deleteCustomerId=${deleteCustomerId}`);
+          console.log(`testDriveId=${testDriveId}`);
+          console.log(`complaintId=${complaintId}`);
+          console.log(`quoteId=${quoteId}`);
+          console.log(`orderId=${orderId}`);
+          console.log(`contractId=${contractId}`);
+          console.log(`newContractOrderId=${newContractOrderId}`);
+          console.log(`managedUserId=${managedUserId}`);
+          console.log(`deleteUserId=${deleteUserId}`);
+          }
+
+          main().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+          source postman-ci-vars.env
+
+          mkdir -p test-results
+
           newman run "$POSTMAN_FILE" \
+            -e "$POSTMAN_ENV" \
             --env-var "baseUrl=http://127.0.0.1:5036" \
             --env-var "base_url=http://127.0.0.1:5036" \
-            --reporters cli 2>&1 | tee newman.log
+            --env-var "gatewayUrl=http://127.0.0.1:5036" \
+            --env-var "userServiceUrl=http://127.0.0.1:7001" \
+            --env-var "vehicleServiceUrl=http://127.0.0.1:5068" \
+            --env-var "customerServiceUrl=http://127.0.0.1:5039" \
+            --env-var "salesServiceUrl=http://127.0.0.1:5003" \
+            --env-var "notificationServiceUrl=http://127.0.0.1:5051" \
+            --env-var "reportingServiceUrl=http://127.0.0.1:5208" \
+            --env-var "authToken=${auth_token}" \
+            --env-var "userId=${auth_user_id}" \
+            --env-var "deleteUserId=${deleteUserId}" \
+            --env-var "vehicleId=${vehicleId}" \
+            --env-var "deleteVehicleId=${deleteVehicleId}" \
+            --env-var "deleteDealerId=${deleteDealerId}" \
+            --env-var "customerId=${customerId}" \
+            --env-var "deleteCustomerId=${deleteCustomerId}" \
+            --env-var "testDriveId=${testDriveId}" \
+            --env-var "complaintId=${complaintId}" \
+            --env-var "quoteId=${quoteId}" \
+            --env-var "orderId=${orderId}" \
+            --env-var "contractId=${contractId}" \
+            --env-var "newContractOrderId=${newContractOrderId}" \
+            --env-var "managedUserId=${managedUserId}" \
+            --reporters cli,junit,htmlextra \
+            --reporter-junit-export ./test-results/newman-results.xml \
+            --reporter-htmlextra-export ./test-results/newman-report.html \
+            2>&1 | tee newman.log
 
-      - name: Jira comment on FAIL
-        if: failure() && github.ref != 'refs/heads/main' && steps.jira_keys.outputs.branch_key != ''
+      - name: Upload Newman test evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-black-box-results-${{ github.run_id }}
+          path: |
+            newman.log
+            gateway-build.log
+            test-results/newman-results.xml
+            test-results/newman-report.html
+            ci-logs/*.log
+          if-no-files-found: warn
+
+      - name: Create or update Jira issue for CI failure
+        if: ${{ always() && failure() }}
         env:
+          TEST_STATUS: FAIL
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
           JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
-          JIRA_ISSUE_KEYS: ${{ steps.jira_keys.outputs.branch_key }}
-          JIRA_BRANCH_TYPE: ${{ steps.jira_keys.outputs.branch_type }}
+          JIRA_REPORTER_ACCOUNT_ID: ${{ secrets.JIRA_REPORTER_ACCOUNT_ID }}
+          JIRA_DEFAULT_ASSIGNEE_ACCOUNT_ID: ${{ secrets.JIRA_DEFAULT_ASSIGNEE_ACCOUNT_ID }}
+          JIRA_AUTOMATION_ISSUE_KEY: ${{ steps.jira_keys.outputs.branch_key }}
+          JIRA_LINK_ISSUE_KEY: ${{ steps.jira_keys.outputs.branch_key }}
+          BRANCH_VALIDATION_OUTCOME: ${{ steps.branch_validation.outcome }}
+          POSTMAN_VALIDATION_OUTCOME: ${{ steps.postman_validation.outcome }}
+          RESTORE_OUTCOME: ${{ steps.restore.outcome }}
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
+          UNIT_TEST_OUTCOME: ${{ steps.unit_tests.outcome }}
+          SERVICES_OUTCOME: ${{ steps.services.outcome }}
+          API_TESTS_OUTCOME: ${{ steps.api_tests.outcome }}
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
-        run: node .github/scripts/jira-sync.mjs FAIL
+        shell: bash
+        run: |
+          echo "Jira CI failure reporting step started (always + failure)."
+          echo "Branch: ${GITHUB_REF_NAME}"
+          echo "Commit: ${GITHUB_SHA}"
+          echo "Run: ${GITHUB_RUN_URL}"
+          node .github/scripts/jira-test-report.mjs FAIL
 
       - name: Publish PASS test report
-        if: success()
+        if: ${{ always() && success() }}
         env:
           TEST_STATUS: PASS
           POSTMAN_VALIDATION_OUTCOME: ${{ steps.postman_validation.outcome }}
@@ -191,7 +652,7 @@ jobs:
         run: node .github/scripts/jira-test-report.mjs PASS
 
       - name: Jira update on PASS
-        if: success() && steps.jira_keys.outputs.branch_key != ''
+        if: ${{ always() && success() && steps.jira_keys.outputs.branch_key != '' }}
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
@@ -203,25 +664,6 @@ jobs:
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
         run: node .github/scripts/jira-sync.mjs PASS
-
-      - name: Create Jira Bug only when needed
-        if: failure() && github.ref != 'refs/heads/main' && steps.jira_keys.outputs.branch_type == 'feature' && steps.jira_keys.outputs.is_module_parent == 'true'
-        env:
-          TEST_STATUS: FAIL
-          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
-          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
-          JIRA_REPORTER_ACCOUNT_ID: ${{ secrets.JIRA_REPORTER_ACCOUNT_ID }}
-          JIRA_DEFAULT_ASSIGNEE_ACCOUNT_ID: ${{ secrets.JIRA_DEFAULT_ASSIGNEE_ACCOUNT_ID }}
-          JIRA_LINK_ISSUE_KEY: ${{ steps.jira_keys.outputs.branch_key }}
-          POSTMAN_VALIDATION_OUTCOME: ${{ steps.postman_validation.outcome }}
-          BUILD_OUTCOME: ${{ steps.build.outcome }}
-          UNIT_TEST_OUTCOME: ${{ steps.unit_tests.outcome }}
-          SERVICES_OUTCOME: ${{ steps.services.outcome }}
-          API_TESTS_OUTCOME: ${{ steps.api_tests.outcome }}
-          GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: node .github/scripts/jira-test-report.mjs FAIL
 
   merge-pr-to-done:
     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true

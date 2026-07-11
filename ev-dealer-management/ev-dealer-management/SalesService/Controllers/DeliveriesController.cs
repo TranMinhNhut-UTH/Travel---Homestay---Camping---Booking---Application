@@ -44,6 +44,16 @@ namespace SalesService.Controllers
         [HttpPost]
         public async Task<ActionResult<DeliveryDto>> CreateDelivery(CreateDeliveryDto createDto)
         {
+            if (createDto.EstimatedDeliveryDate == default)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Missing estimated delivery date",
+                    Detail = "EstimatedDeliveryDate is required.",
+                    Status = StatusCodes.Status400BadRequest
+                });
+            }
+
             var delivery = new Delivery
             {
                 DeliveryId = Guid.NewGuid(),

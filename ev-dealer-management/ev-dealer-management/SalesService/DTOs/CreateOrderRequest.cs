@@ -15,6 +15,8 @@ namespace SalesService.DTOs
         public int CustomerId { get; set; }
 
         [JsonPropertyName("customerEmail")]
+        [Required]
+        [EmailAddress]
         public string CustomerEmail { get; set; } = string.Empty;
 
         [JsonPropertyName("customerName")]
@@ -66,6 +68,7 @@ namespace SalesService.DTOs
         public decimal UnitPrice { get; set; }
 
         [JsonPropertyName("totalAmount")] // This is the computedTotal from frontend
+        [Range(typeof(decimal), "0.01", "79228162514264337593543950335")]
         public decimal TotalAmount { get; set; }
 
         // Promotion fields

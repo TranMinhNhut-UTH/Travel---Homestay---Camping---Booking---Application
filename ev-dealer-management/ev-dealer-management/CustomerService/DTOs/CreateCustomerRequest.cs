@@ -17,7 +17,7 @@ public class CreateCustomerRequest
 
     public string? Address { get; set; }
 
-    [Required]
+    [Range(1, int.MaxValue, ErrorMessage = "DealerId must be greater than 0.")]
     public int DealerId { get; set; }
 
     public string? Status { get; set; } // e.g., "active", "inactive", "pending"

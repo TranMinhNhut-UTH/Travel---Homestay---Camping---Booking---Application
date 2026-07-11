@@ -11,16 +11,66 @@ $services = @(
     @{ Name = "APIGatewayService"; Path = (Join-Path $backendRoot "APIGatewayService"); Url = "http://localhost:5036" }
 )
 
-$tabs = @()
+$wtArgs = @()
+$powerShellExe = (Get-Process -Id $PID).Path
+$startupDir = Join-Path $env:TEMP "ev-dealer-management-startup"
+New-Item -ItemType Directory -Force -Path $startupDir | Out-Null
 
-foreach ($service in $services) {
-    $tabs += "new-tab --title `"$($service.Name)`" -d `"$($service.Path)`" powershell -NoExit -Command `"Set-Location '$($service.Path)'; $env:ASPNETCORE_URLS='$($service.Url)'; dotnet run`""
+function New-ServiceStartupScript {
+    param(
+        [string]$Name,
+        [string]$WorkingDirectory,
+        [string]$Url
+    )
+
+    $scriptPath = Join-Path $startupDir "$Name-startup.ps1"
+    @"
+Set-Location -LiteralPath '$WorkingDirectory'
+`$env:ASPNETCORE_URLS = '$Url'
+dotnet run
+"@ | Set-Content -LiteralPath $scriptPath -Encoding UTF8
+    return $scriptPath
 }
 
-$frontendCommand = "Set-Location `"$frontendRoot`"; if (-not (Test-Path node_modules)) { npm install }; npm run dev"
-$tabs += "new-tab --title `"Frontend`" -d `"$frontendRoot`" powershell -NoExit -Command `"$frontendCommand`""
+function Add-WtTab {
+    param(
+        [string]$Title,
+        [string]$WorkingDirectory,
+        [string]$ScriptPath
+    )
 
-$wtArgs = ($tabs -join ' ; ')
+    if (-not (Test-Path -LiteralPath $WorkingDirectory -PathType Container)) {
+        throw "Working directory does not exist: $WorkingDirectory"
+    }
+
+    if ($script:wtArgs.Count -gt 0) {
+        $script:wtArgs += ";"
+    }
+
+    # Keep every Windows Terminal argument separate. Building one large quoted
+    # string makes wt treat the command and all its arguments as an executable name.
+    $script:wtArgs += @(
+        "new-tab",
+        "--title", $Title,
+        "-d", $WorkingDirectory,
+        $powerShellExe,
+        "-NoExit",
+        "-File", $ScriptPath
+    )
+}
+
+foreach ($service in $services) {
+    $startupScript = New-ServiceStartupScript -Name $service.Name -WorkingDirectory $service.Path -Url $service.Url
+    Add-WtTab -Title $service.Name -WorkingDirectory $service.Path -ScriptPath $startupScript
+}
+
+$frontendScript = Join-Path $startupDir "Frontend-startup.ps1"
+@"
+Set-Location -LiteralPath '$frontendRoot'
+if (-not (Test-Path node_modules)) { npm install }
+npm run dev
+"@ | Set-Content -LiteralPath $frontendScript -Encoding UTF8
+Add-WtTab -Title 'Frontend' -WorkingDirectory $frontendRoot -ScriptPath $frontendScript
 
 Write-Host "Opening backend services and frontend in Windows Terminal tabs..."
-Start-Process wt -ArgumentList $wtArgs
+& wt.exe @wtArgs

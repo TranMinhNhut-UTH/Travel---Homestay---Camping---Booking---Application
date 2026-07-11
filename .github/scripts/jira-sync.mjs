@@ -30,6 +30,7 @@ function buildVerificationComment(state, issueKey) {
     `Commit: ${process.env.GITHUB_SHA || 'unknown-commit'}`,
     `Actor: ${process.env.GITHUB_ACTOR || 'unknown-actor'}`,
     `CI Run: ${process.env.GITHUB_RUN_URL || 'Not available'}`,
+    `Time: ${new Date().toISOString()}`,
     `Branch Type: ${branchType}`,
     `Jira Issue: ${issueKey}`,
   ];
@@ -116,6 +117,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error(error.stack || error.message);
+  console.error(`[Jira Sync] ERROR: ${error.stack || error.message}`);
   process.exit(1);
 });
