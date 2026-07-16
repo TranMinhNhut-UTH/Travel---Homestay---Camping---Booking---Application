@@ -639,7 +639,7 @@ jobs:
           echo "Run: ${GITHUB_RUN_URL}"
           node .github/scripts/jira-test-report.mjs FAIL
 
-      - name: Publish PASS test report
+      - name: Publish PASS job summary
         if: ${{ always() && success() }}
         env:
           TEST_STATUS: PASS
@@ -651,8 +651,17 @@ jobs:
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: node .github/scripts/jira-test-report.mjs PASS
 
-      - name: Jira update on PASS
-        if: ${{ always() && success() && steps.jira_keys.outputs.branch_key != '' }}
+      - name: Add Jira PASS comment and move issue to In Progress
+        if: >-
+          ${{ always()
+              && steps.jira_keys.outputs.branch_key != ''
+              && steps.branch_validation.outcome == 'success'
+              && steps.postman_validation.outcome == 'success'
+              && steps.restore.outcome == 'success'
+              && steps.build.outcome == 'success'
+              && steps.unit_tests.outcome == 'success'
+              && steps.services.outcome == 'success'
+              && steps.api_tests.outcome == 'success' }}
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}

@@ -96,7 +96,7 @@ async function main() {
 
     if (state === 'PASS') {
       const branchType = process.env.JIRA_BRANCH_TYPE || 'other';
-      if (branchType === 'feature' || branchType === 'chore') {
+      if (['feature', 'fix', 'hotfix', 'chore'].includes(branchType)) {
         const target = process.env.JIRA_TRANSITION_IN_PROGRESS || 'In Progress';
         const result = await transitionIssue({ baseUrl, email, apiToken, issueKey, transitionName: target });
         console.log(`PASS comment added; In Progress transition result: ${JSON.stringify(result)}`);
