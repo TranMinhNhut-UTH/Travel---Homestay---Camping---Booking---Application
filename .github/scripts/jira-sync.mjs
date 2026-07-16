@@ -96,9 +96,21 @@ async function main() {
 
     if (state === 'PASS') {
       const branchType = process.env.JIRA_BRANCH_TYPE || 'other';
-      if (branchType === 'feature' || branchType === 'chore') {
-        const target = process.env.JIRA_TRANSITION_IN_PROGRESS || 'In Progress';
-        const result = await transitionIssue({ baseUrl, email, apiToken, issueKey, transitionName: target });
+      if (['feature', 'fix', 'hotfix', 'chore'].includes(branchType)) {
+        const configuredTarget = process.env.JIRA_TRANSITION_IN_PROGRESS || '';
+        const result = await transitionIssue({
+          baseUrl,
+          email,
+          apiToken,
+          issueKey,
+          transitionNames: [
+            configuredTarget,
+            'In Progress',
+            'In Process',
+            'Start Progress',
+            'Start Work',
+          ],
+        });
         console.log(`PASS comment added; In Progress transition result: ${JSON.stringify(result)}`);
       } else {
         console.log(`PASS comment added for ${branchType} branch; Jira status remains unchanged until PR merge.`);

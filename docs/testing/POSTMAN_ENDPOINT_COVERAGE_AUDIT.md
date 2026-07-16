@@ -1,7 +1,7 @@
 # Postman Endpoint Coverage Audit
 
 ## Scope
-The CI source of truth is the root [ev-dealer-management.postman_collection.json](../../ev-dealer-management.postman_collection.json), as referenced by `.github/workflows/ci-jira.yml`. Other collections are retained as historical/module-specific suites and are not evidence for the CI run.
+The CI and local full-suite source of truth is the root [ev-dealer-management.postman_collection.json](../../ev-dealer-management.postman_collection.json), as referenced by `.github/workflows/ci-jira.yml`. Superseded duplicate collections under `postman/` have been removed; module-specific suites outside that directory remain separate and are not evidence for the CI run.
 
 The canonical collection currently contains 116 active requests. Five `ProcessedReservations` requests were removed because their controller is commented out and the routes are inactive. Every remaining request inherits executable collection-level `pm.test()` assertions for status, HTTP 500 rejection, response time, JSON-compatible media types (`application/json` and `application/*+json`), valid JSON, and basic response structure. Execution evidence is generated as Newman CLI output, JUnit XML, and HTML Extra report.
 

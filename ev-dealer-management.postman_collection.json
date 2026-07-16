@@ -39,11 +39,11 @@
           "  pm.expect(pm.response.responseTime).to.be.below(responseTimeLimitMs);",
           "});",
           "pm.test('Content-Type describes JSON when a JSON body is returned', function () {",
-          "  const responseBody = pm.response.text();",
-          "  if (responseBody && responseBody.trim().length > 0) {",
+          "  const responseText = pm.response.text();",
+          "  if (responseText && responseText.trim().length > 0) {",
           "    const contentType = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
           "    const mediaType = contentType.split(';')[0].trim();",
-          "    if (/^[\\[{]/.test(responseBody.trim())) {",
+          "    if (/^[\\[{]/.test(responseText.trim())) {",
           "      pm.expect(mediaType === 'application/json' || mediaType.endsWith('+json')).to.equal(true);",
           "    }",
           "  }",
@@ -111,30 +111,31 @@
           "name": "Login",
           "request": {
             "method": "POST",
+            "auth": { "type": "noauth" },
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"P@ssw0rd!\"\n}" },
-            "url": "{{baseUrl}}/api/auth/login",
-            "event": [
-              {
-                "listen": "test",
-                "script": {
-                  "type": "text/javascript",
-                  "exec": [
-                    "pm.test('Login succeeds', function () {",
-                    "  pm.response.to.have.status(200);",
-                    "});",
-                    "let response = {};",
-                    "try { response = pm.response.json(); } catch (error) { response = {}; }",
-                    "const token = response.accessToken || response.token || response.access_token || response.result?.accessToken || response.data?.accessToken || response.data?.token;",
-                    "if (token) {",
-                    "  pm.collectionVariables.set('authToken', token);",
-                    "  pm.environment.set('authToken', token);",
-                    "}"
-                  ]
-                }
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"{{loginUsername}}\",\n  \"password\": \"{{loginPassword}}\"\n}" },
+            "url": "{{baseUrl}}/api/auth/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login succeeds', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "let loginResponse = {};",
+                  "try { loginResponse = pm.response.json(); } catch (error) { loginResponse = {}; }",
+                  "const loginToken = loginResponse.accessToken || loginResponse.token || loginResponse.access_token || loginResponse.result?.accessToken || loginResponse.data?.accessToken || loginResponse.data?.token;",
+                  "if (loginToken) {",
+                  "  pm.collectionVariables.set('authToken', loginToken);",
+                  "  pm.environment.set('authToken', loginToken);",
+                  "}"
+                ]
               }
-            ]
-          }
+            }
+          ]
         },
         {
           "name": "Register",
@@ -777,7 +778,7 @@
                   { "key": "Content-Type", "value": "application/json" },
                   { "key": "Authorization", "value": "Bearer {{authToken}}" }
                 ],
-                "body": { "mode": "raw", "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 1200000000,\n  \"paymentDate\": \"2026-06-10T09:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-001\",\n  \"notes\": \"Demo payment\"\n}" },
+                "body": { "mode": "raw", "raw": "{\n  \"orderId\": {{createdOrderId}},\n  \"amount\": 1200000000,\n  \"paymentDate\": \"2026-06-10T09:00:00Z\",\n  \"paymentMethod\": \"Cash\",\n  \"status\": \"Completed\",\n  \"transactionId\": \"TXN-001\",\n  \"notes\": \"Demo payment\"\n}" },
                 "url": "{{salesServiceUrl}}/api/Payments"
               }
             },
@@ -819,7 +820,7 @@
                   { "key": "Content-Type", "value": "application/json" },
                   { "key": "Authorization", "value": "Bearer {{authToken}}" }
                 ],
-                "body": { "mode": "raw", "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000001\",\n  \"trackingNumber\": \"TRK-001\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"status\": \"Scheduled\",\n  \"notes\": \"Demo delivery\"\n}" },
+                "body": { "mode": "raw", "raw": "{\n  \"orderId\": {{createdOrderId}},\n  \"trackingNumber\": \"TRK-001\",\n  \"estimatedDeliveryDate\": \"2026-06-15T09:00:00Z\",\n  \"status\": \"Scheduled\",\n  \"notes\": \"Demo delivery\"\n}" },
                 "url": "{{salesServiceUrl}}/api/Deliveries"
               }
             },
