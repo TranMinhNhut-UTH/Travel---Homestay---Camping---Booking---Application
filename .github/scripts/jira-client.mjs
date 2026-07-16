@@ -95,21 +95,82 @@ export async function getTransitions({ baseUrl, email, apiToken, issueKey }) {
   return data.transitions || [];
 }
 
-export async function transitionIssue({ baseUrl, email, apiToken, issueKey, transitionName }) {
+export async function getIssue({ baseUrl, email, apiToken, issueKey, fields = [] }) {
+  const query = fields.length > 0
+    ? `?${new URLSearchParams({ fields: fields.join(',') }).toString()}`
+    : '';
+  return jiraRequest(baseUrl, email, apiToken, `/issue/${encodeURIComponent(issueKey)}${query}`);
+}
+
+function uniqueTransitionNames(transitionName, transitionNames) {
+  return [...new Set([transitionName, ...(transitionNames || [])]
+    .map((name) => String(name || '').trim())
+    .filter(Boolean))];
+}
+
+function statusName(issue) {
+  return String(issue?.fields?.status?.name || '').trim();
+}
+
+export async function transitionIssue({
+  baseUrl,
+  email,
+  apiToken,
+  issueKey,
+  transitionName,
+  transitionNames = [],
+}) {
   const transitions = await getTransitions({ baseUrl, email, apiToken, issueKey });
-  const transition = transitions.find((item) => item.name.toLowerCase() === transitionName.toLowerCase())
-    || transitions.find((item) => item.name.toLowerCase().includes(transitionName.toLowerCase()));
+  const availableTransitions = transitions.map((item) => ({
+    id: String(item.id || ''),
+    name: String(item.name || ''),
+    targetStatus: String(item.to?.name || ''),
+  }));
+  console.log(`[Jira Transition] Available transitions for ${issueKey}: ${JSON.stringify(availableTransitions)}`);
+
+  const candidateNames = uniqueTransitionNames(transitionName, transitionNames);
+  const normalizedCandidates = candidateNames.map((name) => name.toLocaleLowerCase('en-US'));
+  const transition = transitions.find((item) => normalizedCandidates.includes(
+    String(item.name || '').trim().toLocaleLowerCase('en-US'),
+  ));
 
   if (!transition) {
-    return { skipped: true, reason: `Transition not found: ${transitionName}` };
+    const reason = `No matching transition found for ${issueKey}. Tried: ${candidateNames.join(', ') || '<none>'}`;
+    console.warn(`[Jira Transition] ${reason}`);
+    console.warn(`[Jira Transition] All available transitions: ${JSON.stringify(availableTransitions)}`);
+    return { skipped: true, reason, availableTransitions };
   }
 
-  await jiraRequest(baseUrl, email, apiToken, `/issue/${encodeURIComponent(issueKey)}/transitions`, {
+  const issueBefore = await getIssue({ baseUrl, email, apiToken, issueKey, fields: ['status'] });
+  const beforeStatus = statusName(issueBefore);
+  console.log(`[Jira Transition] Selected transition for ${issueKey}: id=${transition.id}, name=${transition.name}, currentStatus=${beforeStatus || '<unknown>'}`);
+
+  const transitionResponse = await jiraRequest(baseUrl, email, apiToken, `/issue/${encodeURIComponent(issueKey)}/transitions`, {
     method: 'POST',
     body: { transition: { id: transition.id } },
   });
 
-  return { skipped: false, transition: transition.name };
+  const issueAfter = await getIssue({ baseUrl, email, apiToken, issueKey, fields: ['status'] });
+  const afterStatus = statusName(issueAfter);
+  const statusChanged = Boolean(afterStatus) && afterStatus.toLocaleLowerCase('en-US') !== beforeStatus.toLocaleLowerCase('en-US');
+
+  if (!statusChanged) {
+    const fullIssueResponse = await getIssue({ baseUrl, email, apiToken, issueKey });
+    console.warn(`[Jira Transition] Transition id=${transition.id}, name=${transition.name} completed, but status did not change for ${issueKey}. Before=${beforeStatus || '<unknown>'}; After=${afterStatus || '<unknown>'}.`);
+    console.warn(`[Jira Transition] Jira transition response: ${JSON.stringify(transitionResponse)}`);
+    console.warn(`[Jira Transition] Jira issue response after transition: ${JSON.stringify(fullIssueResponse)}`);
+  } else {
+    console.log(`[Jira Transition] Confirmed ${issueKey} status changed: ${beforeStatus || '<unknown>'} -> ${afterStatus}.`);
+  }
+
+  return {
+    skipped: false,
+    transitionId: String(transition.id),
+    transition: transition.name,
+    beforeStatus,
+    afterStatus,
+    statusChanged,
+  };
 }
 
 export async function addComment({ baseUrl, email, apiToken, issueKey, comment }) {
