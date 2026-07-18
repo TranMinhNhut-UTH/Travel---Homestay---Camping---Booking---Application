@@ -72,6 +72,12 @@ async function main() {
       epicKey,
       epicLinkFieldId,
       labels: [...labels, ...(item.labels || [])],
+
+      priority: item.priority,
+      dueDate: item.dueDate,
+      reporterAccountId: item.reporterAccountId,
+      assigneeAccountId: item.assigneeAccountId,
+      componentName: item.componentName,
     });
 
     const result = await createIssue({ baseUrl, email, apiToken, fields });
