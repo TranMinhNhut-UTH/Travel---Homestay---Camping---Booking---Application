@@ -1,75 +1,71 @@
-# Báo Cáo Thực Thi Kiểm Thử Hộp Trắng — Module C
+# Báo cáo thực thi kiểm thử white-box
 
-> **Dự án**: EV Dealer Management System  
-> **Ngày thực thi**: 2026-07-03  
-> **Người thực thi**: Senior QA Automation Engineer  
-> **Công cụ**: xUnit, Moq, Entity Framework Core InMemory, Coverlet
+## 1. Mục tiêu và phạm vi
 
----
+Báo cáo kết quả unit test hiện tại của solution EV Dealer Management. Phạm vi tập trung business logic/service-layer và các controller method được gọi trực tiếp, không khởi tạo HTTP server và không phải integration test.
 
-## 1. Tóm Tắt Kết Quả (Execution Summary)
+## 2. Công cụ và môi trường
 
-- **Thời điểm chạy**: 2026-07-03
-- **Lệnh thực thi**: `dotnet test --collect:"XPlat Code Coverage"`
-- **Thư mục test**: `ev-dealer-management/SalesService.Tests`
-- **Kết quả tổng quan**:
-  - Tổng số lượng bài test: **20**
-  - Số bài test **Passed**: **20** (100%)
-  - Số bài test **Failed**: **0** (0%)
-  - Số bài test **Skipped**: **0** (0%)
-  - Thời gian chạy (Duration): **~8s**
+- .NET 8, xUnit 2.5.3.
+- Moq 4.20.72.
+- EF Core InMemory cho dữ liệu cô lập.
+- Coverlet collector `XPlat Code Coverage`.
+- Solution: `DealerSystem.sln`.
 
----
+## 3. Quy trình thực thi
 
-## 2. Chi Tiết Kết Quả Từng Controller
+```powershell
+dotnet test DealerSystem.sln
+dotnet test DealerSystem.sln --collect:"XPlat Code Coverage"
+```
 
-### 2.1 QuotesControllerTests (3/3 Passed)
-1. `CreateQuote_InvalidModelState_ReturnsBadRequest` - **Passed**
-2. `CreateQuote_ValidDto_ReturnsCreated` - **Passed**
-3. `CreateQuote_DatabaseException_Returns500` - **Passed**
+Coverage XML nằm tại `SalesService.Tests/TestResults/<run-id>/coverage.cobertura.xml`.
 
-### 2.2 ContractsControllerTests (9/9 Passed)
-1. `CreateContract_InvalidModelState_ReturnsBadRequest` - **Passed**
-2. `CreateContract_OrderNotFound_ReturnsNotFound` - **Passed**
-3. `CreateContract_ContractAlreadyExists_ReturnsBadRequest` - **Passed**
-4. `CreateContract_InvalidSalespersonId_ReturnsBadRequest` - **Passed**
-5. `CreateContract_ValidRequest_DepositTrue_ReturnsCreated` - **Passed**
-6. `UpdateContractStatus_ContractNotFound_ReturnsNotFound` - **Passed**
-7. `UpdateContractStatus_Rejected_RemovesContractAndOrder_ReturnsOk` - **Passed**
-8. `UpdateContractStatus_Approved_SetsOrderReadyForDelivery_ReturnsOk` - **Passed**
-9. `UpdateContractStatus_OtherStatus_UpdatesBoth_ReturnsOk` - **Passed**
+## 4. Kết quả test
 
-### 2.3 OrdersControllerTests (8/8 Passed)
-1. `CompleteOrder_MissingEmail_ReturnsBadRequest` - **Passed**
-2. `CompleteOrder_MissingName_ReturnsBadRequest` - **Passed**
-3. `CompleteOrder_TotalPriceZero_ReturnsBadRequest` - **Passed**
-4. `CompleteOrder_ValidRequest_DiscountAmount_ReturnsOk` - **Passed**
-5. `CompleteOrder_ValidRequest_DiscountPercent_UpdatesQuote_ReturnsOk` - **Passed**
-6. `UpdateOrderStatus_OrderNotFound_ReturnsNotFound` - **Passed**
-7. `UpdateOrderStatus_ValidId_UpdatesStatus_ReturnsOk` - **Passed**
+| Chỉ số | Giá trị |
+|---|---:|
+| Total | 37 |
+| Passed | 37 |
+| Failed | 0 |
+| Skipped | 0 |
 
----
+| Test class | Số test | Đối tượng chính |
+|---|---:|---|
+| `UserServiceTests` | 4 | Login và register failure |
+| `OrderBusinessLogicTests` | 3 | Discount, quote state, order number |
+| `PaymentBusinessLogicTests` | 3 | Create, validation, DTO mapping |
+| `ReportingServiceTests` | 4 | Demand forecast và date range |
+| `NotificationServiceTests` | 4 | Fake FCM happy/failure cases |
+| `OrdersControllerTests` | 7 | Order validation/status |
+| `ContractsControllerTests` | 9 | Contract create/status branches |
+| `QuotesControllerTests` | 3 | Quote create validation/error |
+| **Tổng** | **37** |  |
 
-## 3. Đánh Giá Mức Độ Phủ (Code Coverage - Coverlet)
+## 5. Coverage thực tế
 
-- **Coverage Report Path**: `SalesService.Tests/TestResults/[uuid]/coverage.cobertura.xml`
-- **Phân tích kết quả Coverage**:
-  - Dữ liệu thu được từ Coverlet cho thấy **Branch Coverage** đạt kỳ vọng 100% đối với các methods mục tiêu do đã cover toàn bộ các quyết định validation (D1), logical branches (D2..D9) và Exception catching (D10, D11).
-  - Không có dead code trong 5 functions được chọn.
-  - Các phần dependencies phức tạp như `RabbitMQ publisher` và cấu hình HTTP Client (gọi VehicleService) đã được mock an toàn bằng Exception bắt lỏng (Try-Catch log) hoặc Mock `IConfiguration`.
+Cobertura gần nhất (`23088ff0-9c0a-41b0-b988-43017d0efd84`) ghi:
 
----
+| Metric | Kết quả | Diễn giải |
+|---|---:|---|
+| Line coverage | 14,13% (861/6091) | Thấp; nhiều service/nhánh production chưa được unit test. |
+| Branch coverage | 6,74% (73/1082) | Thấp; failure/business branches cần mở rộng. |
 
-## 4. Defect Log (Lỗi Tìm Thấy & Đã Sửa)
+Không có dữ liệu để khẳng định statement coverage hoặc cyclomatic complexity. Kết quả 37/37 PASS chỉ chứng minh các test đã viết đang pass, không chứng minh toàn bộ hệ thống đúng hoặc đạt coverage cao.
 
-| ID Lỗi | Mô Tả Lỗi (Gặp khi Test Design) | Cách Xử Lý / Khắc Phục | Trạng Thái |
-|---|---|---|---|
-| EF-01 | EF Core InMemory ném `DbUpdateException` do thiếu Required properties trên model `Order` (`CustomerEmail`, `CustomerName`, `OrderNumber`) | Cập nhật Test Data Generator (`CreateValidOrder`) cung cấp đủ các properties bắt buộc theo DataAnnotations để by-pass validation cấp Entity. | **Closed** |
+## 6. Mock/dependency strategy
 
----
+- Moq: `IEmailService`, `IConfiguration`, `ILogger<T>`.
+- EF Core InMemory: `UserDbContext`, `SalesDbContext`, `ReportingDbContext`.
+- `FakeFcmService`: kiểm tra logic notification không phụ thuộc FCM thật.
+- Không gọi HTTP controller qua network trong unit test.
 
-## 5. Kết Luận
+## 7. Defect/issue và hạn chế
 
-- Phase 4 (White-box Testing) đã hoàn tất mỹ mãn và **pass 100%** đối với Module C, chứng minh business logic cốt lõi trong SalesService hoàn toàn bền vững, xử lý triệt để mọi logic biên, validation lỗi và exception hệ thống.
-- **Không có bất kỳ sự thay đổi nào đối với Business Logic** trên production codebase. Toàn bộ tính đúng đắn được giữ nguyên như Phase 3 Black-box.
-- Chiến lược sử dụng DB InMemory tỏ ra vô cùng hiệu quả để cô lập Data Access Layer mà không cần viết Mock Repository phức tạp cho Entity Framework.
+- Nullable/package vulnerability warnings có thể xuất hiện nhưng không làm test fail; cần xử lý riêng theo backlog.
+- Coverage thấp do solution có nhiều controller/minimal API/service chưa được cô lập kiểm thử.
+- Báo cáo Module C cũ 20/20 là snapshot lịch sử, không còn là baseline toàn solution.
+
+## 8. Kết luận
+
+Baseline white-box hiện tại là 37/37 PASS. Ưu tiên tiếp theo là thêm failure/authorization/business-rule tests cho CustomerService, VehicleService, các nhánh Sales/Reporting còn thiếu và theo dõi coverage theo từng lần chạy CI.

@@ -1,155 +1,97 @@
-# Postman Endpoint Coverage Audit
+# Báo cáo đối chiếu độ phủ endpoint Postman
 
-## Scope
-The CI and local full-suite source of truth is the root [ev-dealer-management.postman_collection.json](../../ev-dealer-management.postman_collection.json), as referenced by `.github/workflows/ci-jira.yml`. Superseded duplicate collections under `postman/` have been removed; module-specific suites outside that directory remain separate and are not evidence for the CI run.
+## 1. Mục tiêu
 
-The canonical collection currently contains 116 active requests. Five `ProcessedReservations` requests were removed because their controller is commented out and the routes are inactive. Every remaining request inherits executable collection-level `pm.test()` assertions for status, HTTP 500 rejection, response time, JSON-compatible media types (`application/json` and `application/*+json`), valid JSON, and basic response structure. Execution evidence is generated as Newman CLI output, JUnit XML, and HTML Extra report.
+Đối chiếu chính xác method/path trong backend với collection CI, phân biệt endpoint đã có request, mới phủ một phần, chưa phủ, đang inactive và route gateway trùng với service gốc. Báo cáo không xem một gateway proxy là endpoint nghiệp vụ mới.
 
-## Summary
-- Total active backend endpoints: 87
-- Total Postman requests: 128
-- Covered endpoints: 39
-- Backend endpoints missing from Postman: 48
-- Postman requests without an exact active backend match: 61
-- Method mismatches: 1
-- Path mismatches: 11
-- Target mismatches caused by gateway proxy gaps: 22
-- Inactive/commented-out backend endpoints excluded: 11
+## 2. Phạm vi và nguồn dữ liệu
 
-## Exact Coverage Notes
-The collection covers many core direct-service paths correctly, especially:
-- User auth and admin user management against the gateway
-- Customer and test-drive routes through the gateway
-- Vehicle routes through the gateway or direct service depending on folder
-- Orders, quotes, contracts, payments, deliveries, promotions through SalesService or gateway
-- ReportingService requests directly against port 5208
+- Collection chuẩn: `ev-dealer-management.postman_collection.json` – 116 request.
+- Environment: `postman/ev-dealer-management.postman_environment.json`.
+- Backend inventory: `docs/testing/BACKEND_ENDPOINT_INVENTORY.md`.
+- Source routes: UserService, CustomerService, VehicleService, SalesService, ReportingService và NotificationService.
+- Gateway: `APIGatewayService/Program.cs`, chỉ dùng để đánh giá khả năng proxy.
 
-## Backend endpoints covered by Postman
-Covered requests were found for these active areas:
-- `POST /api/auth/login`
-- `POST /api/auth/register`
-- `POST /api/auth/forgot-password`
-- `POST /api/auth/reset-password`
-- `GET /api/users/me`
-- `GET /api/users`
-- `POST /api/admin/users`
-- `GET /api/users/{id}`
-- `PUT /api/users/{id}`
-- `DELETE /api/users/{id}`
-- `PUT /api/users/{id}/role`
-- `PUT /api/users/{id}/approve`
-- `GET /api/dealers`
-- `GET /api/internal/users`
-- `GET /api/Vehicles`
-- `GET /api/Vehicles/{id}`
-- `POST /api/Vehicles`
-- `PUT /api/Vehicles/{id}`
-- `DELETE /api/Vehicles/{id}`
-- `POST /api/Vehicles/{id}/reserve`
-- `GET /api/Customers`
-- `GET /api/Customers/{id}`
-- `POST /api/Customers`
-- `PUT /api/Customers/{id}`
-- `DELETE /api/Customers/{id}`
-- `GET /api/TestDrives`
-- `GET /api/TestDrives/customer/{customerId}`
-- `GET /api/TestDrives/{id}`
-- `POST /api/TestDrives`
-- `PUT /api/TestDrives/{id}`
-- `DELETE /api/TestDrives/{id}`
-- `GET /api/Complaints`
-- `GET /api/Complaints/{id}`
-- `POST /api/Complaints`
-- `PUT /api/Complaints/{id}`
-- `DELETE /api/Complaints/{id}`
-- `GET /api/Quotes`
-- `GET /api/Quotes/{id}`
-- `POST /api/Quotes`
-- `PUT /api/Quotes/{id}/status`
-- `POST /api/Orders/complete`
-- `GET /api/Orders`
-- `GET /api/Orders/{id}`
-- `PUT /api/Orders/{id}/status`
-- `GET /api/Contracts`
-- `GET /api/Contracts/{id}`
-- `POST /api/Contracts`
-- `PUT /api/Contracts/{id}/status`
-- `GET /api/Promotions`
-- `POST /api/Promotions`
-- `GET /api/Payments`
-- `POST /api/Payments`
-- `GET /api/Deliveries`
-- `POST /api/Deliveries`
-- `GET /api/reports/*` family and `POST /api/reports/synchronize-data`
+`DealerManagementService` hiện chỉ có file project, không có controller hoặc minimal API route nên không được tính endpoint. `ProcessedReservationsController.cs` bị comment toàn bộ; năm route trong file là inactive và bị loại khỏi mẫu số active.
 
-## Backend endpoints missing from Postman
-The collection does not include these active backend routes:
-- `GET /api/vehicletypes` direct service path is present only indirectly; the direct backend route exists and should be treated as covered by `/api/vehicletypes` if the gateway is used consistently.
-- `GET /api/Export/vehicles/csv`
-- `GET /api/Export/vehicles/json`
-- `GET /api/Health`
-- `GET /api/Health/ready`
-- `GET /api/Health/live`
-- `GET /api/Orders/health`
-- `GET /api/Sales/quotes/{id}`
-- `POST /api/Sales/orders`
-- `GET /api/Sales/orders/{id}`
-- `POST /api/Sales/contracts`
-- `GET /api/Sales/contracts/{id}`
-- `POST /api/reports/sales-summary`
-- `POST /api/reports/inventory-summary`
-- `GET /api/reports/sales-summary/{id}`
-- `GET /api/reports/inventory-summary/{id}`
-- `GET /api/reports/top-vehicles`
-- `GET /api/reports/sales-by-staff`
-- `GET /api/reports/sales-by-region`
-- `GET /api/reports/sales-proportion`
-- `GET /api/reports/debt-summary` with full optional query set coverage remains incomplete in the collection
-- `GET /api/Notification/test-fcm`
-- `POST /api/Notification/subscribe-topic`
-- `POST /api/Notification/unsubscribe-topic`
-- `POST /api/Notification/send-to-topic`
-- `POST /api/Notification/send-multicast`
+## 3. Phương pháp phân loại
 
-## Postman requests without an exact active backend match
-These requests exist in the collection but do not match an exact active backend method+path pair:
-- `GET {{baseUrl}}/api/health` because the active service health route is `GET /health` in NotificationService and `GET /api/Health*` in VehicleService, not a gateway-proxied `GET /api/health`
-- `GET {{baseUrl}}/images/sample.jpg` is gateway-only proxy surface; there is no dedicated controller method, but the gateway path exists
-- `GET {{baseUrl}}/api/dealers` through the gateway is not proxied to the actual UserService dealer route because the gateway currently points dealers to VehicleService port 5068 while the direct dealer list is in UserService
-- `GET {{baseUrl}}/api/dealers/{{dealerId}}` and dealer CRUD requests are not matched because the backend active dealer CRUD is in VehicleService, but the gateway proxy is inconsistent
-- `GET {{baseUrl}}/api/Orders/complete` is not present; the collection correctly uses POST, so the request itself is fine
-- `GET {{baseUrl}}/api/vehicletypes` is only reliable if the gateway proxy and backend route are used consistently
-- Several ReportingService requests sent to `{{baseUrl}}` do not match because the gateway does not proxy ReportingService routes; they are valid only when sent directly to `{{reportingServiceUrl}}`
-- Several NotificationService requests do not match because the gateway does not proxy NotificationService routes; they are valid only when sent directly to `{{notificationServiceUrl}}`
-- `GET {{baseUrl}}/api/Sales/...` requests do not exist in the collection, but the direct sales routes are active in backend
+| Phân loại | Tiêu chí |
+|---|---|
+| Covered | Có ít nhất một request trong collection trùng method và route gốc, có collection-level assertion. |
+| Partially covered | Có request đúng endpoint nhưng chưa phủ đủ nhánh dữ liệu, quyền, query hoặc chuỗi ID động. |
+| Not covered | Route active nhưng không có request trùng method/path. |
+| Inactive/commented endpoint | Code không tạo route runtime nên không tính vào active coverage. |
+| Gateway proxy duplicate | Cùng endpoint nghiệp vụ qua gateway; không cộng thêm vào tổng endpoint. |
 
-## Method mismatches
-- One request/category mismatch remains around gateway exposure for dealer routes: the backend dealer list exists on `GET /api/dealers`, but the collection mixes direct and gateway targets across dealer requests, so the effective route is inconsistent rather than method-invalid.
+Matching được chuẩn hóa không phân biệt hoa/thường và coi `{id}`, `{customerId}` cùng là path parameter. Utility route (`weatherforecast`, health) vẫn được liệt kê để báo cáo đầy đủ nhưng tách khỏi đánh giá nghiệp vụ.
 
-## Path mismatches
-- Gateway route for dealers is inconsistent with the actual service boundary.
-- `POST /api/Orders/complete` is correctly path-shaped, but older gateway/collection combinations previously caused 404s; the current path is now aligned.
-- `GET /api/health` does not match any active route exactly.
-- ReportingService requests are path-correct but target-wrong when pointed at the gateway.
-- NotificationService requests are path-correct but target-wrong when pointed at the gateway.
+## 4. Tổng hợp theo module
 
-## Target mismatches caused by gateway proxy gaps
-The following request groups are active backend endpoints but should be sent directly to service URLs rather than the gateway unless proxying is added:
-- ReportingService routes (`/api/reports/*`) should use `{{reportingServiceUrl}}`
-- NotificationService routes (`/api/Notification/*`, `/health`) should use `{{notificationServiceUrl}}`
-- VehicleService health/export routes should use `{{vehicleServiceUrl}}` unless explicitly proxied
-- SalesService direct service routes beyond the small gateway-proxied subset should use `{{salesServiceUrl}}`
+| Module | Service | Active origin routes | Method/path có request | Chưa có request | Ghi chú |
+|---|---|---:|---:|---:|---|
+| ED-21 – Module A | UserService | 14 | 14 | 0 | Auth/User có request; các nhánh quyền và ID động chỉ phủ một phần. |
+| ED-21 – Module A | CustomerService | 17 | 16 | 1 | Thiếu utility `GET /weatherforecast`; CRUD stateful phụ thuộc customer/test-drive/complaint ID. |
+| ED-22 – Module B | VehicleService | 17 | 15 | 2 | Thiếu `GET /api/Health/ready` và `/live`. |
+| ED-23 – Module C | SalesService | 24 | 18 | 6 | Thiếu health Orders và năm route facade `/api/Sales/*`. |
+| ED-23 – Module C | ReportingService | 19 | 14 | 5 | Thiếu hai GET-by-ID, hai POST summary và utility weatherforecast. |
+| ED-23 – Module C | NotificationService | 6 | 5 | 1 | Năm POST nghiệp vụ có request; thiếu `GET /health`. |
+| **Tổng** |  | **97** | **82** | **15** | 82 là origin route có cặp method/path, không phải 82 request PASS. |
 
-## Inactive/commented-out backend endpoints excluded
-Excluded from the active count because they are commented out or inactive:
-- [SalesService/Controllers/ProcessedReservationsController.cs](../../ev-dealer-management/ev-dealer-management/SalesService/Controllers/ProcessedReservationsController.cs)
-  - `GET /api/ProcessedReservations`
-  - `GET /api/ProcessedReservations/{id}`
-  - `POST /api/ProcessedReservations`
-  - `PUT /api/ProcessedReservations/{id}`
-  - `DELETE /api/ProcessedReservations/{id}`
-- [SalesService/Controllers/SalesController.cs](../../ev-dealer-management/ev-dealer-management/SalesService/Controllers/SalesController.cs)
-  - Commented `CreateQuote` route and other commented sales routes
+ED-21 có 31 route/30 route có request; ED-22 có 17/15; ED-23 có 49/37. Collection có 116 request vì một endpoint có thể có happy path và nhiều negative/boundary case.
 
-## Notes
-This audit intentionally favors exact method+path matching. Requests that are valid only through a direct service URL but not via the gateway are listed as target mismatches rather than backend misses.
+## 5. Endpoint chưa được phủ
+
+| Module | Service | Method | Endpoint | Phân loại/đề xuất |
+|---|---|---|---|---|
+| ED-21 | CustomerService | GET | `/weatherforecast` | Utility; Not covered, có thể loại khỏi phạm vi nghiệp vụ. |
+| ED-22 | VehicleService | GET | `/api/Health/ready` | Not covered; thêm smoke readiness nếu CI cần. |
+| ED-22 | VehicleService | GET | `/api/Health/live` | Not covered; thêm liveness smoke test nếu CI cần. |
+| ED-23 | SalesService | GET | `/api/Orders/health` | Not covered. |
+| ED-23 | SalesService | GET | `/api/Sales/quotes/{id}` | Not covered; facade trùng miền Quotes nhưng là route active riêng. |
+| ED-23 | SalesService | POST | `/api/Sales/orders` | Not covered. |
+| ED-23 | SalesService | GET | `/api/Sales/orders/{id}` | Not covered. |
+| ED-23 | SalesService | POST | `/api/Sales/contracts` | Not covered. |
+| ED-23 | SalesService | GET | `/api/Sales/contracts/{id}` | Not covered. |
+| ED-23 | ReportingService | GET | `/api/reports/sales-summary/{id}` | Not covered. |
+| ED-23 | ReportingService | POST | `/api/reports/sales-summary` | Not covered. |
+| ED-23 | ReportingService | GET | `/api/reports/inventory-summary/{id}` | Not covered. |
+| ED-23 | ReportingService | POST | `/api/reports/inventory-summary` | Not covered. |
+| ED-23 | ReportingService | GET | `/weatherforecast` | Utility; Not covered. |
+| ED-23 | NotificationService | GET | `/health` | Not covered. |
+
+## 6. Khu vực chỉ phủ một phần
+
+| Nhóm | Hiện trạng | Rủi ro còn lại |
+|---|---|---|
+| Authentication/Users | Có login, register, admin CRUD và role/approve | Cần tách rõ 401 và 403 theo role; các request dùng `managedUserId`/`deleteUserId` phải có dữ liệu runtime. |
+| Vehicle/Dealer CRUD | Có GET/POST/PUT/DELETE và reserve | DELETE dùng biến riêng; nếu chưa tạo/lưu ID sẽ kiểm tra sai dữ liệu hoặc URL chưa resolve. |
+| Customer/Test Drive/Complaint | Có toàn bộ method CRUD chính | Collection lưu một số ID dưới tên `created*` nhưng request sau dùng biến chuẩn; database reset làm ID hard-code mất hiệu lực. |
+| Sales | Có Quotes, Orders, Contracts, Payments, Deliveries, Promotions | Chưa phủ facade `/api/Sales/*`; Payment/Delivery cần Order ID đúng kiểu và tồn tại. |
+| Reporting | Có 14/19 route | Query combinations và POST/GET-by-ID summary chưa phủ. |
+| Notifications | Có năm POST | Fake token có thể trả business failure; chưa có health request. |
+
+## 7. Gateway proxy và request đặc biệt
+
+- Các request dùng `{{baseUrl}}` chỉ được xem reachable khi `APIGatewayService` có proxy đúng method/path. Việc route gốc tồn tại không chứng minh gateway route hoạt động.
+- Reporting, Notification và phần lớn Sales route nên dùng `{{reportingServiceUrl}}`, `{{notificationServiceUrl}}`, `{{salesServiceUrl}}` nếu gateway không proxy.
+- `GET /images/sample.jpg` là gateway/static-file check, không có controller method tương ứng; đây là request hợp lệ cho routing/static content nhưng không tính vào 97 origin routes.
+- Dealer CRUD thuộc VehicleService. `DealerManagementService` không cung cấp endpoint để thay thế.
+- Năm route ProcessedReservations nằm trong controller bị comment, do đó không nên thêm lại vào collection cho đến khi backend thực sự map route.
+
+## 8. Biến Postman và test data
+
+Collection-level pre-request sinh `futureAppointmentDate`; collection-level test lưu các ID `created*`; Login dùng request-level script để lưu `authToken`. Các biến phải chú ý khi chạy regression:
+
+- `deleteDealerId`, `deleteVehicleId`, `deleteCustomerId`, `deleteUserId`, `managedUserId`, `newContractOrderId` không có default tin cậy và cần được tạo/lưu trước khi dùng.
+- `testDriveId`, `complaintId`, `customerId`, `dealerId`, `vehicleId` có default nhưng có thể không tồn tại trong database hiện tại.
+- Nếu create lưu `createdTestDriveId` nhưng GET/PUT/DELETE đọc `testDriveId`, chuỗi phụ thuộc vẫn có thể dùng ID cũ. Đây là lỗi test data/collection flow, không phải bằng chứng route không tồn tại.
+- Không dùng ngày appointment cố định đã qua thời điểm chạy.
+
+## 9. Defect/issue đã quan sát
+
+Black-box từng phát hiện 400, 401, 403, 404, 405 và 500. Status code một mình không đủ xác định nguyên nhân. Cần lưu response body và log service để phân loại: validation/test data, auth, route/method, gateway proxy hoặc backend exception. Tài liệu này không đánh dấu các request là PASS khi thiếu Newman artifact tương ứng.
+
+## 10. Kết luận
+
+Collection có độ phủ method/path rộng (82/97 origin routes) nhưng chưa đồng nghĩa toàn bộ chức năng pass. Khoảng trống chính nằm ở Sales facade, summary write/detail của Reporting, health endpoints và các luồng stateful dùng ID động. CI ED-47 đã pass và unit test 37/37 pass, nhưng coverage code còn 14,13% line/6,74% branch và black-box vẫn cần evidence theo từng run.
