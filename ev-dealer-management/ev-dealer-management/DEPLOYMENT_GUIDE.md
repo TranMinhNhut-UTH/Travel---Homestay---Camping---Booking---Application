@@ -9,12 +9,9 @@
 - **Mục tiêu**: Xây dựng hệ thống quản lý đại lý bán xe điện với kiến trúc Microservices (C# .NET 8).
 - **Trạng thái hiện tại**: Đã hoàn thiện và vượt qua 100% các kịch bản kiểm thử (Blackbox API và Whitebox Unit Test) cho **Module C (Sales Management)**.
 
-## 2. Danh Sách Thay Đổi (Module C - Automation Testing)
-Các file tài liệu kiểm thử được thêm mới và cập nhật trong thư mục `docs/testing/`:
-- `docs/testing/TEST_RESULT_REPORT_MODULE_C.md`: Báo cáo chi tiết kết quả chạy Newman cho Module C.
-- `docs/testing/POSTMAN_GUIDE_MODULE_C.md`: Hướng dẫn cài đặt và chạy Postman/Newman.
-- `docs/testing/TEST_CASES_MODULE_C.md`, `DEFECT_REPORT_MODULE_C.md`, `TEST_PROCEDURES_MODULE_C.md`, `TRACEABILITY_MATRIX_MODULE_C.md`: Cập nhật trạng thái Pass 100%.
-- Bổ sung thư mục `chi-tiet/` (ngoài thư mục dự án) chứa các tài liệu phục vụ bảo vệ nghiệm thu.
+## 2. Tài Liệu Kiểm Thử Chính Thức
+
+Toàn bộ tài liệu kiểm thử chính thức của project được quản lý tại documentation root `docs/testing/` tính từ repository root. Danh mục và vai trò từng tài liệu được mô tả trong `docs/testing/README.md`.
 
 ## 3. Hướng Dẫn Cài Đặt và Môi Trường
 - **Dependency**: .NET 8 SDK, Node.js, Newman (`npm i -g newman`), RabbitMQ.
